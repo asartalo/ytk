@@ -3,7 +3,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 export const theme = createMuiTheme({
   palette: {
-    type: 'dark',
+    // type: 'dark',
     primary: {
       main: '#d32f2f',
       light: '#ff6659',
@@ -11,14 +11,6 @@ export const theme = createMuiTheme({
       contrastText: '#fff',
 
     },
-    // primary: {
-    //   main: '#ff7030',
-    //   // main: '#e8006f',
-    //   light: '#ffa15e',
-    //   dark: '#c53f00',
-    //   // contrastText: '#000',
-    //   contrastText: '#fff',
-    // },
     secondary: {
       main: '#ff0080',
       light: '#ff5daf',
@@ -27,8 +19,9 @@ export const theme = createMuiTheme({
     },
   },
   typography: {
-    // Use the system font instead of the default Roboto font.
-
+    fontWeightLight: 100,
+    fontWeightMedium: 400,
+    fontWeightRegular: 300,
   },
 });
 
@@ -41,8 +34,6 @@ class Themer extends Component {
     );
   }
 }
-
-console.log(theme);
 
 export default Themer;
 
