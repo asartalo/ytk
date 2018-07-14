@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import MaterialAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,11 +20,11 @@ const styles = {
     },
   };
 
-function YTKAppBar(props) {
+function AppBar(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
+      <MaterialAppBar position="static" color="default">
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
             <MenuIcon />
@@ -34,13 +34,13 @@ function YTKAppBar(props) {
             YouTube Karaoke
           </Typography>
         </Toolbar>
-      </AppBar>
+      </MaterialAppBar>
     </div>
   );
 }
 
-YTKAppBar.propTypes = {
+AppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(YTKAppBar);
+export default withStyles(styles)(AppBar);

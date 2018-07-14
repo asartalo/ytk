@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
-import YTKAppBar from 'components/YTKAppBar';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { ScrollContext } from 'react-router-scroll-4';
 
-import './App.css';
+import Home from './Home';
+import Body from 'components/ytk/Body';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <YTKAppBar />
-        <h1>YouTube Karaoke</h1>
-      </div>
+      <Router>
+        <ScrollContext>
+          <Body>
+            <Switch>
+              <Route exact path="/" component={Home}/>
+            </Switch>
+          </Body>
+        </ScrollContext>
+      </Router>
     );
   }
 }
