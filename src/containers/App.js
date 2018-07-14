@@ -16,7 +16,7 @@ class App extends Component {
         <ScrollContext>
           <Body>
             <Switch>
-              <Route exact path="/" component={Home}/>
+              <Route exact path="/" component={Home} />
             </Switch>
           </Body>
         </ScrollContext>
