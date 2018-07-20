@@ -13,6 +13,11 @@ const styles = theme => ({
 });
 
 class NameForm extends Component {
+	static propTypes = {
+		classes: PropTypes.object.isRequired,
+		onNameSet: PropTypes.func.isRequired,
+	}
+
   constructor(props) {
 		super(props);
 		this.state = { name: '' };
@@ -44,7 +49,8 @@ class NameForm extends Component {
 					<CenterTextField
 						fullWidth
 						required
-						id="name"
+						id="current-user-name-input"
+						name="current-user-name"
 						label="Who are you?"
 						placeholder="Name"
 						onChange={this.handleChangeName}
@@ -58,11 +64,6 @@ class NameForm extends Component {
 			</form>
 		);
   }
-}
-
-NameForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onNameSet: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(NameForm);
