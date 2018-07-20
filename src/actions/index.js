@@ -1,3 +1,3 @@
-import * as currentUserActions from './* as currentUserActions';
+import * as _currentUserActions from './currentUserActions';
 
-export currentUserActions;
+export const currentUserActions = _currentUserActions;
