@@ -6,7 +6,7 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 
 const styles = theme => ({
   button: {
-	padding: '8px 32px 9px 16px',
+	padding: '8px 32px 8px 16px',
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -26,7 +26,6 @@ function HomeButton(props) {
 	  className={classes.button}
 	  variant="extendedFab"
 	  color="primary"
-	  aria-label="delete"
 	>
 	  <MusicNoteIcon className={classes.extendedIcon} />
 	  { children }

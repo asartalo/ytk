@@ -1,8 +1,23 @@
 import { ActionTypes as types } from '../constants';
 
-export function setCurrentUserName(name) {
+export function setName(name) {
 	return {
 		type: types.CURRENT_USER_SET_NAME,
 		data: name
+	};
+};
+
+export function setNameAndIntent(name, intent) {
+	return {
+		type: types.CURRENT_USER_SET_NAME_AND_INTENT,
+		data: { name, intent }
 	}
 };
+
+export function setParty(partyId) {
+	return {
+		type: types.CURRENT_USER_SET_PARTY,
+		data: partyId
+	};
+};
+
