@@ -9,7 +9,6 @@ export const theme = createMuiTheme({
       light: '#ff6659',
       dark: '#9a0007',
       contrastText: '#fff',
-
     },
     secondary: {
       main: '#ff0080',
@@ -28,12 +27,9 @@ export const theme = createMuiTheme({
 class Themer extends Component {
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
-	{ this.props.children }
-      </MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>{this.props.children}</MuiThemeProvider>
     );
   }
 }
 
 export default Themer;
-

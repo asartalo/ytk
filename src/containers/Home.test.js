@@ -12,7 +12,7 @@ describe('Home', () => {
 
   const mountHome = () => {
     return shallow(<Home {...props} />);
-  }
+  };
 
   beforeEach(() => {
     props = {
@@ -21,7 +21,7 @@ describe('Home', () => {
         intent: '',
         homeState: 'started',
       },
-      dispatch: jest.fn()
+      dispatch: jest.fn(),
     };
   });
 
@@ -50,18 +50,21 @@ describe('Home', () => {
     });
 
     it('sets handleInputStarted as onInputStarted listener', () => {
-      expect(form).toHaveProp('onInputStarted', home.instance().handleInputStarted);
+      expect(form).toHaveProp(
+        'onInputStarted',
+        home.instance().handleInputStarted
+      );
     });
 
     describe('when #handleNameSet() is called', () => {
       describe('with start intent', () => {
         beforeEach(() => {
-          home.instance().handleNameSet("Arnold", "start")
+          home.instance().handleNameSet('Arnold', 'start');
         });
 
         it('dispatches a set current user name and intent action ', () => {
           expect(props.dispatch).toHaveBeenCalledWith(
-            currentUserActions.setNameAndIntent("Arnold", "start")
+            currentUserActions.setNameAndIntent('Arnold', 'start')
           );
         });
       });
@@ -78,7 +81,6 @@ describe('Home', () => {
         );
       });
     });
-
   });
 
   describe('when homeState is "inputStarted"', () => {
@@ -134,8 +136,8 @@ describe('Home', () => {
   describe('Start and callback', () => {
     let start;
     beforeEach(() => {
-      props.currentUser.name = "Laura";
-      props.currentUser.intent = "start";
+      props.currentUser.name = 'Laura';
+      props.currentUser.intent = 'start';
       home = mountHome();
       start = home.find(Start);
     });
@@ -146,15 +148,14 @@ describe('Home', () => {
 
     describe('when #handlePartySet() is called', () => {
       beforeEach(() => {
-        home.instance().handlePartySet("party-id");
+        home.instance().handlePartySet('party-id');
       });
 
       it('dispatches a set party action', () => {
         expect(props.dispatch).toHaveBeenCalledWith(
-          currentUserActions.setParty("party-id")
+          currentUserActions.setParty('party-id')
         );
       });
     });
   });
 });
-

@@ -9,8 +9,13 @@ import currentUser from './currentUser';
 import { wrapReducers } from './firestore';
 import db, { auth } from 'config/firebase';
 
-export default combineReducers(wrapReducers({
-  currentUser,
-  error
-}, db, auth));
-
+export default combineReducers(
+  wrapReducers(
+    {
+      currentUser,
+      error,
+    },
+    db,
+    auth
+  )
+);

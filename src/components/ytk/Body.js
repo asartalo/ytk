@@ -12,27 +12,27 @@ const styles = {
   body: {
     backgroundColor: backgroundColor,
     color: primaryText,
-	minHeight: '100vh',
-  }
+    minHeight: '100vh',
+  },
 };
 
 class Body extends Component {
   renderAppBar() {
-	if (false) {
-	  return <AppBar />;
-	}
-	return null;
+    if (false) {
+      return <AppBar />;
+    }
+    return null;
   }
 
   render() {
     const { classes, children } = this.props;
     return (
-	  <Themer>
-		<div className={classes.body}>
-		  { this.renderAppBar() }
-		  { children }
-		</div>
-	  </Themer>
+      <Themer>
+        <div className={classes.body}>
+          {this.renderAppBar()}
+          {children}
+        </div>
+      </Themer>
     );
   }
 }
@@ -42,4 +42,3 @@ Body.propTypes = {
 };
 
 export default withStyles(styles)(Body);
-

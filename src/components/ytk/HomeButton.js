@@ -6,7 +6,7 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote';
 
 const styles = theme => ({
   button: {
-	padding: '8px 32px 8px 16px',
+    padding: '8px 32px 8px 16px',
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -14,28 +14,24 @@ const styles = theme => ({
 });
 
 function HomeButton(props) {
-  const {
-	children,
-	classes,
-  } = props;
+  const { children, classes } = props;
   const filteredProps = { ...props };
   delete filteredProps.classes;
   return (
-	<Button
-	  { ...filteredProps }
-	  className={classes.button}
-	  variant="extendedFab"
-	  color="primary"
-	>
-	  <MusicNoteIcon className={classes.extendedIcon} />
-	  { children }
-	</Button>
+    <Button
+      {...filteredProps}
+      className={classes.button}
+      variant="extendedFab"
+      color="primary"
+    >
+      <MusicNoteIcon className={classes.extendedIcon} />
+      {children}
+    </Button>
   );
 }
 
 HomeButton.propTypes = {
   classes: PropTypes.object.isRequired,
-}
+};
 
 export default withStyles(styles)(HomeButton);
-

@@ -5,14 +5,8 @@ import rootReducer from '../reducers/index';
 import thunk from 'redux-thunk';
 import devMiddlewares from './devMiddlewares';
 
-const middlewares = [
-	thunk,
-].concat(devMiddlewares);
+const middlewares = [thunk].concat(devMiddlewares);
 
-const store = createStore(
-	rootReducer,
-	applyMiddleware(...middlewares)
-);
-
+const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
 export default store;

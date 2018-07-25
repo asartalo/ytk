@@ -26,7 +26,11 @@ function AppBar(props) {
     <div className={classes.root}>
       <MaterialAppBar position="static" color="default">
         <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="Menu"
+          >
             <MenuIcon />
           </IconButton>
 
