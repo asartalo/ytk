@@ -18,6 +18,11 @@ jobs:
 
     steps:
       - checkout
+			- run:
+					name: ".env for tests"
+					command: |
+						cp env.sample .env.test.local
+
 
       # Download and cache dependencies
       - restore_cache:
