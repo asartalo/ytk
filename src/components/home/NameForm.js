@@ -57,7 +57,7 @@ class NameForm extends Component {
 	invokeOnNameSet(e, intent) {
 		e.preventDefault();
 		if (!this.canContinue()) return;
-		this.props.onNameSet(this.state.name, intent);
+		this.props.onNameSet(this.state.name, intent || "start");
 	}
 
 	handleFocus() {

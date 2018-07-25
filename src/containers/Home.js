@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { currentUserActions, uiActions } from 'actions';
+import { currentUserActions } from 'actions';
 import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
@@ -12,10 +12,10 @@ export class Home extends Component {
 	static propTypes = {
 		className: PropTypes.string,
 		dispatch: PropTypes.func.isRequired,
-		homeState: PropTypes.string.isRequired,
 		currentUser: PropTypes.shape({
 			name: PropTypes.string.isRequired,
-			intent: PropTypes.string.isRequired
+			intent: PropTypes.string.isRequired,
+			homeState: PropTypes.string.isRequired,
 		}).isRequired,
 	};
 
@@ -35,13 +35,12 @@ export class Home extends Component {
 	}
 
 	handleInputStarted() {
-		// this.setState({ inputStarted: true });
-		this.props.dispatch(uiActions.setHomeState('inputStarted'));
+		this.props.dispatch(currentUserActions.setHomeState('inputStarted'));
 	}
 
 	renderHomeBody() {
 		const { currentUser } = this.props;
-		if (currentUser.name) {
+		if (currentUser.name && currentUser.intent) {
 			if (currentUser.intent === "join") {
 				return (
 					<Join
@@ -67,8 +66,9 @@ export class Home extends Component {
 	}
 
   render() {
+		const { currentUser } = this.props;
 		return (
-			<HomePage inputStarted={this.props.homeState === 'inputStarted'}>
+			<HomePage homeState={currentUser.homeState}>
 				{ this.renderHomeBody() }
 			</HomePage>
 		);
@@ -76,11 +76,8 @@ export class Home extends Component {
 }
 
 export default connect((state, props) => {
-	const { currentUser, ui } = state;
-	return {
-		currentUser,
-		homeState: ui.homeState
-	};
+	const { currentUser } = state;
+	return { currentUser };
 
 })(Home);
 

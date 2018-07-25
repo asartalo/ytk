@@ -21,3 +21,10 @@ export function setParty(partyId) {
 	};
 };
 
+export function setHomeState(state) {
+	return {
+		type: types.CURRENT_USER_UI_HOME_SET_STATE,
+		data: state,
+	};
+};
+

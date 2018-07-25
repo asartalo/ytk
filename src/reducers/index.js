@@ -6,11 +6,11 @@ import { combineReducers } from 'redux';
 
 import error from './error';
 import currentUser from './currentUser';
-import ui from './ui';
+import { wrapReducers } from './firestore';
+import db, { auth } from 'config/firebase';
 
-export default combineReducers({
+export default combineReducers(wrapReducers({
   currentUser,
-  ui,
   error
-});
+}, db, auth));
 

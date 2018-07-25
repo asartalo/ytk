@@ -27,7 +27,7 @@ class Start extends Component {
 		return (
 			<div className="Start">
 				<h1 className={ classes.mainTitle }>Hello, { userName }</h1>
-				<p>We need some additional details</p>
+				<p>Let's get started!</p>
 				<form>
 					<TextField
 						fullWidth
