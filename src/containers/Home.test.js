@@ -5,7 +5,7 @@ import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
-import { currentUserActions, uiActions } from 'actions';
+import { currentUserActions } from 'actions';
 
 describe('Home', () => {
   let home, props;
@@ -19,8 +19,8 @@ describe('Home', () => {
       currentUser: {
         name: '',
         intent: '',
+        homeState: 'started',
       },
-      homeState: 'started',
       dispatch: jest.fn()
     };
   });
@@ -29,9 +29,9 @@ describe('Home', () => {
     mountHome();
   });
 
-  it('sets state inputStarted prop of HomePage to false by default', () => {
+  it('sets homeState prop of HomePage to value of currentUser.homeState', () => {
     const page = mountHome().find(HomePage);
-    expect(page.prop('inputStarted')).toBe(false);
+    expect(page.prop('homeState')).toEqual(props.currentUser.homeState);
   });
 
   describe('NameForm and callback', () => {
@@ -72,9 +72,9 @@ describe('Home', () => {
         home.instance().handleInputStarted();
       });
 
-      it('dispatches to set ui homeState to inputStarted action', () => {
+      it('dispatches to set currentUser.homeState to inputStarted action', () => {
         expect(props.dispatch).toHaveBeenCalledWith(
-          uiActions.setHomeState('inputStarted')
+          currentUserActions.setHomeState('inputStarted')
         );
       });
     });
@@ -83,13 +83,13 @@ describe('Home', () => {
 
   describe('when homeState is "inputStarted"', () => {
     beforeEach(() => {
-      props.homeState = 'inputStarted';
+      props.currentUser.homeState = 'inputStarted';
       home = mountHome();
     });
 
-    it('sets state inputStarted prop of HomePage to true', () => {
+    it('sets state inputStarted prop of HomePage', () => {
       const page = home.find(HomePage);
-      expect(page.prop('inputStarted')).toBe(true);
+      expect(page.prop('homeState')).toEqual('inputStarted');
     });
   });
 
@@ -135,6 +135,7 @@ describe('Home', () => {
     let start;
     beforeEach(() => {
       props.currentUser.name = "Laura";
+      props.currentUser.intent = "start";
       home = mountHome();
       start = home.find(Start);
     });
