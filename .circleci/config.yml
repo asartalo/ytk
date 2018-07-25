@@ -18,11 +18,6 @@ jobs:
 
     steps:
       - checkout
-			- run:
-					name: ".env for tests"
-					command: |
-						cp env.sample .env.test.local
-
 
       # Download and cache dependencies
       - restore_cache:
@@ -30,6 +25,10 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
+			- run:
+					name: .env for tests
+					command: cp env.sample .env.test.local
+
 
       - run: yarn install
 
