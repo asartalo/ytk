@@ -46,6 +46,7 @@ jobs:
           ./cc-test-reporter before-build
           yarn test-coverage
           ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $? ./coverage/lcov.info
+          cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 
 
