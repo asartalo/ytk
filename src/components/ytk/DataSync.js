@@ -8,7 +8,6 @@ export class DataSync extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
-    signedIn: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
     userDataLoaded: PropTypes.bool.isRequired,
     uid: PropTypes.any,
@@ -35,7 +34,6 @@ export class DataSync extends Component {
 export default connect((state, props) => {
   const { firestore, currentUser } = state;
   return {
-    signedIn: firestore.signedIn,
     uid: firestore.uid,
     userDataLoaded: firestore.userDataLoaded,
     // TODO: PROPTYPE better (use home.js definition)

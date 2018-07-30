@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ScrollContext } from 'react-router-scroll-4';
 
 import Home from './Home';
-import DataSync from 'components/ytk/DataSync';
 import Body from 'components/ytk/Body';
 
 class App extends Component {
@@ -19,7 +18,6 @@ class App extends Component {
             </Body>
           </ScrollContext>
         </Router>
-        <DataSync />
       </div>
     );
   }

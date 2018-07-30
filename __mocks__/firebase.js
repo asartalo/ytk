@@ -1,18 +1,52 @@
-const firebaseMock = jest.genMockFromModule('firebase');
+import firebasemock from "firebase-mock";
 
-const mockDb = {
-  settings: (s) => {
-    console.log(s);
+const mockauth = new firebasemock.MockAuthentication();
+const mockdatabase = new firebasemock.MockFirebase();
+const mockfirestore = new firebasemock.MockFirestore();
+const mockstorage = new firebasemock.MockStorage();
+const mockmessaging = new firebasemock.MockMessaging();
+const mocksdk = new firebasemock.MockFirebaseSdk(
+  // use null if your code does not use RTDB
+  (path) => {
+    return path ? mockdatabase.child(path) : mockdatabase;
+  },
+  // use null if your code does not use AUTHENTICATION
+  () => {
+    return mockauth;
+  },
+  // use null if your code does not use FIRESTORE
+  () => {
+    return mockfirestore;
+  },
+  // use null if your code does not use STORAGE
+  () => {
+    return mockstorage;
+  },
+  // use null if your code does not use MESSAGING
+  () => {
+    return mockmessaging;
   }
-};
+);
 
-firebaseMock.initializeApp.mockImplementation(() => {  });
-firebaseMock.firestore.mockImplementation(() => mockDb);
-firebaseMock.auth.mockImplementation(() => {
-  return {
-    signInAnonymously: jest.fn()
-  }
-});
+export default mocksdk;
 
-export default firebaseMock;
+// const firebaseMock = jest.genMockFromModule('firebase');
+//
+// const mockDb = {
+//   settings: (s) => {
+//     console.log(s);
+//   }
+// };
+//
+// firebaseMock.initializeApp.mockImplementation(() => {  });
+// firebaseMock.firestore.mockImplementation(() => mockDb);
+// firebaseMock.auth.mockImplementation(() => {
+//   return {
+//     signInAnonymously: firebaseMock.__signInAnonymously
+//   }
+// });
+//
+// firebaseMock.__signInAnonymously = jest.fn();
+//
+// export default firebaseMock;
 
