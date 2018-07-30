@@ -29,24 +29,3 @@ const mocksdk = new firebasemock.MockFirebaseSdk(
 );
 
 export default mocksdk;
-
-// const firebaseMock = jest.genMockFromModule('firebase');
-//
-// const mockDb = {
-//   settings: (s) => {
-//     console.log(s);
-//   }
-// };
-//
-// firebaseMock.initializeApp.mockImplementation(() => {  });
-// firebaseMock.firestore.mockImplementation(() => mockDb);
-// firebaseMock.auth.mockImplementation(() => {
-//   return {
-//     signInAnonymously: firebaseMock.__signInAnonymously
-//   }
-// });
-//
-// firebaseMock.__signInAnonymously = jest.fn();
-//
-// export default firebaseMock;
-

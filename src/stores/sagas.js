@@ -1,13 +1,5 @@
 import { delay } from 'redux-saga';
-import {
-  all,
-  apply,
-  call,
-  put,
-  race,
-  select,
-  takeLatest,
-} from 'redux-saga/effects';
+import { all, apply, put, race, select, takeLatest } from 'redux-saga/effects';
 
 import { ActionTypes as types } from '../constants';
 import action from 'helpers/action';

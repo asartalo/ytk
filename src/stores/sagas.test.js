@@ -1,40 +1,72 @@
-import { put } from 'redux-saga/effects';
-import { runSaga } from 'redux-saga';
-
 import { expectSaga } from 'redux-saga-test-plan';
-import mockFirebase from 'firebase';
 
-import setup, { signInAnonymouslyRequest } from './sagas';
+import setup from './sagas';
 
 import rootReducer from 'reducers/index';
-
-describe('signInAnonymously', () => {
-  let gen, sagas, db, auth;
-  beforeEach(() => {
-    db = mockFirebase.firestore();
-    auth = mockFirebase.auth();
-    sagas = setup(db, auth);
-  });
-
-  test('happy path', () => {
-    const gen = sagas.signInAnonymously();
-    expect(gen.next().value).toEqual(put(signInAnonymouslyRequest()));
-  });
-});
 
 describe('rootSaga', () => {
   let sagas, db, auth;
 
+  const fakeAuthUser = { uid: 'FAKEUID' };
+  const fakeResponse = { user: fakeAuthUser };
+  const successSignIn = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(fakeResponse);
+    }, 0);
+  });
+
+  let fakeUserData = {
+    name: 'John',
+    intent: '',
+    party: '',
+  };
+
+  let fakeDoc = {
+    exists: true,
+    data: () => fakeUserData,
+  };
+
+  let fakeDocResponse = new Promise(resolve => {
+    setTimeout(resolve, 10, fakeDoc);
+  });
+
+  let fakeDoRef = uid => {
+    return {
+      get: () => fakeDocResponse,
+    };
+  };
+
+  let fakeCollection = collection => {
+    return {
+      doc: fakeDoRef,
+    };
+  };
+
   beforeEach(() => {
-    db = mockFirebase.firestore();
-    auth = mockFirebase.auth();
+    // db = mockFirebase.firestore();
+    // auth = mockFirebase.auth();
+    db = {
+      collection: fakeCollection,
+    };
+    auth = {};
+    auth.signInAnonymously = () => {
+      return successSignIn;
+    };
     sagas = setup(db, auth);
   });
 
-  test('it works', () => {
+  test('happy path: revisiting user', () => {
+    const finalState = rootReducer({}, {});
+    finalState.currentUser = { ...fakeUserData, homeState: 'loaded' };
+    finalState.firestore = {
+      ...finalState.firestore,
+      signedIn: true,
+      userDataLoaded: true,
+      uid: fakeAuthUser.uid,
+    };
     return expectSaga(sagas.rootSaga)
       .withReducer(rootReducer)
-      .put(signInAnonymouslyRequest())
-      .run();
+      .hasFinalState(finalState)
+      .silentRun();
   });
 });
