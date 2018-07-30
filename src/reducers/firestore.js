@@ -13,6 +13,11 @@ const wrapCurrentUser = (currentUser, db, auth) => {
           ...newState,
           ...action.data,
         };
+      case types.FIRESTORE_SIGN_IN_ANONYMOUSLY_ERROR:
+        return {
+          ...newState,
+          homeState: 'loaded',
+        };
 
       default:
         return newState;

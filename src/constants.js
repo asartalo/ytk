@@ -1,6 +1,9 @@
 import enforcedActionTypes from 'helpers/enforcedActionTypes';
 
 export const ActionTypes = enforcedActionTypes(
+  // Errors
+  'ERROR_SET_MESSAGE',
+
   // currentUserActions
   'CURRENT_USER_SET_NAME',
   'CURRENT_USER_SET_NAME_AND_INTENT',

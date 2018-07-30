@@ -7,9 +7,9 @@ import rootReducer from 'reducers/index';
 describe('rootSaga', () => {
   let sagas, db, auth;
 
-  const fakeAuthUser = { uid: 'FAKEUID' };
-  const fakeResponse = { user: fakeAuthUser };
-  const successSignIn = new Promise((resolve, reject) => {
+  let fakeAuthUser = { uid: 'FAKEUID' };
+  let fakeResponse = { user: fakeAuthUser };
+  let signInResponse = new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(fakeResponse);
     }, 0);
@@ -21,36 +21,34 @@ describe('rootSaga', () => {
     party: '',
   };
 
-  let fakeDoc = {
+  let fakeUserDoc = {
     exists: true,
     data: () => fakeUserData,
   };
 
-  let fakeDocResponse = new Promise(resolve => {
-    setTimeout(resolve, 10, fakeDoc);
+  let fakeUserDocResponse = () =>
+    new Promise(resolve => {
+      setTimeout(resolve, 0, fakeUserDoc);
+    });
+
+  let fakeUserDocRef = uid => ({
+    get: () => fakeUserDocResponse(),
+    set: user =>
+      new Promise(resolve => {
+        setTimeout(resolve, 0);
+      }),
   });
 
-  let fakeDoRef = uid => {
-    return {
-      get: () => fakeDocResponse,
-    };
-  };
-
-  let fakeCollection = collection => {
-    return {
-      doc: fakeDoRef,
-    };
-  };
+  let fakeCollection = collection => ({
+    doc: fakeUserDocRef,
+  });
 
   beforeEach(() => {
-    // db = mockFirebase.firestore();
-    // auth = mockFirebase.auth();
     db = {
       collection: fakeCollection,
     };
-    auth = {};
-    auth.signInAnonymously = () => {
-      return successSignIn;
+    auth = {
+      signInAnonymously: () => signInResponse,
     };
     sagas = setup(db, auth);
   });
@@ -64,6 +62,50 @@ describe('rootSaga', () => {
       userDataLoaded: true,
       uid: fakeAuthUser.uid,
     };
+
+    return expectSaga(sagas.rootSaga)
+      .withReducer(rootReducer)
+      .hasFinalState(finalState)
+      .silentRun();
+  });
+
+  test('happy path: new user', () => {
+    fakeUserDoc = { exists: false };
+    // fakeUserData = ;
+    const finalState = rootReducer({}, {});
+    finalState.currentUser = { ...finalState.currentUser, homeState: 'loaded' };
+    finalState.firestore = {
+      ...finalState.firestore,
+      signedIn: true,
+      userDataLoaded: false,
+      uid: fakeAuthUser.uid,
+    };
+
+    return expectSaga(sagas.rootSaga)
+      .withReducer(rootReducer)
+      .hasFinalState(finalState)
+      .silentRun();
+  });
+
+  test('failed path: error on signIn', () => {
+    signInResponse = new Promise((_, reject) => {
+      setTimeout(reject, 0, Error('Something happened while signing in'));
+    });
+    const finalState = rootReducer({}, {});
+    finalState.currentUser = {
+      ...finalState.currentUser,
+      homeState: 'loaded',
+    };
+    finalState.error = {
+      ...finalState.error,
+      errorMsg: 'Something happened while signing in',
+    };
+    finalState.firestore = {
+      ...finalState.firestore,
+      signedIn: false,
+      userDataLoaded: false,
+    };
+
     return expectSaga(sagas.rootSaga)
       .withReducer(rootReducer)
       .hasFinalState(finalState)

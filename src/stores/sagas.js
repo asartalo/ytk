@@ -2,6 +2,8 @@ import { delay } from 'redux-saga';
 import { all, apply, put, race, select, takeLatest } from 'redux-saga/effects';
 
 import { ActionTypes as types } from '../constants';
+import { setHomeState } from 'actions/currentUserActions';
+import { setErrorMessage } from 'actions/errorActions';
 import action from 'helpers/action';
 
 export function signInAnonymouslyRequest() {
@@ -67,6 +69,18 @@ export default function setup(db, auth) {
     );
   }
 
+  function* watchSignInError() {
+    yield takeLatest(
+      types.FIRESTORE_SIGN_IN_ANONYMOUSLY_ERROR,
+      announceSignInError
+    );
+  }
+
+  function* announceSignInError({ data }) {
+    yield put(setErrorMessage(data.message));
+    yield put(setHomeState('loaded'));
+  }
+
   let usersRef;
   const usersCollection = function() {
     if (!usersRef) {
@@ -84,12 +98,14 @@ export default function setup(db, auth) {
   }
 
   function getUserAndIdFromState() {
-    return select(state => {
-      return {
-        currentUser: state.currentUser,
-        uid: state.firestore.uid,
-      };
-    });
+    return select(({ currentUser, firestore }) => ({
+      currentUser,
+      uid: firestore.uid,
+    }));
+  }
+
+  function getUserFromState() {
+    return select(({ currentUser }) => currentUser);
   }
 
   function setUserLoadedState(user) {
@@ -99,7 +115,7 @@ export default function setup(db, auth) {
   }
 
   function* retrieveUserData() {
-    const { currentUser, uid } = yield getUserAndIdFromState();
+    let { uid } = yield getUserAndIdFromState();
     const currentUserRef = getCurrentUserFs(uid);
     let doc;
     try {
@@ -113,7 +129,9 @@ export default function setup(db, auth) {
     } else {
       // set new data
       put(userDataDoesNotExist(doc));
-      yield* saveUser(setUserLoadedState(currentUser), uid);
+      yield put(setHomeState('loaded'));
+      const currentUser = getUserFromState();
+      yield* saveUser(currentUser, uid);
     }
   }
 
@@ -146,6 +164,7 @@ export default function setup(db, auth) {
     yield all([
       signInAnonymously(),
       watchSignInSuccess(),
+      watchSignInError(),
       // watchSaveUserSuccess(),
     ]);
   }
