@@ -1,5 +1,5 @@
 // TODO: Maybe this can be a library?
-function enforcedActionTypes(types) {
+function enforcedActionTypes(...types) {
   return new Proxy(new Set(types), {
     get: function(set, prop) {
       if (set.has(prop)) {
