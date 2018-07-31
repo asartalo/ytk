@@ -54,9 +54,7 @@ export function firestore(state = defaultState, action = {}) {
         ...state,
         signedIn: false,
       };
-    case types.FIRESTORE_GETTING_USER_DATA_SUCCESS:
-    case types.FIRESTORE_GETTING_USER_DATA_ERROR:
-    case types.FIRESTORE_USER_DATA_DOES_NOT_EXIST:
+    case types.FIRESTORE_SYNC_READY:
       return {
         ...state,
         userDataLoaded: true,

@@ -27,3 +27,10 @@ export function setHomeState(state) {
     data: state,
   };
 }
+
+export function loadUser(user) {
+  return {
+    type: types.CURRENT_USER_LOAD_USER,
+    data: user,
+  };
+}

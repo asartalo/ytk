@@ -30,24 +30,7 @@ export default function currentUser(state = defaultState, action = {}) {
         ...state,
         homeState: action.data,
       };
-    case types.FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST:
-      return {
-        ...state,
-        homeState: 'loading',
-      };
-    // Should not be here
-    case types.FIRESTORE_GETTING_USER_DATA_ERROR:
-    case types.FIRESTORE_GETTING_USER_DATA_SUCCESS:
-      return {
-        ...state,
-        homeState: 'loaded',
-      };
-    case types.FIRESTORE_USER_DATA_DOES_NOT_EXIST:
-      return {
-        ...state,
-        homeState: 'loaded',
-      };
-    case types.FIRESTORE_SAVE_USER_DATA_SUCCESS:
+    case types.CURRENT_USER_LOAD_USER:
       return {
         ...state,
         ...action.data,

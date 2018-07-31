@@ -1,8 +1,17 @@
 import { delay } from 'redux-saga';
-import { all, apply, put, race, select, takeLatest } from 'redux-saga/effects';
+import {
+  take,
+  call,
+  all,
+  apply,
+  put,
+  race,
+  select,
+  takeLatest,
+} from 'redux-saga/effects';
 
 import { ActionTypes as types } from '../constants';
-import { setHomeState } from 'actions/currentUserActions';
+import { setHomeState, loadUser } from 'actions/currentUserActions';
 import { setErrorMessage } from 'actions/errorActions';
 import action from 'helpers/action';
 
@@ -42,6 +51,10 @@ export function saveUserSuccess(user) {
   return action(types.FIRESTORE_SAVE_USER_DATA_SUCCESS);
 }
 
+export function syncReady() {
+  return action(types.FIRESTORE_SYNC_READY);
+}
+
 export default function setup(db, auth) {
   const timedOutSignIn = {
     response: apply(auth, auth.signInAnonymously),
@@ -50,6 +63,7 @@ export default function setup(db, auth) {
 
   function* signInAnonymously() {
     yield put(signInAnonymouslyRequest());
+    yield put(setHomeState('loading'));
     try {
       const { response } = yield race(timedOutSignIn);
       if (response) {
@@ -109,7 +123,7 @@ export default function setup(db, auth) {
   }
 
   function setUserLoadedState(user) {
-    return user.homeState === 'loading'
+    return user.homeState === 'loading' || !user.homeState
       ? { ...user, homeState: 'loaded' }
       : user;
   }
@@ -126,13 +140,15 @@ export default function setup(db, auth) {
     if (doc.exists) {
       const loadedUser = setUserLoadedState(doc.data());
       yield put(getUserDataSuccess(loadedUser));
+      yield* loadUserToState(loadedUser);
     } else {
       // set new data
-      put(userDataDoesNotExist(doc));
+      yield put(userDataDoesNotExist(doc));
       yield put(setHomeState('loaded'));
-      const currentUser = getUserFromState();
+      const currentUser = yield getUserFromState();
       yield* saveUser(currentUser, uid);
     }
+    yield put(syncReady());
   }
 
   function* saveUser(user, uid) {
@@ -144,6 +160,23 @@ export default function setup(db, auth) {
     } catch (error) {
       yield put(saveUserError(error));
     }
+  }
+
+  function* loadUserToState(user) {
+    yield put(loadUser(user));
+  }
+
+  function* saveUserWrap() {
+    const { currentUser, uid } = yield getUserAndIdFromState();
+    yield call(saveUser, currentUser, uid);
+  }
+
+  function* syncUserChanges() {
+    yield take(types.FIRESTORE_SYNC_READY);
+    yield takeLatest(
+      action => action.type.match(/^CURRENT_USER/),
+      saveUserWrap
+    );
   }
 
   // TODO: This could loop?
@@ -165,6 +198,7 @@ export default function setup(db, auth) {
       signInAnonymously(),
       watchSignInSuccess(),
       watchSignInError(),
+      syncUserChanges(),
       // watchSaveUserSuccess(),
     ]);
   }
@@ -175,6 +209,8 @@ export default function setup(db, auth) {
     setUserLoadedState,
     retrieveUserData,
     timedOutSignIn,
+    syncUserChanges,
+    saveUser,
     rootSaga,
   };
 }
