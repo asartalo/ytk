@@ -1,7 +1,7 @@
 import { expectSaga } from 'redux-saga-test-plan';
-import { mockRandomForEach } from 'jest-mock-random';
 
-import { currentUserActions, errorActions, partyActions } from 'actions';
+import fakeFirestore from './fakeFirestore';
+import { currentUserActions, errorActions } from 'actions';
 import rootReducer from 'reducers/index';
 
 import {
@@ -13,116 +13,36 @@ import {
 import setup from './sagas';
 
 describe('sagas', () => {
-  let sagas, db, auth;
-  let fakeAuthUser,
-    fakeResponse,
-    signInResponse,
-    fakeUserData,
-    fakePartyData,
-    fakeUserDoc,
-    fakePartyDoc,
-    fakeUserDocResponse,
-    fakePartyDocResponse,
-    fakePartyDocFunc,
-    fakeUserDocRef,
-    fakePartyDocRef,
-    fakeCollection,
-    partySetMock;
+  let sagas, fakeFs;
 
   beforeEach(() => {
-    fakeAuthUser = { uid: 'FAKEUID' };
-    fakeResponse = { user: fakeAuthUser };
-    signInResponse = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(fakeResponse);
-      }, 0);
-    });
-
-    fakeUserData = {
-      name: 'John',
-      intent: '',
-      party: '',
-    };
-
-    fakeUserDoc = {
-      exists: true,
-      data: () => fakeUserData,
-    };
-
-    fakeUserDocResponse = () =>
-      new Promise(resolve => {
-        setTimeout(resolve, 0, fakeUserDoc);
-      });
-
-    fakePartyDocResponse = () =>
-      new Promise(resolve => {
-        setTimeout(resolve, 0, fakePartyDoc);
-      });
-
-    let userSetMock = jest.fn();
-    userSetMock.mockReturnValue(
-      new Promise(resolve => {
-        setTimeout(resolve, 0);
-      })
-    );
-
-    partySetMock = jest.fn();
-    partySetMock.mockReturnValue(
-      new Promise(resolve => {
-        setTimeout(resolve, 0);
-      })
-    );
-
-    fakeUserDocRef = {
-      get: () => fakeUserDocResponse(),
-      set: userSetMock,
-    };
-
-    fakePartyDocRef = {
-      get: () => fakePartyDocResponse(),
-      set: partySetMock,
-    };
-
-    fakePartyDocFunc = jest.fn(id => fakePartyDocRef);
-    fakeCollection = jest.fn(collection => {
-      return {
-        users: { doc: jest.fn(uid => fakeUserDocRef) },
-        parties: { doc: fakePartyDocFunc },
-      }[collection];
-    });
-
-    db = {
-      collection: fakeCollection,
-    };
-    auth = {
-      signInAnonymously: () => signInResponse,
-    };
-    sagas = setup(db, auth);
+    fakeFs = fakeFirestore(jest);
+    sagas = setup(fakeFs.db, fakeFs.auth);
   });
 
   describe('rootSagas', () => {
     test('happy path: revisiting user', () => {
       const finalState = rootReducer({}, {});
-      finalState.currentUser = { ...fakeUserData, homeState: 'loaded' };
+      finalState.currentUser = { ...fakeFs.userData, homeState: 'loaded' };
       finalState.firestore = {
         ...finalState.firestore,
         signedIn: true,
         userDataLoaded: true,
-        uid: fakeAuthUser.uid,
+        uid: fakeFs.authUser.uid,
       };
 
       return expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
         .hasFinalState(finalState)
-        .apply(auth, auth.signInAnonymously)
-        .put(signInAnonymouslySuccess(fakeResponse))
+        .apply(fakeFs.auth, fakeFs.auth.signInAnonymously)
+        .put(signInAnonymouslySuccess(fakeFs.authResponse))
         .not.put.like(signInAnonymouslyError())
         .silentRun();
     });
 
     test('happy path: new user', () => {
-      fakeUserDoc = { exists: false };
-      // fakeUserData = ;
+      fakeFs.userDoc = { exists: false };
+      // fakeFs.userData = ;
       const finalState = rootReducer({}, {});
       finalState.currentUser = {
         ...finalState.currentUser,
@@ -132,37 +52,45 @@ describe('sagas', () => {
         ...finalState.firestore,
         signedIn: true,
         userDataLoaded: true,
-        uid: fakeAuthUser.uid,
+        uid: fakeFs.authUser.uid,
       };
 
       return expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
+        .put(signInAnonymouslySuccess(fakeFs.authResponse))
         .hasFinalState(finalState)
         .silentRun();
     });
 
     test('failed path: error on signIn', () => {
-      signInResponse = new Promise((_, reject) => {
-        setTimeout(reject, 0, Error('Something happened while signing in'));
+      const error = Error('Something happened while signing in');
+      const promise = new Promise(function(resolve, reject) {
+        setTimeout(reject, 10, error);
       });
-      const finalState = rootReducer({}, {});
-      finalState.currentUser = {
-        ...finalState.currentUser,
-        homeState: 'loaded',
-      };
-      finalState.error = {
-        ...finalState.error,
-        errorMsg: 'Something happened while signing in',
-      };
-      finalState.firestore = {
-        ...finalState.firestore,
-        signedIn: false,
-        userDataLoaded: false,
+
+      fakeFs._set('signInResponse', promise);
+      let finalState = rootReducer({}, {});
+      finalState = {
+        ...finalState,
+        currentUser: {
+          ...finalState.currentUser,
+          homeState: 'loaded',
+        },
+        error: {
+          ...finalState.error,
+          errorMsg: 'Something happened while signing in',
+        },
+        firestore: {
+          ...finalState.firestore,
+          signedIn: false,
+          userDataLoaded: false,
+        },
       };
 
       return expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
-        .not.call.fn(fakeUserDocRef.get)
+        .not.call.fn(fakeFs.userDocRef.get)
+        .put(signInAnonymouslyError(error))
         .hasFinalState(finalState)
         .silentRun();
     });
@@ -171,10 +99,7 @@ describe('sagas', () => {
       let initialState, syncSaga;
       beforeEach(() => {
         initialState = rootReducer({}, {});
-        initialState.currentUser = {
-          ...initialState.currentUser,
-          name: 'Jane',
-        };
+        initialState.currentUser.name = 'Jane';
         initialState.firestore.uid = 'AUID';
         syncSaga = expectSaga(sagas.syncUserChanges).withReducer(
           rootReducer,
@@ -192,7 +117,7 @@ describe('sagas', () => {
           .dispatch(currentUserActions.setParty('party-night-123'))
           .silentRun()
           .then(() => {
-            expect(fakeUserDocRef.set).toHaveBeenCalledWith(savedUser);
+            expect(fakeFs.userDocRef.set).toHaveBeenCalledWith(savedUser);
           });
       });
 
@@ -201,7 +126,7 @@ describe('sagas', () => {
           .dispatch(currentUserActions.setParty('party-night-123'))
           .silentRun()
           .then(() => {
-            expect(fakeUserDocRef.set).not.toHaveBeenCalled();
+            expect(fakeFs.userDocRef.set).not.toHaveBeenCalled();
           });
       });
 
@@ -211,7 +136,7 @@ describe('sagas', () => {
           .dispatch(errorActions.setErrorMessage('Something went wrong'))
           .silentRun()
           .then(() => {
-            expect(fakeUserDocRef.set).not.toHaveBeenCalled();
+            expect(fakeFs.userDocRef.set).not.toHaveBeenCalled();
           });
       });
     });
