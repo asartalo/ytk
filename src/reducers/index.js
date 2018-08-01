@@ -4,9 +4,13 @@
 
 import { combineReducers } from 'redux';
 
-import error from './error';
-import currentUser from './currentUser';
-import { wrapReducers } from './firestore';
 import db, { auth } from 'config/firebase';
 
-export default combineReducers(wrapReducers({ currentUser, error }, db, auth));
+import error from './error';
+import currentUser from './currentUser';
+import party from './party';
+import { wrapReducers } from './firestore';
+
+export default combineReducers(
+  wrapReducers({ currentUser, error, party }, db, auth)
+);

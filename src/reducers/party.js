@@ -1,5 +1,17 @@
 import { ActionTypes as types } from '../constants';
 
+const defaultState = {
+  name: '',
+};
+
 export default function party(state = defaultState, action = {}) {
-  return state;
+  switch (action.type) {
+    case types.PARTY_NEW:
+      return {
+        ...state,
+        ...action.data,
+      };
+    default:
+      return state;
+  }
 }

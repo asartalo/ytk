@@ -1,36 +1,22 @@
 import { ActionTypes as types } from '../constants';
+import action from 'helpers/action';
 
 export function setName(name) {
-  return {
-    type: types.CURRENT_USER_SET_NAME,
-    data: name,
-  };
+  return action(types.CURRENT_USER_SET_NAME, name);
 }
 
 export function setNameAndIntent(name, intent) {
-  return {
-    type: types.CURRENT_USER_SET_NAME_AND_INTENT,
-    data: { name, intent },
-  };
+  return action(types.CURRENT_USER_SET_NAME_AND_INTENT, { name, intent });
 }
 
 export function setParty(partyId) {
-  return {
-    type: types.CURRENT_USER_SET_PARTY,
-    data: partyId,
-  };
+  return action(types.CURRENT_USER_SET_PARTY, partyId);
 }
 
 export function setHomeState(state) {
-  return {
-    type: types.CURRENT_USER_UI_HOME_SET_STATE,
-    data: state,
-  };
+  return action(types.CURRENT_USER_UI_HOME_SET_STATE, state);
 }
 
 export function loadUser(user) {
-  return {
-    type: types.CURRENT_USER_LOAD_USER,
-    data: user,
-  };
+  return action(types.CURRENT_USER_LOAD_USER, user);
 }

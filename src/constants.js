@@ -4,12 +4,17 @@ export const ActionTypes = enforcedActionTypes(
   // Errors
   'ERROR_SET_MESSAGE',
 
-  // currentUserActions
+  // currentUser
   'CURRENT_USER_SET_NAME',
   'CURRENT_USER_SET_NAME_AND_INTENT',
   'CURRENT_USER_SET_PARTY',
   'CURRENT_USER_UI_HOME_SET_STATE',
   'CURRENT_USER_LOAD_USER',
+
+  // party
+  'PARTY_NEW',
+  'PARTY_NEW_SUCCESS',
+  'PARTY_NEW_ERROR',
 
   // firestore
   'FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST',

@@ -1,13 +1,16 @@
 import { expectSaga } from 'redux-saga-test-plan';
+import { mockRandomForEach } from 'jest-mock-random';
 
-import { currentUserActions, errorActions } from 'actions';
+import { currentUserActions, errorActions, partyActions } from 'actions';
 import rootReducer from 'reducers/index';
 
-import setup, {
+import {
   signInAnonymouslySuccess,
   signInAnonymouslyError,
   syncReady,
-} from './sagas';
+} from 'actions/firestoreActions';
+
+import setup from './sagas';
 
 describe('sagas', () => {
   let sagas, db, auth;
@@ -15,10 +18,16 @@ describe('sagas', () => {
     fakeResponse,
     signInResponse,
     fakeUserData,
+    fakePartyData,
     fakeUserDoc,
+    fakePartyDoc,
     fakeUserDocResponse,
+    fakePartyDocResponse,
+    fakePartyDocFunc,
     fakeUserDocRef,
-    fakeCollection;
+    fakePartyDocRef,
+    fakeCollection,
+    partySetMock;
 
   beforeEach(() => {
     fakeAuthUser = { uid: 'FAKEUID' };
@@ -45,19 +54,41 @@ describe('sagas', () => {
         setTimeout(resolve, 0, fakeUserDoc);
       });
 
-    let setMock = jest.fn();
-    setMock.mockReturnValue(
+    fakePartyDocResponse = () =>
+      new Promise(resolve => {
+        setTimeout(resolve, 0, fakePartyDoc);
+      });
+
+    let userSetMock = jest.fn();
+    userSetMock.mockReturnValue(
       new Promise(resolve => {
         setTimeout(resolve, 0);
       })
     );
+
+    partySetMock = jest.fn();
+    partySetMock.mockReturnValue(
+      new Promise(resolve => {
+        setTimeout(resolve, 0);
+      })
+    );
+
     fakeUserDocRef = {
       get: () => fakeUserDocResponse(),
-      set: setMock,
+      set: userSetMock,
     };
 
-    fakeCollection = collection => ({
-      doc: uid => fakeUserDocRef,
+    fakePartyDocRef = {
+      get: () => fakePartyDocResponse(),
+      set: partySetMock,
+    };
+
+    fakePartyDocFunc = jest.fn(id => fakePartyDocRef);
+    fakeCollection = jest.fn(collection => {
+      return {
+        users: { doc: jest.fn(uid => fakeUserDocRef) },
+        parties: { doc: fakePartyDocFunc },
+      }[collection];
     });
 
     db = {

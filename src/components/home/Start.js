@@ -1,47 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import HomeButton from 'components/ytk/HomeButton';
-import TextField from '@material-ui/core/TextField';
-
-const styles = theme => ({
-  mainTitle: {
-    ...theme.typography.display1,
-    fontWeight: 300,
-    color: theme.palette.text.primary,
-  },
-  spacer: {
-    margin: `${theme.spacing.unit * 5}px`,
-  },
-});
+import StartForm from './StartForm';
 
 class Start extends Component {
   static propTypes = {
     children: PropTypes.node,
-    classes: PropTypes.object.isRequired,
     userName: PropTypes.string.isRequired,
+    onPartySet: PropTypes.func.isRequired,
   };
 
   render() {
-    const { userName, classes } = this.props;
-    return (
-      <div className="Start">
-        <h1 className={classes.mainTitle}>Hello, {userName}</h1>
-        <p>Let's get started!</p>
-        <form>
-          <TextField
-            fullWidth
-            required
-            label="Party Name"
-            id="new-party-name"
-          />
-          <div className={classes.spacer}>
-            <HomeButton type="submit">Start a Party</HomeButton>
-          </div>
-        </form>
-      </div>
-    );
+    const { userName, onPartySet } = this.props;
+    return <StartForm userName={userName} onPartySet={onPartySet} />;
   }
 }
 
-export default withStyles(styles)(Start);
+export default Start;

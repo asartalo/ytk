@@ -13,47 +13,20 @@ import {
 import { ActionTypes as types } from '../constants';
 import { setHomeState, loadUser } from 'actions/currentUserActions';
 import { setErrorMessage } from 'actions/errorActions';
-import action from 'helpers/action';
+import {
+  getUserDataError,
+  getUserDataSuccess,
+  saveUserError,
+  saveUserStart,
+  saveUserSuccess,
+  signInAnonymouslyError,
+  signInAnonymouslyRequest,
+  signInAnonymouslySuccess,
+  syncReady,
+  userDataDoesNotExist,
+} from 'actions/firestoreActions';
 
-export function signInAnonymouslyRequest() {
-  return action(types.FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST);
-}
-
-export function signInAnonymouslySuccess(response) {
-  return action(types.FIRESTORE_SIGN_IN_ANONYMOUSLY_SUCCESS, response);
-}
-
-export function signInAnonymouslyError(error) {
-  return action(types.FIRESTORE_SIGN_IN_ANONYMOUSLY_ERROR, error);
-}
-
-export function getUserDataSuccess(data) {
-  return action(types.FIRESTORE_GETTING_USER_DATA_SUCCESS, data);
-}
-
-export function getUserDataError(error) {
-  return action(types.FIRESTORE_GETTING_USER_DATA_ERROR);
-}
-
-export function userDataDoesNotExist(doc) {
-  return action(types.FIRESTORE_USER_DATA_DOES_NOT_EXIST);
-}
-
-export function saveUserStart(user, uid) {
-  return action(types.FIRESTORE_SAVE_USER_DATA);
-}
-
-export function saveUserError(error) {
-  return action(types.FIRESTORE_SAVE_USER_DATA_ERROR);
-}
-
-export function saveUserSuccess(user) {
-  return action(types.FIRESTORE_SAVE_USER_DATA_SUCCESS);
-}
-
-export function syncReady() {
-  return action(types.FIRESTORE_SYNC_READY);
-}
+import partySagas from './partySagas';
 
 export default function setup(db, auth) {
   const timedOutSignIn = {
@@ -96,12 +69,12 @@ export default function setup(db, auth) {
   }
 
   let usersRef;
-  const usersCollection = function() {
+  function usersCollection() {
     if (!usersRef) {
       usersRef = db.collection('users');
     }
     return usersRef;
-  };
+  }
 
   let currentUserRef;
   function getCurrentUserFs(uid) {
@@ -179,19 +152,7 @@ export default function setup(db, auth) {
     );
   }
 
-  // TODO: This could loop?
-  // function* watchSaveUserSuccess() {
-  //   yield takeLatest(types.FIRESTORE_SAVE_USER_DATA_SUCCESS, loadUser);
-  // }
-  //
-  // function* loadUser(user) {
-  //   const { currentUser, uid } = yield select((state) => {
-  //   return {
-  //     currentUser: state.currentUser,
-  //     uid: state.firestore.uid,
-  //   };
-  //   });
-  // }
+  const { watchNewParty } = partySagas(db, auth);
 
   function* rootSaga() {
     yield all([
@@ -199,6 +160,7 @@ export default function setup(db, auth) {
       watchSignInSuccess(),
       watchSignInError(),
       syncUserChanges(),
+      watchNewParty(),
       // watchSaveUserSuccess(),
     ]);
   }
@@ -210,6 +172,7 @@ export default function setup(db, auth) {
     retrieveUserData,
     timedOutSignIn,
     syncUserChanges,
+    watchNewParty,
     saveUser,
     rootSaga,
   };
