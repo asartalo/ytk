@@ -22,16 +22,11 @@ export class Home extends Component {
   constructor(props) {
     super(props);
     this.handleNameSet = this.handleNameSet.bind(this);
-    this.handlePartySet = this.handlePartySet.bind(this);
     this.handleInputStarted = this.handleInputStarted.bind(this);
   }
 
   handleNameSet(name, intent) {
     this.props.dispatch(currentUserActions.setNameAndIntent(name, intent));
-  }
-
-  handlePartySet(partyId) {
-    this.props.dispatch(currentUserActions.setParty(partyId));
   }
 
   handleInputStarted() {
@@ -42,13 +37,9 @@ export class Home extends Component {
     const { currentUser } = this.props;
     if (currentUser.name && currentUser.intent) {
       if (currentUser.intent === 'join') {
-        return (
-          <Join onPartySet={this.handlePartySet} userName={currentUser.name} />
-        );
+        return <Join userName={currentUser.name} />;
       }
-      return (
-        <Start onPartySet={this.handlePartySet} userName={currentUser.name} />
-      );
+      return <Start />;
     } else {
       return (
         <NameForm

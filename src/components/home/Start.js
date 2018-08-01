@@ -1,18 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { newParty } from 'actions/partyActions';
 import StartForm from './StartForm';
 
-class Start extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    userName: PropTypes.string.isRequired,
-    onPartySet: PropTypes.func.isRequired,
+export function Start(props) {
+  const { dispatch, userName } = props;
+  const handlePartySet = party => {
+    dispatch(newParty(party));
   };
 
-  render() {
-    const { userName, onPartySet } = this.props;
-    return <StartForm userName={userName} onPartySet={onPartySet} />;
-  }
+  return <StartForm userName={userName} onPartySet={handlePartySet} />;
 }
 
-export default Start;
+Start.propTypes = {
+  children: PropTypes.node,
+  userName: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect(state => {
+  return { userName: state.currentUser.name };
+})(Start);

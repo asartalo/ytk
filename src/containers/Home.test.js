@@ -132,30 +132,4 @@ describe('Home', () => {
       });
     });
   });
-
-  describe('Start and callback', () => {
-    let start;
-    beforeEach(() => {
-      props.currentUser.name = 'Laura';
-      props.currentUser.intent = 'start';
-      home = mountHome();
-      start = home.find(Start);
-    });
-
-    it('sets handlePartySet as onPartySet listener', () => {
-      expect(start).toHaveProp('onPartySet', home.instance().handlePartySet);
-    });
-
-    describe('when #handlePartySet() is called', () => {
-      beforeEach(() => {
-        home.instance().handlePartySet('party-id');
-      });
-
-      it('dispatches a set party action', () => {
-        expect(props.dispatch).toHaveBeenCalledWith(
-          currentUserActions.setParty('party-id')
-        );
-      });
-    });
-  });
 });
