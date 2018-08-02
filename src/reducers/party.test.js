@@ -14,8 +14,8 @@ describe('party', () => {
     });
   });
 
-  it('handles PARTY_NEW action', () => {
-    const action = actions.newParty({ name: 'New Year' });
+  it('handles PARTY_LOAD action', () => {
+    const action = actions.loadParty({ name: 'New Year' });
     newState = party(initialState, action);
     expect(newState.name).toEqual('New Year');
   });

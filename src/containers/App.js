@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ScrollContext } from 'react-router-scroll-4';
 
 import Home from './Home';
+import Party from './Party';
 import Body from 'components/ytk/Body';
 
 class App extends Component {
@@ -14,6 +15,7 @@ class App extends Component {
             <Body>
               <Switch>
                 <Route exact path="/" component={Home} />
+                <Route path="/:party" component={Party} />
               </Switch>
             </Body>
           </ScrollContext>

@@ -20,6 +20,11 @@ export default function fakeFirestore(jest) {
     data: () => fakeFs.userData,
   };
 
+  fakeFs.partyDoc = {
+    exists: true,
+    data: () => fakeFs.partyData,
+  };
+
   fakeFs.userDocResponse = () =>
     new Promise(resolve => {
       setTimeout(resolve, 0, fakeFs.userDoc);
@@ -49,8 +54,9 @@ export default function fakeFirestore(jest) {
     set: userSetMock,
   };
 
+  fakeFs.partyGetMock = jest.fn(() => fakeFs.partyDocResponse());
   fakeFs.partyDocRef = {
-    get: () => fakeFs.partyDocResponse(),
+    get: fakeFs.partyGetMock,
     set: fakeFs.partySetMock,
   };
 

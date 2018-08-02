@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from './AppBar';
 import Themer, { theme } from './Themer';
 
 const primaryText = theme.palette.text.primary;
@@ -17,21 +16,11 @@ const styles = {
 };
 
 class Body extends Component {
-  renderAppBar() {
-    if (false) {
-      return <AppBar />;
-    }
-    return null;
-  }
-
   render() {
     const { classes, children } = this.props;
     return (
       <Themer>
-        <div className={classes.body}>
-          {this.renderAppBar()}
-          {children}
-        </div>
+        <div className={classes.body}>{children}</div>
       </Themer>
     );
   }

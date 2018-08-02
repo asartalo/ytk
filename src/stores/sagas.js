@@ -6,7 +6,6 @@ import {
   apply,
   put,
   race,
-  select,
   takeLatest,
 } from 'redux-saga/effects';
 
@@ -25,6 +24,7 @@ import {
   syncReady,
   userDataDoesNotExist,
 } from 'actions/firestoreActions';
+import { getUserAndUidFromState, getUserFromState } from './sagasCommon';
 
 import partySagas from './partySagas';
 
@@ -84,17 +84,6 @@ export default function setup(db, auth) {
     return currentUserRef;
   }
 
-  function getUserAndIdFromState() {
-    return select(({ currentUser, firestore }) => ({
-      currentUser,
-      uid: firestore.uid,
-    }));
-  }
-
-  function getUserFromState() {
-    return select(({ currentUser }) => currentUser);
-  }
-
   function setUserLoadedState(user) {
     return user.homeState === 'loading' || !user.homeState
       ? { ...user, homeState: 'loaded' }
@@ -102,7 +91,7 @@ export default function setup(db, auth) {
   }
 
   function* retrieveUserData() {
-    let { uid } = yield getUserAndIdFromState();
+    let { uid } = yield getUserAndUidFromState();
     const currentUserRef = getCurrentUserFs(uid);
     let doc;
     try {
@@ -140,7 +129,7 @@ export default function setup(db, auth) {
   }
 
   function* saveUserWrap() {
-    const { currentUser, uid } = yield getUserAndIdFromState();
+    const { currentUser, uid } = yield getUserAndUidFromState();
     yield call(saveUser, currentUser, uid);
   }
 
@@ -152,7 +141,7 @@ export default function setup(db, auth) {
     );
   }
 
-  const { watchNewParty } = partySagas(db, auth);
+  const { allPartySagas } = partySagas(db, auth);
 
   function* rootSaga() {
     yield all([
@@ -160,8 +149,7 @@ export default function setup(db, auth) {
       watchSignInSuccess(),
       watchSignInError(),
       syncUserChanges(),
-      watchNewParty(),
-      // watchSaveUserSuccess(),
+      allPartySagas(),
     ]);
   }
 
@@ -172,7 +160,6 @@ export default function setup(db, auth) {
     retrieveUserData,
     timedOutSignIn,
     syncUserChanges,
-    watchNewParty,
     saveUser,
     rootSaga,
   };

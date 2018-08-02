@@ -2,21 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { currentUserShape } from 'components/propTypes';
 import { currentUserActions } from 'actions';
 import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
+import { Redirect } from 'react-router';
 
 export class Home extends Component {
   static propTypes = {
     className: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
-    currentUser: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      intent: PropTypes.string.isRequired,
-      homeState: PropTypes.string.isRequired,
-    }).isRequired,
+    currentUser: currentUserShape.isRequired,
   };
 
   constructor(props) {
@@ -35,6 +33,9 @@ export class Home extends Component {
 
   renderHomeBody() {
     const { currentUser } = this.props;
+    if (currentUser.party) {
+      return <Redirect to={`/${currentUser.party}`} />;
+    }
     if (currentUser.name && currentUser.intent) {
       if (currentUser.intent === 'join') {
         return <Join userName={currentUser.name} />;

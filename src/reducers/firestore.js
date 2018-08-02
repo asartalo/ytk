@@ -1,47 +1,13 @@
 import { ActionTypes as types } from '../constants';
 
-const wrapCurrentUser = (currentUser, db, auth) => {
-  return (state, action) => {
-    const newState = currentUser(state, action);
-    if (newState !== state) {
-      // something changed
-      // TODO: save data
-    }
-    switch (action.type) {
-      case types.FIRESTORE_GETTING_USER_DATA_SUCCESS:
-        return {
-          ...newState,
-          ...action.data,
-        };
-      case types.FIRESTORE_SIGN_IN_ANONYMOUSLY_ERROR:
-        return {
-          ...newState,
-          homeState: 'loaded',
-        };
-
-      default:
-        return newState;
-    }
-  };
-};
-
-export const wrapReducers = (reducers, db, auth) => {
-  const { currentUser, error } = reducers;
-
-  return {
-    currentUser: wrapCurrentUser(currentUser, db, auth),
-    firestore: firestore,
-    error,
-  };
-};
-
 const defaultState = {
   signedIn: false,
   userDataLoaded: false,
+  partyLoaded: false,
   uid: null,
 };
 
-export function firestore(state = defaultState, action = {}) {
+export default function firestore(state = defaultState, action = {}) {
   switch (action.type) {
     case types.FIRESTORE_SIGN_IN_ANONYMOUSLY_SUCCESS:
       return {

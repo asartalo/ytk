@@ -15,6 +15,8 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_NEW',
   'PARTY_NEW_SUCCESS',
   'PARTY_NEW_ERROR',
+  'PARTY_LOAD',
+  'PARTY_GET',
 
   // firestore
   'FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST',
