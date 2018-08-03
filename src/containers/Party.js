@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { partyActions } from 'actions';
 import { currentUserShape, partyShape } from 'components/propTypes';
-import AppBar from 'components/ytk/AppBar';
 import Body from 'components/ytk/Body';
 
 export class Party extends Component {
@@ -25,7 +24,6 @@ export class Party extends Component {
     const { party } = this.props;
     return (
       <Body className="Party">
-        <AppBar />
         <h1>{party.name}</h1>
       </Body>
     );

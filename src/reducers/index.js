@@ -8,5 +8,12 @@ import error from './error';
 import currentUser from './currentUser';
 import party from './party';
 import firestore from './firestore';
+import ui from './ui';
 
-export default combineReducers({ currentUser, firestore, error, party });
+export default combineReducers({
+  currentUser,
+  firestore,
+  error,
+  party,
+  ui,
+});

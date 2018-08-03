@@ -1,25 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { newParty } from 'actions/partyActions';
+import { clearNewPartyCreated } from 'actions/uiActions';
 import StartForm from './StartForm';
 
-export function Start(props) {
-  const { dispatch, userName } = props;
-  const handlePartySet = party => {
-    dispatch(newParty(party));
+export class Start extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    userName: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
-  return <StartForm userName={userName} onPartySet={handlePartySet} />;
+  constructor(props) {
+    super(props);
+    this.handlePartySet = this.handlePartySet.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(clearNewPartyCreated());
+  }
+
+  handlePartySet(party) {
+    this.props.dispatch(newParty(party));
+  }
+
+  render() {
+    const { newPartyCreated, userName } = this.props;
+    if (newPartyCreated) {
+      const redirectPath = `/${newPartyCreated}`;
+      return <Redirect to={redirectPath} />;
+    } else {
+      return <StartForm userName={userName} onPartySet={this.handlePartySet} />;
+    }
+  }
 }
 
-Start.propTypes = {
-  children: PropTypes.node,
-  userName: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
-
-export default connect(state => {
-  return { userName: state.currentUser.name };
+export default connect(({ currentUser, ui }) => {
+  return {
+    userName: currentUser.name,
+    newPartyCreated: ui.newPartyCreated,
+  };
 })(Start);

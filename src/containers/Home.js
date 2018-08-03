@@ -8,7 +8,6 @@ import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
-import { Redirect } from 'react-router';
 
 export class Home extends Component {
   static propTypes = {
@@ -33,9 +32,6 @@ export class Home extends Component {
 
   renderHomeBody() {
     const { currentUser } = this.props;
-    if (currentUser.party) {
-      return <Redirect to={`/${currentUser.party}`} />;
-    }
     if (currentUser.name && currentUser.intent) {
       if (currentUser.intent === 'join') {
         return <Join userName={currentUser.name} />;

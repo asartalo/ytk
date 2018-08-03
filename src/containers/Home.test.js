@@ -6,7 +6,6 @@ import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
 import { currentUserActions } from 'actions';
-import { Redirect } from 'react-router';
 
 describe('Home', () => {
   let home, props;
@@ -33,11 +32,6 @@ describe('Home', () => {
   it('sets homeState prop of HomePage to value of currentUser.homeState', () => {
     const page = mountHome().find(HomePage);
     expect(page.prop('homeState')).toEqual(props.currentUser.homeState);
-  });
-
-  it('does not render a Redirect by default', () => {
-    const redirect = mountHome().find(Redirect);
-    expect(redirect).not.toExist();
   });
 
   describe('NameForm and callback', () => {
@@ -136,22 +130,6 @@ describe('Home', () => {
         const form = mountHome().find(NameForm);
         expect(form).not.toExist();
       });
-    });
-  });
-
-  describe('when the party is set', () => {
-    let redirect;
-    beforeEach(() => {
-      props.currentUser.party = 'the-great-party-2568';
-      redirect = mountHome().find(Redirect);
-    });
-
-    it('renders redirect', () => {
-      expect(redirect).toExist();
-    });
-
-    it('redirects to party page', () => {
-      expect(redirect).toHaveProp('to', '/the-great-party-2568');
     });
   });
 });

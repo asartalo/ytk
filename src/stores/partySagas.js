@@ -31,10 +31,10 @@ export default function partySagas(db, auth) {
   }
 
   function* watchNewPartySuccess() {
-    yield takeEvery(types.PARTY_NEW_SUCCESS, assignParty);
+    yield takeEvery(types.PARTY_NEW_SUCCESS, announceNewParty);
   }
 
-  function* assignParty({ data }) {
+  function* announceNewParty({ data }) {
     yield put(setParty(data.id));
   }
 
