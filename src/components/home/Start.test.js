@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Redirect } from 'react-router-dom';
-import createRouterContext from 'react-router-test-context';
+import ReactRouterEnzymeContext from 'react-router-enzyme-context';
 
 import { newParty } from 'actions/partyActions';
 import { clearNewPartyCreated } from 'actions/uiActions';
@@ -12,8 +12,8 @@ describe('Start', () => {
   let component, props, redirect;
 
   function mountStart() {
-    const context = createRouterContext();
-    return shallow(<Start {...props} />, { context });
+    const options = new ReactRouterEnzymeContext();
+    return mount(<Start {...props} />, options.get());
   }
 
   beforeEach(() => {
