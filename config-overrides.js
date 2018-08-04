@@ -4,15 +4,12 @@ module.exports = {
   },
 
   jest: function(config) {
-    config.bail = true;
-    config.notify = true;
-    return {
-      ...config,
+    return Object.assign({}, config, {
       // bail: true,
-      // notify: true,
+      notify: true,
       // notifyMode: 'failure-success', // not yet supported
-      verbose: true,
-    };
+      verbose: false,
+    });
   },
 
   devServer: function(configFunction) {
