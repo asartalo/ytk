@@ -14,12 +14,11 @@
     "prettier": "^1.13.7",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
-    "react-app-rewired": "^1.5.2",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-router-scroll-4": "^1.0.0-beta.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0"
@@ -34,12 +33,12 @@
     "precommit": "lint-staged",
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-    "start-js": "NODE_PATH=src/ react-app-rewired start",
+    "start-js": "NODE_PATH=src/ react-scripts start",
     "start": "NODE_PATH=src/ npm-run-all -p watch-css start-js",
-    "build-js": "NODE_PATH=src/ react-app-rewired build",
+    "build-js": "NODE_PATH=src/ react-scripts build",
     "build": "NODE_PATH=src/ npm-run-all build-css build-js",
-    "test": "NODE_PATH=src/ react-app-rewired test --env=jsdom",
-    "test-coverage": "NODE_PATH=src/ react-app-rewired test --env=jsdom --coverage",
+    "test": "NODE_PATH=src/ react-scripts test --env=jsdom",
+    "test-coverage": "NODE_PATH=src/ react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
@@ -52,5 +51,17 @@
     "mock-local-storage": "^1.0.5",
     "react-router-enzyme-context": "^1.2.0",
     "redux-saga-test-plan": "^3.7.0"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
   }
 }
