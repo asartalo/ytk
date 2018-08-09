@@ -9,15 +9,17 @@ import {
   signInAnonymouslyError,
   syncReady,
 } from 'actions/firestoreActions';
+import YtkFire from '../YtkFire';
 
 import setup from './sagas';
 
 describe('sagas', () => {
-  let sagas, fakeFs;
+  let sagas, fakeFs, ytkFire;
 
   beforeEach(() => {
     fakeFs = fakeFirestore(jest);
-    sagas = setup(fakeFs.db, fakeFs.auth);
+    ytkFire = new YtkFire(fakeFs.db, fakeFs.auth);
+    sagas = setup(ytkFire);
   });
 
   describe('rootSagas', () => {
@@ -34,10 +36,12 @@ describe('sagas', () => {
       return expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
         .hasFinalState(finalState)
-        .apply(fakeFs.auth, fakeFs.auth.signInAnonymously)
         .put(signInAnonymouslySuccess(fakeFs.authResponse))
         .not.put.like(signInAnonymouslyError())
-        .silentRun();
+        .silentRun()
+        .then(() => {
+          expect(fakeFs.auth.signInAnonymously).toHaveBeenCalled();
+        });
     });
 
     test('happy path: new user', () => {
@@ -64,11 +68,11 @@ describe('sagas', () => {
 
     test('failed path: error on signIn', () => {
       const error = Error('Something happened while signing in');
-      const promise = new Promise(function(resolve, reject) {
-        setTimeout(reject, 10, error);
-      });
+      const promise = () =>
+        new Promise(function(resolve, reject) {
+          setTimeout(reject, 0, error);
+        });
 
-      fakeFs._set('signInResponse', promise);
       let finalState = rootReducer({}, {});
       finalState = {
         ...finalState,
@@ -87,12 +91,13 @@ describe('sagas', () => {
         },
       };
 
-      return expectSaga(sagas.rootSaga)
+      const saga = expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
         .not.call.fn(fakeFs.userDocRef.get)
         .put(signInAnonymouslyError(error))
-        .hasFinalState(finalState)
-        .silentRun();
+        .hasFinalState(finalState);
+      fakeFs._set('signInResponse', promise());
+      return saga.silentRun();
     });
 
     describe('syncUserChanges', () => {
@@ -107,17 +112,18 @@ describe('sagas', () => {
         );
       });
 
-      it('saves user when changes are made', () => {
+      it('saves user when changes are made', async () => {
         const savedUser = {
           ...initialState.currentUser,
           party: 'party-night-123',
         };
-        return syncSaga
+        await ytkFire.signInAnonymously();
+        await syncSaga
           .dispatch(syncReady())
           .dispatch(currentUserActions.setParty('party-night-123'))
           .silentRun()
           .then(() => {
-            expect(fakeFs.userDocRef.set).toHaveBeenCalledWith(savedUser);
+            expect(fakeFs.userSetMock).toHaveBeenCalledWith(savedUser);
           });
       });
 
@@ -130,8 +136,9 @@ describe('sagas', () => {
           });
       });
 
-      it('does nothing when no user change is dispatched', () => {
-        return syncSaga
+      it('does nothing when no user change is dispatched', async () => {
+        await ytkFire.signInAnonymously();
+        await syncSaga
           .dispatch(syncReady())
           .dispatch(errorActions.setErrorMessage('Something went wrong'))
           .silentRun()

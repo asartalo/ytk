@@ -12,6 +12,7 @@ export class Start extends Component {
     children: PropTypes.node,
     userName: PropTypes.string.isRequired,
     dispatch: PropTypes.func.isRequired,
+    newPartyCreated: PropTypes.string,
   };
 
   constructor(props) {

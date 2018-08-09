@@ -21,7 +21,7 @@ export function getUserDataError(error) {
   return action(types.FIRESTORE_GETTING_USER_DATA_ERROR);
 }
 
-export function userDataDoesNotExist(doc) {
+export function userDataDoesNotExist() {
   return action(types.FIRESTORE_USER_DATA_DOES_NOT_EXIST);
 }
 

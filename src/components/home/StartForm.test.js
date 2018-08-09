@@ -12,6 +12,11 @@ describe('StartForm', () => {
     component = mount(<StartForm {...props} />);
   });
 
+  it('renders text input', () => {
+    const input = component.find('input#new-party-name');
+    expect(input).toExist();
+  });
+
   it('calls onPartySet with party values', () => {
     component
       .find('input#new-party-name')

@@ -6,24 +6,28 @@ import { currentUserActions, partyActions } from 'actions';
 import rootReducer from 'reducers/index';
 import { syncReady } from 'actions/firestoreActions';
 import setup from './partySagas';
+import YtkFire from '../YtkFire';
 
 describe('partySagas', () => {
-  let sagas, fakeFs;
+  let sagas, fakeFs, ytkFire;
 
   beforeEach(() => {
     fakeFs = fakeFirestore(jest);
-    sagas = setup(fakeFs.db, fakeFs.auth);
+    ytkFire = new YtkFire(fakeFs.db, fakeFs.auth);
+    sagas = setup(ytkFire);
   });
 
   describe('watchNewParty', () => {
     let initialState, saga, newParty;
-    beforeEach(() => {
+    beforeEach(async () => {
       initialState = rootReducer({}, {});
       initialState.currentUser = {
         ...initialState.currentUser,
         name: 'Juan',
       };
-      initialState.firestore.uid = 'AUID';
+      // initialState.firestore.uid = 'AUID';
+      fakeFs.authUser.uid = 'AUID';
+      await ytkFire.signInAnonymously();
       newParty = { name: 'Party Poopy' };
       saga = expectSaga(sagas.watchNewParty).withReducer(
         rootReducer,
@@ -112,13 +116,14 @@ describe('partySagas', () => {
 
   describe('watchGetParty', () => {
     let initialState, saga, party, partyId;
-    beforeEach(() => {
+    beforeEach(async () => {
       initialState = rootReducer({}, {});
       initialState.currentUser = {
         ...initialState.currentUser,
         name: 'Pedro',
       };
-      initialState.firestore.uid = 'PDoA';
+      fakeFs.authUser.uid = 'PDoA';
+      await ytkFire.signInAnonymously();
       partyId = 'pedro-penduko-1234';
       saga = expectSaga(sagas.watchGetParty).withReducer(
         rootReducer,

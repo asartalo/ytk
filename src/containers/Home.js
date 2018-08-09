@@ -34,7 +34,7 @@ export class Home extends Component {
     const { currentUser } = this.props;
     if (currentUser.name && currentUser.intent) {
       if (currentUser.intent === 'join') {
-        return <Join userName={currentUser.name} />;
+        return <Join />;
       }
       return <Start />;
     } else {

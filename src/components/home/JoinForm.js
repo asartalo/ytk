@@ -15,45 +15,45 @@ const styles = theme => ({
   },
 });
 
-export class StartForm extends Component {
+class JoinForm extends Component {
   static propTypes = {
     children: PropTypes.node,
     classes: PropTypes.object.isRequired,
-    userName: PropTypes.string,
+    userName: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
-    this.state = { name: '' };
+    this.state = { id: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handlePartyIdChange = this.handlePartyIdChange.bind(this);
   }
 
-  handleNameChange(e) {
-    this.setState({ name: e.target.value });
+  handlePartyIdChange(e) {
+    this.setState({ id: e.target.value });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onPartySet(this.state);
+    this.props.onPartySet(this.state.id);
   }
 
   render() {
     const { userName, classes } = this.props;
     return (
-      <div className="Start">
+      <div className="JoinForm">
         <h1 className={classes.mainTitle}>Hello, {userName}</h1>
-        <p>Let's get started!</p>
+        <p>Paste the link or the ID of the party to join</p>
         <form onSubmit={this.handleSubmit}>
           <TextField
             fullWidth
             required
-            label="Party Name"
-            id="new-party-name"
-            onChange={this.handleNameChange}
+            label="Party Link or ID"
+            id="new-party-id"
+            onChange={this.handlePartyIdChange}
           />
           <div className={classes.spacer}>
-            <HomeButton type="submit">Start a Party</HomeButton>
+            <HomeButton type="submit">Join the Party!</HomeButton>
           </div>
         </form>
       </div>
@@ -61,4 +61,4 @@ export class StartForm extends Component {
   }
 }
 
-export default withStyles(styles)(StartForm);
+export default withStyles(styles)(JoinForm);

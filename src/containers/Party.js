@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { partyActions } from 'actions';
 import { currentUserShape, partyShape } from 'components/propTypes';
 import Body from 'components/ytk/Body';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export class Party extends Component {
   static propTypes = {
@@ -15,18 +16,21 @@ export class Party extends Component {
     match: PropTypes.object.isRequired,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, match } = this.props;
     dispatch(partyActions.getParty(match.params.party));
   }
 
+  renderLoaderOrContent() {
+    if (this.props.party.name) {
+      return <h1>{this.props.party.name}</h1>;
+    } else {
+      return <CircularProgress />;
+    }
+  }
+
   render() {
-    const { party } = this.props;
-    return (
-      <Body className="Party">
-        <h1>{party.name}</h1>
-      </Body>
-    );
+    return <Body className="Party">{this.renderLoaderOrContent()}</Body>;
   }
 }
 

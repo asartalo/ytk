@@ -20,3 +20,23 @@ export function loadParty(party) {
 export function getParty(partyId) {
   return action(types.PARTY_GET, partyId);
 }
+
+export function getPartySuccess(id, party) {
+  return action(types.PARTY_GET_SUCCESS, { id, party });
+}
+
+export function getPartyError(partyId) {
+  return action(types.PARTY_GET_ERROR, partyId);
+}
+
+export function joinParty(partyId) {
+  return action(types.PARTY_JOIN, partyId);
+}
+
+export function joinPartySuccess(partyId) {
+  return action(types.PARTY_JOIN_SUCCESS, partyId);
+}
+
+export function joinPartyError(error) {
+  return action(types.PARTY_JOIN_ERROR, error);
+}

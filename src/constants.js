@@ -10,6 +10,7 @@ export const ActionTypes = enforcedActionTypes(
   'CURRENT_USER_SET_PARTY',
   'CURRENT_USER_UI_HOME_SET_STATE',
   'CURRENT_USER_LOAD_USER',
+  'CURRENT_USER_NOT_SIGNED_IN',
 
   // party
   'PARTY_NEW',
@@ -17,9 +18,15 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_NEW_ERROR',
   'PARTY_LOAD',
   'PARTY_GET',
+  'PARTY_GET_SUCCESS',
+  'PARTY_GET_ERROR',
+  'PARTY_JOIN',
+  'PARTY_JOIN_SUCCESS',
+  'PARTY_JOIN_ERROR',
 
   // UI
   'UI_NEW_PARTY_CREATED_CLEAR',
+  'UI_NEW_PARTY_JOINED_CLEAR',
 
   // firestore
   'FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST',

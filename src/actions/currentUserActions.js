@@ -20,3 +20,7 @@ export function setHomeState(state) {
 export function loadUser(user) {
   return action(types.CURRENT_USER_LOAD_USER, user);
 }
+
+export function userNotSignedIn() {
+  return action(types.CURRENT_USER_NOT_SIGNED_IN);
+}

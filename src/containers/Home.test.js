@@ -121,7 +121,7 @@ describe('Home', () => {
         props.currentUser.intent = 'join';
       });
 
-      it('renders Start', () => {
+      it('renders Join', () => {
         const start = mountHome().find(Join);
         expect(start).toExist();
       });

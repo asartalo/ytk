@@ -1,26 +1,44 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import HomeButton from 'components/ytk/HomeButton';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-const styles = theme => ({});
+import { joinParty } from 'actions/partyActions';
+import { clearNewPartyJoined } from 'actions/uiActions';
+import JoinForm from './JoinForm';
 
-class Join extends Component {
+export class Join extends Component {
   static propTypes = {
     children: PropTypes.node,
-    classes: PropTypes.object.isRequired,
     userName: PropTypes.string.isRequired,
+    newPartyJoined: PropTypes.string,
   };
 
+  constructor(props) {
+    super(props);
+    this.handlePartySet = this.handlePartySet.bind(this);
+  }
+
+  handlePartySet(partyId) {
+    this.props.dispatch(joinParty(partyId));
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(clearNewPartyJoined());
+  }
+
   render() {
-    const { userName } = this.props;
-    return (
-      <div className="Join">
-        <h1>Hello {userName}</h1>
-        <HomeButton>Join a Party</HomeButton>
-      </div>
-    );
+    const { newPartyJoined, userName } = this.props;
+    if (newPartyJoined) {
+      return <Redirect to={`/${newPartyJoined}`} />;
+    }
+    return <JoinForm userName={userName} onPartySet={this.handlePartySet} />;
   }
 }
 
-export default withStyles(styles)(Join);
+export default connect(({ currentUser, ui }) => {
+  return {
+    userName: currentUser.name,
+    newPartyJoined: ui.newPartyJoined,
+  };
+})(Join);

@@ -1,13 +1,4 @@
-import { delay } from 'redux-saga';
-import {
-  take,
-  call,
-  all,
-  apply,
-  put,
-  race,
-  takeLatest,
-} from 'redux-saga/effects';
+import { take, call, all, put, takeLatest } from 'redux-saga/effects';
 
 import { ActionTypes as types } from '../constants';
 import { setHomeState, loadUser } from 'actions/currentUserActions';
@@ -24,26 +15,18 @@ import {
   syncReady,
   userDataDoesNotExist,
 } from 'actions/firestoreActions';
-import { getUserAndUidFromState, getUserFromState } from './sagasCommon';
+import { getUserFromState } from './sagasCommon';
+import { UserDataDoesNotExist } from '../YtkFire';
 
 import partySagas from './partySagas';
 
-export default function setup(db, auth) {
-  const timedOutSignIn = {
-    response: apply(auth, auth.signInAnonymously),
-    timeout: delay(30000),
-  };
-
+export default function setup(ytkFire) {
   function* signInAnonymously() {
     yield put(signInAnonymouslyRequest());
     yield put(setHomeState('loading'));
     try {
-      const { response } = yield race(timedOutSignIn);
-      if (response) {
-        yield put(signInAnonymouslySuccess(response));
-      } else {
-        yield put(signInAnonymouslyError(Error('Sign in timeout')));
-      }
+      const response = yield ytkFire.signInAnonymously();
+      yield put(signInAnonymouslySuccess(response));
     } catch (error) {
       yield put(signInAnonymouslyError(error));
     }
@@ -68,22 +51,6 @@ export default function setup(db, auth) {
     yield put(setHomeState('loaded'));
   }
 
-  let usersRef;
-  function usersCollection() {
-    if (!usersRef) {
-      usersRef = db.collection('users');
-    }
-    return usersRef;
-  }
-
-  let currentUserRef;
-  function getCurrentUserFs(uid) {
-    if (currentUserRef) return currentUserRef;
-    if (!uid) throw Error('No UID SET');
-    currentUserRef = usersCollection().doc(uid);
-    return currentUserRef;
-  }
-
   function setUserLoadedState(user) {
     return user.homeState === 'loading' || !user.homeState
       ? { ...user, homeState: 'loaded' }
@@ -91,33 +58,29 @@ export default function setup(db, auth) {
   }
 
   function* retrieveUserData() {
-    let { uid } = yield getUserAndUidFromState();
-    const currentUserRef = getCurrentUserFs(uid);
-    let doc;
     try {
-      doc = yield apply(currentUserRef, currentUserRef.get);
-    } catch (error) {
-      yield put(getUserDataError(error));
-    }
-    if (doc.exists) {
-      const loadedUser = setUserLoadedState(doc.data());
+      const data = yield ytkFire.retrieveUserData();
+      const loadedUser = setUserLoadedState(data);
       yield put(getUserDataSuccess(loadedUser));
       yield* loadUserToState(loadedUser);
-    } else {
-      // set new data
-      yield put(userDataDoesNotExist(doc));
-      yield put(setHomeState('loaded'));
-      const currentUser = yield getUserFromState();
-      yield* saveUser(currentUser, uid);
+    } catch (error) {
+      if (error instanceof UserDataDoesNotExist) {
+        // set new data
+        yield put(userDataDoesNotExist());
+        yield put(setHomeState('loaded'));
+        const currentUser = yield getUserFromState();
+        yield* saveUser(currentUser);
+      } else {
+        yield put(getUserDataError(error));
+      }
     }
     yield put(syncReady());
   }
 
-  function* saveUser(user, uid) {
-    yield put(saveUserStart(user, uid));
+  function* saveUser(userData) {
+    yield put(saveUserStart(userData, ytkFire.uid));
     try {
-      const userRef = getCurrentUserFs(uid);
-      const savedUser = yield apply(userRef, userRef.set, [user]);
+      const savedUser = yield ytkFire.saveUser(userData);
       yield put(saveUserSuccess(savedUser));
     } catch (error) {
       yield put(saveUserError(error));
@@ -129,8 +92,8 @@ export default function setup(db, auth) {
   }
 
   function* saveUserWrap() {
-    const { currentUser, uid } = yield getUserAndUidFromState();
-    yield call(saveUser, currentUser, uid);
+    const currentUser = yield getUserFromState();
+    yield call(saveUser, currentUser);
   }
 
   function* syncUserChanges() {
@@ -141,7 +104,7 @@ export default function setup(db, auth) {
     );
   }
 
-  const { allPartySagas } = partySagas(db, auth);
+  const { allPartySagas } = partySagas(ytkFire);
 
   function* rootSaga() {
     yield all([
@@ -158,7 +121,6 @@ export default function setup(db, auth) {
     watchSignInSuccess,
     setUserLoadedState,
     retrieveUserData,
-    timedOutSignIn,
     syncUserChanges,
     saveUser,
     rootSaga,

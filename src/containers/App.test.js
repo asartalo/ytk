@@ -6,6 +6,8 @@ import store from 'stores/configureStore';
 
 import 'mock-local-storage';
 
+global.scrollTo = jest.fn();
+
 // Smoke
 describe('App', () => {
   it('renders without crashing', () => {

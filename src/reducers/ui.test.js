@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import { clearNewPartyCreated } from 'actions/uiActions';
+import { clearNewPartyCreated, clearNewPartyJoined } from 'actions/uiActions';
 import { newPartySuccess } from 'actions/partyActions';
 
 import ui from './ui';
@@ -15,6 +15,10 @@ describe('ui', () => {
     it('is null for newPartyCreated', () => {
       expect(initialState.newPartyCreated).toBe(null);
     });
+
+    it('is null for newPartyJoined', () => {
+      expect(initialState.newPartyJoined).toBe(null);
+    });
   });
 
   it('handles PARTY_NEW_SUCCESS', () => {
@@ -28,5 +32,12 @@ describe('ui', () => {
     const action = clearNewPartyCreated();
     const state = ui(initialState, action);
     expect(state.newPartyCreated).toBe(null);
+  });
+
+  it('handles UI_NEW_PARTY_JOINED_CLEAR', () => {
+    initialState.newPartyJoined = 'the-other-party-1112';
+    const action = clearNewPartyJoined();
+    const state = ui(initialState, action);
+    expect(state.newPartyJoined).toBe(null);
   });
 });

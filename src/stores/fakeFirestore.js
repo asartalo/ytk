@@ -35,11 +35,11 @@ export default function fakeFirestore(jest) {
       setTimeout(resolve, 0, fakeFs.partyDoc);
     });
 
-  let userSetMock = jest.fn();
-  userSetMock.mockReturnValue(
-    new Promise(resolve => {
-      setTimeout(resolve, 0);
-    })
+  fakeFs.userSetMock = jest.fn(
+    () =>
+      new Promise(resolve => {
+        setTimeout(resolve, 0);
+      })
   );
 
   fakeFs.partySetMock = jest.fn();
@@ -51,7 +51,7 @@ export default function fakeFirestore(jest) {
 
   fakeFs.userDocRef = {
     get: () => fakeFs.userDocResponse(),
-    set: userSetMock,
+    set: fakeFs.userSetMock,
   };
 
   fakeFs.partyGetMock = jest.fn(() => fakeFs.partyDocResponse());
@@ -61,16 +61,23 @@ export default function fakeFirestore(jest) {
   };
 
   fakeFs.partyDocFunc = jest.fn(id => fakeFs.partyDocRef);
+  fakeFs.usersCollectionDoc = jest.fn(uid => fakeFs.userDocRef);
   fakeFs.collection = jest.fn(collectionName => {
     return {
-      users: { doc: jest.fn(uid => fakeFs.userDocRef) },
+      users: { doc: fakeFs.usersCollectionDoc },
       parties: { doc: fakeFs.partyDocFunc },
     }[collectionName];
   });
 
-  fakeFs.db = { collection: fakeFs.collection };
+  fakeFs.runTransactionMock = jest.fn();
+
+  fakeFs.db = {
+    collection: fakeFs.collection,
+    runTransaction: fakeFs.runTransactionMock,
+  };
+  fakeFs.signInAnonymously = jest.fn(() => fakeFs.signInResponse);
   fakeFs.auth = {
-    signInAnonymously: () => fakeFs.signInResponse,
+    signInAnonymously: fakeFs.signInAnonymously,
   };
 
   fakeFs._set = (field, value) => {
