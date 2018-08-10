@@ -1,52 +1,65 @@
 import { expectSaga } from 'redux-saga-test-plan';
 
-import fakeFirestore from './fakeFirestore';
 import { currentUserActions, errorActions } from 'actions';
 import rootReducer from 'reducers/index';
 
+import * as promise from 'helpers/promise';
 import {
   signInAnonymouslySuccess,
   signInAnonymouslyError,
   syncReady,
 } from 'actions/firestoreActions';
-import YtkFire from '../YtkFire';
+import YtkFire, { UserDataDoesNotExist } from '../YtkFire';
 
 import setup from './sagas';
 
 describe('sagas', () => {
-  let sagas, fakeFs, ytkFire;
+  let sagas, ytkFire;
 
   beforeEach(() => {
-    fakeFs = fakeFirestore(jest);
-    ytkFire = new YtkFire(fakeFs.db, fakeFs.auth);
+    ytkFire = new YtkFire({}, {});
     sagas = setup(ytkFire);
   });
 
+  const fakeUserData = { name: 'John' };
+  const fakeUid = 'FAKEUID';
+  const fakeAuthResponse = { uid: fakeUid };
+
   describe('rootSagas', () => {
-    test('happy path: revisiting user', () => {
+    beforeEach(() => {
+      ytkFire.signInAnonymously = jest.fn(
+        promise.fnResolvesTo(fakeAuthResponse)
+      );
+      ytkFire.retrieveUserData = jest.fn(promise.fnResolvesTo(fakeUserData));
+      ytkFire.saveUser = jest.fn();
+    });
+
+    test('happy path: revisiting user', async () => {
       const finalState = rootReducer({}, {});
-      finalState.currentUser = { ...fakeFs.userData, homeState: 'loaded' };
+      finalState.currentUser = {
+        ...finalState.currentUser,
+        ...fakeUserData,
+        homeState: 'loaded',
+      };
       finalState.firestore = {
         ...finalState.firestore,
         signedIn: true,
         userDataLoaded: true,
-        uid: fakeFs.authUser.uid,
+        uid: fakeUid,
       };
 
-      return expectSaga(sagas.rootSaga)
+      expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
         .hasFinalState(finalState)
-        .put(signInAnonymouslySuccess(fakeFs.authResponse))
+        .put(signInAnonymouslySuccess(fakeAuthResponse))
         .not.put.like(signInAnonymouslyError())
-        .silentRun()
-        .then(() => {
-          expect(fakeFs.auth.signInAnonymously).toHaveBeenCalled();
-        });
+        .silentRun();
     });
 
     test('happy path: new user', () => {
-      fakeFs.userDoc = { exists: false };
-      // fakeFs.userData = ;
+      ytkFire.retrieveUserData = jest.fn(() => {
+        throw new UserDataDoesNotExist(fakeUid);
+      });
       const finalState = rootReducer({}, {});
       finalState.currentUser = {
         ...finalState.currentUser,
@@ -56,22 +69,19 @@ describe('sagas', () => {
         ...finalState.firestore,
         signedIn: true,
         userDataLoaded: true,
-        uid: fakeFs.authUser.uid,
+        uid: fakeUid,
       };
 
       return expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
-        .put(signInAnonymouslySuccess(fakeFs.authResponse))
+        .put(signInAnonymouslySuccess(fakeAuthResponse))
         .hasFinalState(finalState)
         .silentRun();
     });
 
     test('failed path: error on signIn', () => {
       const error = Error('Something happened while signing in');
-      const promise = () =>
-        new Promise(function(resolve, reject) {
-          setTimeout(reject, 0, error);
-        });
+      ytkFire.signInAnonymously = jest.fn(promise.fnRejectsWith(error));
 
       let finalState = rootReducer({}, {});
       finalState = {
@@ -93,10 +103,9 @@ describe('sagas', () => {
 
       const saga = expectSaga(sagas.rootSaga)
         .withReducer(rootReducer)
-        .not.call.fn(fakeFs.userDocRef.get)
+        .not.call.fn(ytkFire.retrieveUserData)
         .put(signInAnonymouslyError(error))
         .hasFinalState(finalState);
-      fakeFs._set('signInResponse', promise());
       return saga.silentRun();
     });
 
@@ -106,6 +115,7 @@ describe('sagas', () => {
         initialState = rootReducer({}, {});
         initialState.currentUser.name = 'Jane';
         initialState.firestore.uid = 'AUID';
+        ytkFire.uid = initialState.firestore.uid;
         syncSaga = expectSaga(sagas.syncUserChanges).withReducer(
           rootReducer,
           initialState
@@ -117,33 +127,29 @@ describe('sagas', () => {
           ...initialState.currentUser,
           party: 'party-night-123',
         };
-        await ytkFire.signInAnonymously();
         await syncSaga
           .dispatch(syncReady())
           .dispatch(currentUserActions.setParty('party-night-123'))
           .silentRun()
           .then(() => {
-            expect(fakeFs.userSetMock).toHaveBeenCalledWith(savedUser);
+            expect(ytkFire.saveUser).toHaveBeenCalledWith(savedUser);
           });
       });
 
-      it('does nothing while not sync ready', () => {
-        return syncSaga
+      it('does nothing while not sync ready', async () => {
+        await syncSaga
           .dispatch(currentUserActions.setParty('party-night-123'))
-          .silentRun()
-          .then(() => {
-            expect(fakeFs.userDocRef.set).not.toHaveBeenCalled();
-          });
+          .silentRun();
+        expect(ytkFire.saveUser).not.toHaveBeenCalled();
       });
 
       it('does nothing when no user change is dispatched', async () => {
-        await ytkFire.signInAnonymously();
         await syncSaga
           .dispatch(syncReady())
           .dispatch(errorActions.setErrorMessage('Something went wrong'))
           .silentRun()
           .then(() => {
-            expect(fakeFs.userDocRef.set).not.toHaveBeenCalled();
+            expect(ytkFire.saveUser).not.toHaveBeenCalled();
           });
       });
     });

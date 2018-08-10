@@ -1,13 +1,10 @@
+import * as promise from 'helpers/promise';
 export default function fakeFirestore(jest) {
   const fakeFs = {};
 
   fakeFs.authUser = { uid: 'FAKEUID' };
   fakeFs.authResponse = { user: fakeFs.authUser };
-  fakeFs.signInResponse = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(fakeFs.authResponse);
-    }, 0);
-  });
+  fakeFs.signInResponse = promise.resolvesTo(fakeFs.authResponse);
 
   fakeFs.userData = {
     name: 'John',
@@ -25,29 +22,11 @@ export default function fakeFirestore(jest) {
     data: () => fakeFs.partyData,
   };
 
-  fakeFs.userDocResponse = () =>
-    new Promise(resolve => {
-      setTimeout(resolve, 0, fakeFs.userDoc);
-    });
+  fakeFs.userDocResponse = promise.fnResolvesTo(fakeFs.userDoc);
+  fakeFs.partyDocResponse = promise.fnResolvesTo(fakeFs.partyDoc);
 
-  fakeFs.partyDocResponse = () =>
-    new Promise(resolve => {
-      setTimeout(resolve, 0, fakeFs.partyDoc);
-    });
-
-  fakeFs.userSetMock = jest.fn(
-    () =>
-      new Promise(resolve => {
-        setTimeout(resolve, 0);
-      })
-  );
-
-  fakeFs.partySetMock = jest.fn();
-  fakeFs.partySetMock.mockReturnValue(
-    new Promise(resolve => {
-      setTimeout(resolve, 0);
-    })
-  );
+  fakeFs.userSetMock = jest.fn(promise.fnResolvesTo(null));
+  fakeFs.partySetMock = jest.fn(promise.fnResolvesTo(null));
 
   fakeFs.userDocRef = {
     get: () => fakeFs.userDocResponse(),

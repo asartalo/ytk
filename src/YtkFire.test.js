@@ -1,3 +1,4 @@
+import * as promise from 'helpers/promise';
 import YtkFire, {
   TimeoutError,
   UserDataDoesNotExist,
@@ -44,12 +45,7 @@ describe('YtkFire', () => {
       let error;
       beforeEach(() => {
         error = Error('Something went wrong');
-        fakeFs.auth.signInAnonymously = jest.fn(
-          () =>
-            new Promise((_, reject) => {
-              setTimeout(reject, 0, error);
-            })
-        );
+        fakeFs.auth.signInAnonymously = jest.fn(promise.fnRejectsWith(error));
       });
 
       it('just throws the error', async () => {
@@ -64,11 +60,9 @@ describe('YtkFire', () => {
     describe('when the sign in times out', () => {
       let error;
       beforeEach(() => {
-        fakeFs.signInAnonymously.mockImplementation(() => {
-          return new Promise(resolve => {
-            setTimeout(resolve, 31000, fakeFs.authResponse);
-          });
-        });
+        fakeFs.signInAnonymously.mockImplementation(
+          promise.fnResolvesTo(fakeFs.authResponse, 31000)
+        );
       });
 
       it('throws a timeout error', async () => {

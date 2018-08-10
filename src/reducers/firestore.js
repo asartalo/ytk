@@ -13,7 +13,7 @@ export default function firestore(state = defaultState, action = {}) {
       return {
         ...state,
         signedIn: true,
-        uid: action.data.user.uid,
+        uid: action.data.uid,
       };
     case types.FIRESTORE_SIGN_IN_ANONYMOUSLY_ERROR:
       return {
