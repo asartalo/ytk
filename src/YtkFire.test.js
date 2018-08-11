@@ -33,11 +33,11 @@ describe('YtkFire', () => {
       });
 
       it('returns the response', () => {
-        expect(response).toEqual(fakeFs.authResponse);
+        expect(response).toEqual(fakeFs.authUser);
       });
 
       it('stores a reference to the uid', () => {
-        expect(ytkFire.uid).toEqual(response.user.uid);
+        expect(ytkFire.uid).toEqual(response.uid);
       });
     });
 

@@ -73,7 +73,7 @@ export default class YtkFire {
       this.options.requestTimeOut
     );
     this.uid = response.user.uid;
-    return response;
+    return response.user;
   }
 
   async retrieveUserData() {
