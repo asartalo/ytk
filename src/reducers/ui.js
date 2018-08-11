@@ -1,8 +1,8 @@
 import { ActionTypes as types } from '../constants';
+import { idToPath } from 'helpers/party';
 
 export const defaultState = {
-  newPartyCreated: null,
-  newPartyJoined: null,
+  redirectTo: null,
 };
 
 export default function ui(state = defaultState, action = {}) {
@@ -10,22 +10,24 @@ export default function ui(state = defaultState, action = {}) {
     case types.PARTY_NEW_SUCCESS:
       return {
         ...state,
-        newPartyCreated: action.data.id,
-      };
-    case types.UI_NEW_PARTY_CREATED_CLEAR:
-      return {
-        ...state,
-        newPartyCreated: null,
+        redirectTo: idToPath(action.data.id),
       };
     case types.PARTY_JOIN_SUCCESS:
       return {
         ...state,
-        newPartyJoined: action.data,
+        redirectTo: idToPath(action.data),
       };
-    case types.UI_NEW_PARTY_JOINED_CLEAR:
+
+    case types.UI_REDIRECT_CLEAR:
       return {
         ...state,
-        newPartyJoined: null,
+        redirectTo: null,
+      };
+
+    case types.CURRENT_USER_SET_PARTY:
+      return {
+        ...state,
+        redirectTo: idToPath(action.data),
       };
     default:
       return state;

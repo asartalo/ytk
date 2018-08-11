@@ -52,42 +52,4 @@ describe('Join', () => {
       expect(props.dispatch).toHaveBeenCalledWith(joinParty(partyId));
     });
   });
-
-  describe('when newPartyJoined prop is set', () => {
-    beforeEach(() => {
-      props.newPartyJoined = 'the-great-party-2568';
-      component = mountJoin();
-      redirect = component.find(Redirect);
-    });
-
-    it('renders redirect', () => {
-      expect(redirect).toExist();
-    });
-
-    it('redirects to party page', () => {
-      expect(redirect).toHaveProp('to', '/the-great-party-2568');
-    });
-
-    describe('when it unmounts', () => {
-      beforeEach(() => {
-        component.instance().componentWillUnmount();
-      });
-
-      it('dispatches to clear newPartyJoined', () => {
-        expect(props.dispatch).toHaveBeenCalledWith(clearNewPartyJoined());
-      });
-    });
-  });
-
-  describe('when newPartyJoined props is an empty string', () => {
-    beforeEach(() => {
-      props.newPartyJoined = '';
-      component = mountJoin();
-      redirect = component.find(Redirect);
-    });
-
-    it('does not render redirect', () => {
-      expect(redirect).not.toExist();
-    });
-  });
 });

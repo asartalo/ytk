@@ -1,10 +1,6 @@
 import { ActionTypes as types } from '../constants';
 import action from 'helpers/action';
 
-export function clearNewPartyCreated() {
-  return action(types.UI_NEW_PARTY_CREATED_CLEAR);
-}
-
-export function clearNewPartyJoined() {
-  return action(types.UI_NEW_PARTY_JOINED_CLEAR);
+export function clearRedirect() {
+  return action(types.UI_REDIRECT_CLEAR);
 }

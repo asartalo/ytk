@@ -1,11 +1,12 @@
 import currentUser from './currentUser';
 import * as actions from '../actions/currentUserActions';
+import { joinPartySuccess, newPartySuccess } from 'actions/partyActions';
 
 describe('currentUser', () => {
   let initialState, newState;
 
   beforeEach(() => {
-    initialState = currentUser();
+    initialState = { ...currentUser() };
   });
 
   describe('default state', () => {
@@ -41,8 +42,20 @@ describe('currentUser', () => {
   });
 
   it('handles CURRENT_USER_SET_PARTY action', () => {
-    const action = actions.setParty('My Party');
+    const action = actions.setParty('a-party-id-8888');
     newState = currentUser(initialState, action);
-    expect(newState.party).toEqual('My Party');
+    expect(newState.party).toEqual('a-party-id-8888');
+  });
+
+  it('handles PARTY_JOIN_SUCCESS action', () => {
+    const action = joinPartySuccess('the-party-id-1777');
+    newState = currentUser(initialState, action);
+    expect(newState.party).toEqual('the-party-id-1777');
+  });
+
+  it('handles PARTY_NEW_SUCCESS action', () => {
+    const action = newPartySuccess({ name: 'The Party' }, 'the-party-id-1777');
+    newState = currentUser(initialState, action);
+    expect(newState.party).toEqual('the-party-id-1777');
   });
 });

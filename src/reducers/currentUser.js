@@ -21,9 +21,15 @@ export default function currentUser(state = defaultState, action = {}) {
         intent: action.data.intent,
       };
     case types.CURRENT_USER_SET_PARTY:
+    case types.PARTY_JOIN_SUCCESS:
       return {
         ...state,
         party: action.data,
+      };
+    case types.PARTY_NEW_SUCCESS:
+      return {
+        ...state,
+        party: action.data.id,
       };
     case types.CURRENT_USER_UI_HOME_SET_STATE:
       return {

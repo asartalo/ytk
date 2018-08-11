@@ -5,6 +5,7 @@ import { ScrollContext } from 'react-router-scroll-4';
 import Home from './Home';
 import Party from './Party';
 import Body from 'components/ytk/Body';
+import AppRedirect from 'components/AppRedirect';
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/:party" component={Party} />
               </Switch>
+              <AppRedirect />
             </Body>
           </ScrollContext>
         </Router>

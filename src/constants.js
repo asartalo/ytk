@@ -25,8 +25,8 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_JOIN_ERROR',
 
   // UI
-  'UI_NEW_PARTY_CREATED_CLEAR',
-  'UI_NEW_PARTY_JOINED_CLEAR',
+  'UI_REDIRECT',
+  'UI_REDIRECT_CLEAR',
 
   // firestore
   'FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST',
