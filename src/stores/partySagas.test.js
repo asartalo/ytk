@@ -9,24 +9,27 @@ import setup from './partySagas';
 import YtkFire from '../YtkFire';
 
 describe('partySagas', () => {
-  let sagas, ytkFire;
+  let initialState, sagas, saga, ytkFire;
 
   beforeEach(() => {
     ytkFire = new YtkFire({}, {});
     sagas = setup(ytkFire);
+    initialState = { ...rootReducer({}, {}) };
   });
 
   describe('watchNewParty', () => {
-    let initialState, saga, newParty;
+    let newParty;
 
     beforeEach(() => {
       ytkFire.newParty = jest.fn();
-      initialState = rootReducer({}, {});
       initialState.currentUser = {
         ...initialState.currentUser,
         name: 'Juan',
       };
-      ytkFire.uid = initialState.firestore.uid = 'AUID';
+      initialState.firestore = {
+        ...initialState.firestore,
+        uid: 'AUID',
+      };
       newParty = { ...initialState.party, name: 'Party Poopy' };
       saga = expectSaga(sagas.watchNewParty).withReducer(
         rootReducer,
@@ -83,14 +86,16 @@ describe('partySagas', () => {
   });
 
   describe('watchNewPartySuccess', () => {
-    let initialState, saga, newParty, newPartyId;
+    let newParty, newPartyId;
     beforeEach(() => {
-      initialState = rootReducer({}, {});
       initialState.currentUser = {
         ...initialState.currentUser,
         name: 'Pedro',
       };
-      initialState.firestore.uid = 'PDoA';
+      initialState.firestore = {
+        ...initialState.firestore,
+        uid: 'PDoA',
+      };
       newParty = { name: 'Pedro Penduko Graduation' };
       newPartyId = 'pedro-penduko-1234';
       saga = expectSaga(sagas.watchNewPartySuccess).withReducer(
@@ -108,14 +113,16 @@ describe('partySagas', () => {
   });
 
   describe('watchGetParty', () => {
-    let initialState, saga, party, partyId;
-    beforeEach(async () => {
-      initialState = rootReducer({}, {});
+    let party, partyId;
+    beforeEach(() => {
       initialState.currentUser = {
         ...initialState.currentUser,
         name: 'Pedro',
       };
-      ytkFire.uid = initialState.firestore.uid = 'AUID';
+      initialState.firestore = {
+        ...initialState.firestore,
+        uid: 'AUID',
+      };
       partyId = 'pedro-penduko-1234';
       saga = expectSaga(sagas.watchGetParty).withReducer(
         rootReducer,
@@ -123,16 +130,62 @@ describe('partySagas', () => {
       );
     });
 
-    it('loads party when party field of user is set', () => {
+    it('loads party when party field of user is set', async () => {
       const partyData = { name: 'Pedro Penduko', users: ['PDoA'], queue: [] };
       ytkFire.getParty = jest.fn(() => promise.resolvesTo(partyData));
-      return saga
+      await saga
         .dispatch(partyActions.getParty(partyId))
         .put(partyActions.loadParty(partyData))
-        .silentRun()
-        .then(() => {
-          expect(ytkFire.getParty).toHaveBeenCalledWith(partyId);
+        .silentRun();
+      expect(ytkFire.getParty).toHaveBeenCalledWith(partyId);
+    });
+  });
+
+  describe('watchJoinParty', () => {
+    let partyId = 'funky-jane-8989';
+    beforeEach(() => {
+      initialState.currentUser = {
+        ...initialState.currentUser,
+        name: 'Jane',
+      };
+      ytkFire.joinParty = jest.fn();
+      saga = expectSaga(sagas.watchJoinParty)
+        .withReducer(rootReducer, initialState)
+        .dispatch(partyActions.joinParty(partyId));
+    });
+
+    it('does nothing if the user is not signed in', async () => {
+      await saga.silentRun();
+      expect(ytkFire.joinParty).not.toHaveBeenCalled();
+    });
+
+    describe('when user is signed in', () => {
+      beforeEach(() => {
+        initialState.firestore = {
+          ...initialState.firestore,
+          uid: 'JAID',
+        };
+      });
+
+      it('calls joinParty with ID', async () => {
+        await saga.silentRun();
+        expect(ytkFire.joinParty).toHaveBeenCalledWith(partyId);
+      });
+
+      it('sends a partySuccess action on success', async () => {
+        await saga.put(partyActions.joinPartySuccess(partyId)).silentRun();
+      });
+
+      it('throws error if errored', async () => {
+        const error = Error('Something happened');
+        ytkFire.joinParty = jest.fn(() => {
+          throw error;
         });
+        await saga.not
+          .put(partyActions.joinPartySuccess(partyId))
+          .put(partyActions.joinPartyError(error))
+          .silentRun();
+      });
     });
   });
 });
