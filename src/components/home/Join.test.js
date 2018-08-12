@@ -20,7 +20,7 @@ describe('Join', () => {
     props = {
       userName: 'Jane Smith',
       dispatch: jest.fn(),
-      newPartyJoined: null,
+      inProgress: false,
     };
     component = mountJoin();
   });

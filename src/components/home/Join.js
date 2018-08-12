@@ -22,13 +22,22 @@ export class Join extends Component {
   }
 
   render() {
-    const { userName } = this.props;
-    return <JoinForm userName={userName} onPartySet={this.handlePartySet} />;
+    const { error, inProgress, userName } = this.props;
+    return (
+      <JoinForm
+        userName={userName}
+        onPartySet={this.handlePartySet}
+        inProgress={inProgress}
+        error={error}
+      />
+    );
   }
 }
 
 export default connect(({ currentUser, ui }) => {
   return {
     userName: currentUser.name,
+    inProgress: ui.partyJoinInProgress,
+    error: ui.partyJoinError,
   };
 })(Join);

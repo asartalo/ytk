@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import HomeButton from 'components/ytk/HomeButton';
 import TextField from '@material-ui/core/TextField';
+
+import ProgressOrChildren from 'components/ProgressOrChildren';
+import HomeButton from 'components/ytk/HomeButton';
 
 const styles = theme => ({
   mainTitle: {
@@ -20,6 +22,8 @@ class JoinForm extends Component {
     children: PropTypes.node,
     classes: PropTypes.object.isRequired,
     userName: PropTypes.string.isRequired,
+    inProgress: PropTypes.bool.isRequired,
+    error: PropTypes.string,
   };
 
   constructor(props) {
@@ -39,7 +43,8 @@ class JoinForm extends Component {
   }
 
   render() {
-    const { userName, classes } = this.props;
+    const { classes, error, inProgress, userName } = this.props;
+
     return (
       <div className="JoinForm">
         <h1 className={classes.mainTitle}>Hello, {userName}</h1>
@@ -48,12 +53,16 @@ class JoinForm extends Component {
           <TextField
             fullWidth
             required
+            error={!!error}
+            helperText={error}
             label="Party Link or ID"
             id="new-party-id"
             onChange={this.handlePartyIdChange}
           />
           <div className={classes.spacer}>
-            <HomeButton type="submit">Join the Party!</HomeButton>
+            <ProgressOrChildren inProgress={inProgress}>
+              <HomeButton type="submit">Join the Party!</HomeButton>
+            </ProgressOrChildren>
           </div>
         </form>
       </div>

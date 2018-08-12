@@ -3,6 +3,8 @@ import { idToPath } from 'helpers/party';
 
 export const defaultState = {
   redirectTo: null,
+  partyJoinError: null,
+  partyJoinInProgress: false,
 };
 
 export default function ui(state = defaultState, action = {}) {
@@ -12,10 +14,26 @@ export default function ui(state = defaultState, action = {}) {
         ...state,
         redirectTo: idToPath(action.data.id),
       };
+
+    case types.PARTY_JOIN:
+      return {
+        ...state,
+        partyJoinInProgress: true,
+        partyJoinError: null,
+      };
+
     case types.PARTY_JOIN_SUCCESS:
       return {
         ...state,
         redirectTo: idToPath(action.data),
+        partyJoinInProgress: false,
+      };
+
+    case types.PARTY_JOIN_ERROR:
+      return {
+        ...state,
+        partyJoinError: action.data.message,
+        partyJoinInProgress: false,
       };
 
     case types.UI_REDIRECT_CLEAR:
@@ -29,6 +47,7 @@ export default function ui(state = defaultState, action = {}) {
         ...state,
         redirectTo: idToPath(action.data),
       };
+
     default:
       return state;
   }
