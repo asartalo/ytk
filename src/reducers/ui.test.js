@@ -1,4 +1,5 @@
 import { ActionTypes as types } from '../constants';
+import reducerTest from 'helpers/reducerTest';
 import * as uiActions from 'actions/uiActions';
 import * as userActions from 'actions/currentUserActions';
 import * as partyActions from 'actions/partyActions';
@@ -6,69 +7,53 @@ import * as partyActions from 'actions/partyActions';
 import ui from './ui';
 
 describe('ui', () => {
-  let initialState;
+  const initialState = {
+    redirectTo: null,
+    partyJoinError: null,
+    partyJoinInProgress: false,
+  };
 
-  beforeEach(() => {
-    initialState = { ...ui() };
-  });
+  reducerTest(ui, initialState, {
+    PARTY_NEW_SUCCESS: {
+      action: partyActions.newPartySuccess(
+        { name: 'The Party' },
+        'the-party-8988'
+      ),
+      expect: { redirectTo: '/the-party-8988' },
+    },
 
-  describe('default state', () => {
-    it('is null for redirectTo', () => {
-      expect(initialState.redirectTo).toBe(null);
-    });
+    UI_REDIRECT_CLEAR: {
+      from: { redirectTo: '/the-other-party-1112' },
+      action: uiActions.clearRedirect(),
+      expect: {
+        /* back to initial state */
+      },
+    },
 
-    it('is null for partyJoinError', () => {
-      expect(initialState.partyJoinError).toBe(null);
-    });
+    CURRENT_USER_SET_PARTY: {
+      action: userActions.setParty('another-party-8888'),
+      expect: { redirectTo: '/another-party-8888' },
+    },
 
-    it('is false for partyJoinInProgress', () => {
-      expect(initialState.partyJoinInProgress).toBe(false);
-    });
-  });
+    PARTY_JOIN: {
+      from: { partyJoinError: 'Some error' },
+      action: partyActions.joinParty('the-party-id-1234'),
+      expect: { partyJoinError: null, partyJoinInProgress: true },
+    },
 
-  it('handles PARTY_NEW_SUCCESS', () => {
-    const action = partyActions.newPartySuccess(
-      { name: 'The Party' },
-      'the-party-8988'
-    );
-    const state = ui(initialState, action);
-    expect(state.redirectTo).toEqual('/the-party-8988');
-  });
+    PARTY_JOIN_SUCCESS: {
+      from: { partyJoinInProgress: true },
+      action: partyActions.joinPartySuccess('another-party-8888'),
+      expect: {
+        redirectTo: '/another-party-8888',
+        partyJoinInProgress: false,
+      },
+    },
 
-  it('handles UI_REDIRECT_CLEAR', () => {
-    initialState.redirectTo = '/the-other-party-1112';
-    const action = uiActions.clearRedirect();
-    const state = ui(initialState, action);
-    expect(state.redirectTo).toBe(null);
-  });
-
-  it('handles CURRENT_USER_SET_PARTY', () => {
-    const action = userActions.setParty('another-party-8888');
-    const state = ui(initialState, action);
-    expect(state.redirectTo).toEqual('/another-party-8888');
-  });
-
-  it('handles PARTY_JOIN', () => {
-    initialState.partyJoinError = 'Some error';
-    const action = partyActions.joinParty('the-party-id-1234');
-    const state = ui(initialState, action);
-    expect(state.partyJoinInProgress).toBe(true);
-    expect(state.partyJoinError).toBe(null);
-  });
-
-  it('handles PARTY_JOIN_SUCCESS', () => {
-    initialState.partyJoinInProgress = true;
-    const action = partyActions.joinPartySuccess('another-party-8888');
-    const state = ui(initialState, action);
-    expect(state.redirectTo).toEqual('/another-party-8888');
-    expect(state.partyJoinInProgress).toBe(false);
-  });
-
-  it('handles PARTY_JOIN_ERROR', () => {
-    initialState.partyJoinInProgress = true;
-    const action = partyActions.joinPartyError(Error('Cannot join party'));
-    const state = ui(initialState, action);
-    expect(state.partyJoinError).toEqual('Cannot join party');
-    expect(state.partyJoinInProgress).toBe(false);
+    PARTY_JOIN_ERROR: {
+      from: { partyJoinInProgress: true },
+      action: partyActions.joinPartyError(Error('Cannot join party')),
+      expect: { partyJoinError: 'Cannot join party' },
+    },
   });
 });

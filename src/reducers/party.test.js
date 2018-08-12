@@ -1,22 +1,18 @@
-import party from './party';
+import reducerTest from 'helpers/reducerTest';
 import * as actions from 'actions/partyActions';
+import party from './party';
 
 describe('party', () => {
-  let initialState, newState;
+  const initialState = {
+    name: '',
+    users: [],
+    queue: [],
+  };
 
-  beforeEach(() => {
-    initialState = party();
-  });
-
-  describe('default state', () => {
-    it('defaults to blank name', () => {
-      expect(initialState.name).toEqual('');
-    });
-  });
-
-  it('handles PARTY_LOAD action', () => {
-    const action = actions.loadParty({ name: 'New Year' });
-    newState = party(initialState, action);
-    expect(newState.name).toEqual('New Year');
+  reducerTest(party, initialState, {
+    PARTY_LOAD: {
+      action: actions.loadParty({ name: 'New Year' }),
+      expect: { name: 'New Year' },
+    },
   });
 });

@@ -1,61 +1,45 @@
-import currentUser from './currentUser';
+import reducerTest from 'helpers/reducerTest';
 import * as actions from '../actions/currentUserActions';
 import { joinPartySuccess, newPartySuccess } from 'actions/partyActions';
+import currentUser from './currentUser';
 
 describe('currentUser', () => {
-  let initialState, newState;
-
-  beforeEach(() => {
-    initialState = { ...currentUser() };
-  });
-
-  describe('default state', () => {
-    it('defaults to blank name', () => {
-      expect(initialState.name).toEqual('');
-    });
-
-    it('blank intent', () => {
-      expect(initialState.intent).toEqual('');
-    });
-
-    it('has blank party', () => {
-      expect(initialState.party).toEqual('');
-    });
-  });
+  const initialState = {
+    name: '',
+    intent: '',
+    party: '',
+    homeState: 'start',
+  };
 
   it('noops for invalid action', () => {
-    newState = currentUser(initialState, 'foo');
+    const newState = currentUser(initialState, 'foo');
     expect(newState).toEqual(initialState);
   });
 
-  it('handles CURRENT_USER_SET_NAME action', () => {
-    const action = actions.setName('Jane');
-    newState = currentUser(initialState, action);
-    expect(newState.name).toEqual('Jane');
-  });
+  reducerTest(currentUser, initialState, {
+    CURRENT_USER_SET_NAME: {
+      action: actions.setName('Jane'),
+      expect: { name: 'Jane' },
+    },
 
-  it('handles CURRENT_USER_SET_NAME_AND_INTENT action', () => {
-    const action = actions.setNameAndIntent('John', 'start');
-    newState = currentUser(initialState, action);
-    expect(newState.name).toEqual('John');
-    expect(newState.intent).toEqual('start');
-  });
+    CURRENT_USER_SET_NAME_AND_INTENT: {
+      action: actions.setNameAndIntent('John', 'start'),
+      expect: { name: 'John', intent: 'start' },
+    },
 
-  it('handles CURRENT_USER_SET_PARTY action', () => {
-    const action = actions.setParty('a-party-id-8888');
-    newState = currentUser(initialState, action);
-    expect(newState.party).toEqual('a-party-id-8888');
-  });
+    CURRENT_USER_SET_PARTY: {
+      action: actions.setParty('a-party-id-8888'),
+      expect: { party: 'a-party-id-8888' },
+    },
 
-  it('handles PARTY_JOIN_SUCCESS action', () => {
-    const action = joinPartySuccess('the-party-id-1777');
-    newState = currentUser(initialState, action);
-    expect(newState.party).toEqual('the-party-id-1777');
-  });
+    PARTY_JOIN_SUCCESS: {
+      action: joinPartySuccess('the-party-id-1777'),
+      expect: { party: 'the-party-id-1777' },
+    },
 
-  it('handles PARTY_NEW_SUCCESS action', () => {
-    const action = newPartySuccess({ name: 'The Party' }, 'the-party-id-1777');
-    newState = currentUser(initialState, action);
-    expect(newState.party).toEqual('the-party-id-1777');
+    PARTY_NEW_SUCCESS: {
+      action: newPartySuccess({ name: 'The Party' }, 'the-party-id-1777'),
+      expect: { party: 'the-party-id-1777' },
+    },
   });
 });
