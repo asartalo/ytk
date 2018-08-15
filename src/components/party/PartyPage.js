@@ -23,6 +23,7 @@ import queueData from './staticQueueData';
 const themeToggle = (theme, light, dark) => {
   return theme.palette.type === 'dark' ? dark : light;
 };
+
 const styles = theme => ({
   root: {},
 
@@ -96,8 +97,6 @@ export class PartyPage extends Component {
     super(props);
     const queue = [...queueData];
     this.state = {
-      queue,
-      current: queue.shift(),
       showAddMenu: false,
     };
     this.toggleAddMenu = this.toggleAddMenu.bind(this);
@@ -129,9 +128,9 @@ export class PartyPage extends Component {
   }
 
   render() {
-    const { classes, currentUser, party } = this.props;
+    const { classes, currentUser, party, current, queue } = this.props;
 
-    const { queue, current, showAddMenu } = this.state;
+    const { showAddMenu } = this.state;
     const showPlayer = true;
 
     const addToQueueClasses = [classes.addToQueue];
