@@ -5,6 +5,7 @@ export const defaultState = {
   redirectTo: null,
   partyJoinError: null,
   partyJoinInProgress: false,
+  partyGetInProgress: false,
 };
 
 export default function ui(state = defaultState, action = {}) {
@@ -34,6 +35,18 @@ export default function ui(state = defaultState, action = {}) {
         ...state,
         partyJoinError: action.data.message,
         partyJoinInProgress: false,
+      };
+
+    case types.PARTY_GET:
+      return {
+        ...state,
+        partyGetInProgress: true,
+      };
+
+    case types.PARTY_LOAD:
+      return {
+        ...state,
+        partyGetInProgress: false,
       };
 
     case types.UI_REDIRECT_CLEAR:

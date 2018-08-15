@@ -11,6 +11,7 @@ describe('ui', () => {
     redirectTo: null,
     partyJoinError: null,
     partyJoinInProgress: false,
+    partyGetInProgress: false,
   };
 
   reducerTest(ui, initialState, {
@@ -54,6 +55,17 @@ describe('ui', () => {
       from: { partyJoinInProgress: true },
       action: partyActions.joinPartyError(Error('Cannot join party')),
       expect: { partyJoinError: 'Cannot join party' },
+    },
+
+    PARTY_GET: {
+      action: partyActions.getParty('the-id-of-party-8398'),
+      expect: { partyGetInProgress: true },
+    },
+
+    PARTY_LOAD: {
+      from: { partyGetInProgress: true },
+      action: partyActions.loadParty({ name: 'Foo' }),
+      expect: { partyGetInProgress: false },
     },
   });
 });

@@ -10,11 +10,18 @@ export const theme = createMuiTheme({
       dark: '#9a0007',
       contrastText: '#fff',
     },
+    // secondary: {
+    //   main: '#ff0080',
+    //   light: '#ff5daf',
+    //   dark: '#c50054',
+    //   contrastText: '#fff',
+    // },
+
     secondary: {
-      main: '#ff0080',
-      light: '#ff5daf',
-      dark: '#c50054',
-      contrastText: '#000',
+      main: '#8bc34a',
+      light: '#a2cf6e',
+      dark: '#618833',
+      contrastText: '#fff',
     },
   },
   typography: {
@@ -23,6 +30,8 @@ export const theme = createMuiTheme({
     fontWeightRegular: 300,
   },
 });
+
+console.log(theme);
 
 class Themer extends Component {
   render() {

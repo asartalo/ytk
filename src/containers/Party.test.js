@@ -30,6 +30,7 @@ describe('Party', () => {
           party: 'the-party-id-8844',
         },
       },
+      partyGetInProgress: true,
     };
   });
 
