@@ -4,10 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 
+import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import VideoListItem from './VideoListItem';
 
 const styles = theme => ({
@@ -44,23 +43,20 @@ class Queue extends Component {
     className: PropTypes.string,
   };
 
-  constructor(props) {
-    super(props);
-    this.renderQueueItems = this.renderQueueItems.bind(this);
-  }
-
   renderQueueItems() {
     const { queue, classes } = this.props;
-    return queue.map((item, i) => (
+    return queue.concat(queue).map((item, i) => (
       <VideoListItem
         key={`${item.videoId}-${i}`}
         video={item}
         secondaryAction={
-          <Tooltip title="Remove item" placement="top">
-            <IconButton className={classes.clearButton} aria-label="Clear">
-              <ClearIcon className={classes.clearIcon} />
-            </IconButton>
-          </Tooltip>
+          <IconButtonWithTooltip
+            tooltipTitle="Remove item"
+            tooltipPlacement="top"
+            className={classes.clearButton}
+          >
+            <ClearIcon className={classes.clearIcon} />
+          </IconButtonWithTooltip>
         }
       />
     ));
@@ -68,7 +64,6 @@ class Queue extends Component {
 
   render() {
     const { classes } = this.props;
-    const showPlayer = true;
     return (
       <div className={classes.root}>
         <List subheader={<ListSubheader>Up Next:</ListSubheader>}>

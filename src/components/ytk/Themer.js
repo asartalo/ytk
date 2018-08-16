@@ -31,8 +31,6 @@ export const theme = createMuiTheme({
   },
 });
 
-console.log(theme);
-
 class Themer extends Component {
   render() {
     return (

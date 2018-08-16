@@ -29,14 +29,9 @@ class Player extends Component {
     className: PropTypes.string,
   };
 
-  constructor(props) {
-    super(props);
-    this.iframeProps = this.iframeProps.bind(this);
-  }
-
   iframeProps() {
     const props = { ...this.props };
-    ['videoId', 'classes', 'children', 'className'].forEach(
+    ['videoId', 'classes', 'children', 'className', 'isPlaying'].forEach(
       item => delete props[item]
     );
     return props;

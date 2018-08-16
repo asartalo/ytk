@@ -5,78 +5,63 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
-const styles = theme => ({
-  card: {
-    display: 'flex',
-  },
-  title: {
-    marginBottom: 16,
-    fontSize: 14,
-  },
-  details: {
-    display: 'flex',
-    flexBasis: '100%',
-    flexDirection: 'column',
-  },
-  content: {
-    flex: '1 0 auto',
-  },
-  cover: {
-    width: 151,
-    height: 151,
-  },
-  controls: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  playerControls: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-  },
-  miscControls: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-  },
-  playerIcon: {
-    height: 36,
-    width: 36,
-  },
-});
+import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import { currentVideoShape, currentUserShape } from 'components/propTypes';
+import styles from './Current.styles.js';
 
 class Current extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
+    current: currentVideoShape.isRequired,
+    currentUser: currentUserShape.isRequired,
   };
 
-  renderPlayPauseButton() {
-    const { classes } = this.props;
-    const isPlaying = true;
+  constructor(props) {
+    super(props);
+    this.handleStandalonePlayer = this.handleStandalonePlayer.bind(this);
+  }
 
-    let mainIcon, label;
-    if (isPlaying) {
-      mainIcon = <PauseIcon className={classes.playerIcon} />;
-      label = 'Pause';
-    } else {
-      mainIcon = <PlayArrowIcon className={classes.playerIcon} />;
-      label = 'Play';
+  handleStandalonePlayer() {
+    const { currentUser } = this.props;
+    const url = `${window.location}/player`;
+    window.open(url, `Okee ${currentUser.name}`);
+    this.props.onOpenStandalonePlayer();
+  }
+
+  renderPlayPauseButton() {
+    const { classes, current } = this.props;
+    const { isPlaying } = current;
+
+    return (
+      <IconButtonWithTooltip tooltipTitle={isPlaying ? 'Pause' : 'Play'}>
+        {isPlaying ? (
+          <PauseIcon className={classes.playerIcon} />
+        ) : (
+          <PlayArrowIcon className={classes.playerIcon} />
+        )}
+      </IconButtonWithTooltip>
+    );
+  }
+
+  renderStandAloneControl() {
+    const { openStandalonePlayer } = this.props;
+    if (openStandalonePlayer) {
+      return null;
     }
     return (
-      <Tooltip title={label} placement="bottom">
-        <IconButton aria-label="label">{mainIcon}</IconButton>
-      </Tooltip>
+      <IconButtonWithTooltip
+        tooltipTitle="Open player in new window"
+        onClick={this.handleStandalonePlayer}
+      >
+        <OpenInNewIcon />
+      </IconButtonWithTooltip>
     );
   }
 
@@ -100,18 +85,12 @@ class Current extends Component {
           <div className={classes.controls}>
             <div className={classes.playerControls}>
               {this.renderPlayPauseButton()}
-              <Tooltip title="Next" placement="bottom">
-                <IconButton aria-label="Next">
-                  <SkipNextIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButtonWithTooltip tooltipTitle="Next">
+                <SkipNextIcon />
+              </IconButtonWithTooltip>
             </div>
             <div className={classes.miscControls}>
-              <Tooltip title="Open player in new window" placement="bottom">
-                <IconButton aria-label="Open player in new window">
-                  <OpenInNewIcon />
-                </IconButton>
-              </Tooltip>
+              {this.renderStandAloneControl()}
             </div>
           </div>
         </div>

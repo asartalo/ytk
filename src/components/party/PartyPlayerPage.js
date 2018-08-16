@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import IdleTimer from 'react-idle-timer';
@@ -10,6 +8,7 @@ import screenfull from 'screenfull';
 
 import injectProp from 'helpers/injectProp';
 import { currentUserShape, partyShape } from 'components/propTypes';
+import ButtonWithTooltip from 'components/ytk/ButtonWithTooltip';
 import Player from 'components/video/Player';
 
 const styles = theme => ({
@@ -18,6 +17,11 @@ const styles = theme => ({
   controls: {
     transition: '300ms',
     opacity: 1,
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    // bottom: 40,
   },
 
   invisible: {
@@ -87,27 +91,24 @@ class PartyPlayerPage extends Component {
       }
       return (
         <div className={controlsClass.join(' ')}>
-          <Button
+          <ButtonWithTooltip
             variant="fab"
             color="primary"
             className={classes.mainButton}
             onClick={this.handleFullScreenToggle}
+            tooltipTitle={
+              this.state.fullScreen
+                ? 'Exit Full Screen'
+                : 'Enter Full Screen Mode'
+            }
+            tooltipPlacement="left"
           >
-            <Tooltip
-              title={
-                this.state.fullScreen
-                  ? 'Exit Full Screen'
-                  : 'Enter Full Screen Mode'
-              }
-              placement="left"
-            >
-              {this.state.fullScreen ? (
-                <FullscreenExitIcon />
-              ) : (
-                <FullscreenIcon />
-              )}
-            </Tooltip>
-          </Button>
+            {this.state.fullScreen ? (
+              <FullscreenExitIcon />
+            ) : (
+              <FullscreenIcon />
+            )}
+          </ButtonWithTooltip>
         </div>
       );
     } else {
@@ -116,19 +117,20 @@ class PartyPlayerPage extends Component {
   }
 
   render() {
-    const { classes, current } = this.props;
+    const { classes, party } = this.props;
+    const { current } = party;
     return (
-      <div className={classes.root}>
-        <IdleTimer
-          element={document}
-          onActive={this.handleActive}
-          onIdle={this.handleIdle}
-          timeout={1000 * 5}
-        >
+      <IdleTimer
+        element={document}
+        onActive={this.handleActive}
+        onIdle={this.handleIdle}
+        timeout={1000 * 5}
+      >
+        <div className={classes.root}>
           <Player className={classes.player} videoId={current.videoId} />
           {this.renderControls()}
-        </IdleTimer>
-      </div>
+        </div>
+      </IdleTimer>
     );
   }
 }

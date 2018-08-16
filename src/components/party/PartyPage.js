@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 // import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import SwipeableViews from 'react-swipeable-views';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
@@ -13,16 +10,13 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Zoom from '@material-ui/core/Zoom';
 
 import { currentUserShape, partyShape } from 'components/propTypes';
+import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import AppBar from './AppBar';
+import PartyUiGrid from './PartyUiGrid';
 import Player from 'components/video/Player';
 import Current from './Current';
 import Queue from './Queue';
 import AddToQueue from './AddToQueue';
-import queueData from './staticQueueData';
-
-const themeToggle = (theme, light, dark) => {
-  return theme.palette.type === 'dark' ? dark : light;
-};
 
 const styles = theme => ({
   root: {},
@@ -31,30 +25,16 @@ const styles = theme => ({
     width: '100%',
   },
 
-  videoContainer: {
-    paddingTop: 56,
-    maxHeight: '100vh',
-    backgroundColor: 'black',
-  },
-
-  sidePanel: {
-    paddingTop: 56,
-    backgroundColor: theme.palette.background.default,
-    borderLeft: `1px solid ${
-      theme.palette.grey[themeToggle(theme, '300', '800')]
-    }`,
-    overflow: 'hidden',
-    position: 'relative',
-
-    [theme.breakpoints.down('sm')]: {
-      paddingTop: 0,
-      maxHeight: 'auto',
-    },
-  },
-
   panel: {
     overflow: 'auto',
     height: 'calc(100vh - 56px)',
+  },
+
+  panelStandalone: {
+    overflow: 'visible',
+    height: 'auto',
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
   },
 
   panelControlWrap: {
@@ -95,12 +75,15 @@ export class PartyPage extends Component {
 
   constructor(props) {
     super(props);
-    const queue = [...queueData];
     this.state = {
       showAddMenu: false,
+      openStandalonePlayer: false,
     };
     this.toggleAddMenu = this.toggleAddMenu.bind(this);
     this.handleChangePanel = this.handleChangePanel.bind(this);
+    this.handleOpenStandalonePlayer = this.handleOpenStandalonePlayer.bind(
+      this
+    );
   }
 
   toggleAddMenu() {
@@ -127,11 +110,22 @@ export class PartyPage extends Component {
     });
   }
 
-  render() {
-    const { classes, currentUser, party, current, queue } = this.props;
+  handleOpenStandalonePlayer() {
+    this.setState({ openStandalonePlayer: true });
+  }
 
-    const { showAddMenu } = this.state;
-    const showPlayer = true;
+  panelClasses(standalone) {
+    const { classes } = this.props;
+    const classNames = [classes.panel];
+    if (standalone) {
+      classNames.push(classes.panelStandalone);
+    }
+    return classNames.join(' ');
+  }
+
+  render() {
+    const { classes, currentUser, party } = this.props;
+    const { showAddMenu, openStandalonePlayer } = this.state;
 
     const addToQueueClasses = [classes.addToQueue];
     if (!showAddMenu) {
@@ -142,58 +136,46 @@ export class PartyPage extends Component {
       <div className={classes.root}>
         <AppBar party={party} />
         <div className={classes.mainContent}>
-          <Grid container spacing={0}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              md={8}
-              lg={9}
-              className={classes.videoContainer}
-            >
-              <Player
-                className={classes.mainPlayer}
-                videoId={current.videoId}
-              />
-            </Grid>
-            <Grid
-              item
-              className={classes.sidePanel}
-              xs={12}
-              sm={12}
-              md={4}
-              lg={3}
-            >
+          <PartyUiGrid hidePlayer={openStandalonePlayer}>
+            <Player
+              className={classes.mainPlayer}
+              videoId={party.current.videoId}
+              isPlaying={party.current.isPlaying}
+            />
+            <div>
               <SwipeableViews
                 enableMouseEvents
                 index={showAddMenu ? 1 : 0}
                 onChangeIndex={this.handleChangePanel}
               >
-                <div className={classes.panel}>
-                  <Current {...{ current }} />
+                <div className={this.panelClasses(openStandalonePlayer)}>
+                  <Current
+                    onOpenStandalonePlayer={this.handleOpenStandalonePlayer}
+                    current={party.current}
+                    {...{ currentUser, openStandalonePlayer }}
+                  />
                   <Divider />
-                  <Queue queue={queue} />
+                  <Queue queue={party.queue} />
                 </div>
-                <div className={classes.panel}>
+                <div className={this.panelClasses(openStandalonePlayer)}>
                   <div className={classes.panelControlWrap}>
-                    <Tooltip title="Back to playlist" placement="right">
-                      <IconButton
-                        className={classes.panelControl}
-                        onClick={this.toggleAddMenu}
-                      >
-                        <ArrowBackIcon />
-                      </IconButton>
-                    </Tooltip>
+                    <IconButtonWithTooltip
+                      tooltipTitle="Back to playlist"
+                      tooltipPlacement="right"
+                      className={classes.panelControl}
+                      onClick={this.toggleAddMenu}
+                    >
+                      <ArrowBackIcon />
+                    </IconButtonWithTooltip>
                   </div>
                   <AddToQueue
                     className={addToQueueClasses.join(' ')}
-                    queue={queue}
+                    queue={party.queue}
                     onAddQueue={this.toggleAddMenu}
                     inputRef={input => (this.searchInput = input)}
                   />
                 </div>
               </SwipeableViews>
-
               <Zoom in={!showAddMenu}>
                 <Button
                   variant="fab"
@@ -204,8 +186,8 @@ export class PartyPage extends Component {
                   <AddIcon />
                 </Button>
               </Zoom>
-            </Grid>
-          </Grid>
+            </div>
+          </PartyUiGrid>
         </div>
       </div>
     );

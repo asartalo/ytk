@@ -29,8 +29,6 @@ export class Party extends Component {
 
   render() {
     const { currentUser, match, party, partyGetInProgress } = this.props;
-    const queue = [...queueData];
-    const current = queue.shift();
     return (
       <Body className="Party">
         <ProgressOrChildren inProgress={partyGetInProgress}>
@@ -38,16 +36,12 @@ export class Party extends Component {
             <Route
               exact
               path={match.url}
-              render={props => (
-                <PartyPage {...{ currentUser, party, queue, current }} />
-              )}
+              render={props => <PartyPage {...{ currentUser, party }} />}
             />
             <Route
               exact
               path={match.url + '/player'}
-              render={props => (
-                <PartyPlayerPage {...{ currentUser, party, queue, current }} />
-              )}
+              render={props => <PartyPlayerPage {...{ currentUser, party }} />}
             />
           </Switch>
         </ProgressOrChildren>
@@ -64,6 +58,9 @@ export default connect((state, props) => {
   //   party,
   //   partyGetInProgress: ui.partyGetInProgress
   // };
+  const queue = [...queueData];
+  const current = queue.shift();
+  current.isPlaying = false;
   return {
     currentUser: {
       name: 'Jesus Maria Jose',
@@ -74,7 +71,8 @@ export default connect((state, props) => {
     party: {
       name: 'Birthday Bash!',
       users: ['anid'],
-      queue: [],
+      queue,
+      current,
     },
     partyGetInProgress: false,
   };

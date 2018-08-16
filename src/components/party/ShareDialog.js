@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import Tooltip from '@material-ui/core/Tooltip';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -16,6 +14,8 @@ import Zoom from '@material-ui/core/Zoom';
 import TextField from '@material-ui/core/TextField';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import CheckIcon from '@material-ui/icons/Check';
+
+import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 
 const styles = theme => ({
   root: {},
@@ -56,7 +56,10 @@ export class ShareDialog extends Component {
 
   renderCopyButton() {
     return (
-      <IconButton>
+      <IconButtonWithTooltip
+        tooltipTitle={this.state.copied ? 'Copied!' : 'Copy'}
+        tooltipPlacement="top"
+      >
         {this.state.copied ? (
           <Zoom in={this.state.copied}>
             <CheckIcon color="secondary" />
@@ -66,7 +69,7 @@ export class ShareDialog extends Component {
             <FileCopyIcon />
           </Zoom>
         )}
-      </IconButton>
+      </IconButtonWithTooltip>
     );
   }
 
@@ -78,8 +81,6 @@ export class ShareDialog extends Component {
         open={open}
         keepMounted
         onClose={onClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
         onEntered={e => {
           setTimeout(this.focusOnText, 100);
         }}
@@ -105,14 +106,9 @@ export class ShareDialog extends Component {
               },
               endAdornment: (
                 <InputAdornment position="end">
-                  <Tooltip
-                    title={this.state.copied ? 'Copied!' : 'Copy'}
-                    placement="top"
-                  >
-                    <CopyToClipboard text={partyUrl} onCopy={this.handleCopy}>
-                      {this.renderCopyButton()}
-                    </CopyToClipboard>
-                  </Tooltip>
+                  <CopyToClipboard text={partyUrl} onCopy={this.handleCopy}>
+                    {this.renderCopyButton()}
+                  </CopyToClipboard>
                 </InputAdornment>
               ),
             }}
