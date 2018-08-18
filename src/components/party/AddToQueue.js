@@ -46,7 +46,7 @@ export class AddToQueue extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onAddQueue();
+    this.props.onAddToQueue();
   }
 
   renderSearchResultItems() {
