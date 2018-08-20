@@ -34,9 +34,34 @@ export const currentVideoShape = PropTypes.shape({
   isPlaying: PropTypes.bool,
 });
 
+export const profileShape = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  uid: PropTypes.string.isRequired,
+});
+
 export const partyShape = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  users: PropTypes.array.isRequired,
+  users: PropTypes.arrayOf(profileShape).isRequired,
   queue: PropTypes.arrayOf(videoShape).isRequired,
   current: currentVideoShape,
 });
+
+export const validateReducer = (shape, reducerName) => reducer => {
+  const env = process.env.NODE_ENV;
+
+  if (env === 'development' || env === 'test') {
+    return (state, action) => {
+      const newState = reducer(state, action);
+      const getStack = () => Error().stack;
+      PropTypes.checkPropTypes(
+        { state: shape },
+        { state: newState },
+        'property',
+        reducerName,
+        getStack
+      );
+      return newState;
+    };
+  }
+  return reducer;
+};

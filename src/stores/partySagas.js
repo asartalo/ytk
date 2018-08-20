@@ -3,7 +3,7 @@ import { all, put, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { ActionTypes as types } from '../constants';
 import * as partyActions from 'actions/partyActions';
 import { setParty } from 'actions/currentUserActions';
-import { continueIfSignedIn } from './sagasCommon';
+import { continueIfSignedIn, getUserAndUidFromState } from './sagasCommon';
 import { defaultState as defaultParty } from 'reducers/party';
 
 export default function partySagas(ytkFire) {
@@ -13,7 +13,12 @@ export default function partySagas(ytkFire) {
   }
 
   function* newParty(action) {
-    let newPartyData = { ...defaultParty, ...action.data };
+    const { currentUser, uid } = yield getUserAndUidFromState();
+    let newPartyData = {
+      ...defaultParty,
+      ...action.data,
+      users: [{ name: currentUser.name, uid: uid }],
+    };
     try {
       let { party, id } = yield ytkFire.newParty(newPartyData);
       yield put(partyActions.newPartySuccess(party, id));
@@ -56,8 +61,9 @@ export default function partySagas(ytkFire) {
   function* joinParty(action) {
     yield* continueIfSignedIn();
     const partyId = action.data;
+    const { currentUser, uid } = yield getUserAndUidFromState();
     try {
-      yield ytkFire.joinParty(partyId);
+      yield ytkFire.joinParty(partyId, { name: currentUser.name, uid });
       yield put(partyActions.joinPartySuccess(partyId));
     } catch (error) {
       yield put(partyActions.joinPartyError(error));

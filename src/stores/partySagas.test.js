@@ -54,7 +54,7 @@ describe('partySagas', () => {
         savedParty = {
           ...initialState.party,
           ...newParty,
-          users: ['AUID'],
+          users: [{ name: 'Juan', uid: 'AUID' }],
           queue: [],
         };
         ytkFire.newParty.mockImplementation(() =>
@@ -68,7 +68,7 @@ describe('partySagas', () => {
           .dispatch(partyActions.newParty(newParty))
           .put(partyActions.newPartySuccess(savedParty, newPartyId))
           .silentRun();
-        expect(ytkFire.newParty).toHaveBeenCalledWith(newParty);
+        expect(ytkFire.newParty).toHaveBeenCalledWith(savedParty);
       });
 
       it('sends error when there is an error', async () => {
@@ -131,7 +131,11 @@ describe('partySagas', () => {
     });
 
     it('loads party when party field of user is set', async () => {
-      const partyData = { name: 'Pedro Penduko', users: ['PDoA'], queue: [] };
+      const partyData = {
+        name: 'Pedro Penduko',
+        users: [{ name: 'Pedro', uid: 'PDoA' }],
+        queue: [],
+      };
       ytkFire.getParty = jest.fn(() => promise.resolvesTo(partyData));
       await saga
         .dispatch(partyActions.getParty(partyId))
@@ -167,9 +171,12 @@ describe('partySagas', () => {
         };
       });
 
-      it('calls joinParty with ID', async () => {
+      it('calls joinParty with user profile', async () => {
         await saga.silentRun();
-        expect(ytkFire.joinParty).toHaveBeenCalledWith(partyId);
+        expect(ytkFire.joinParty).toHaveBeenCalledWith(partyId, {
+          name: 'Jane',
+          uid: 'JAID',
+        });
       });
 
       it('sends a partySuccess action on success', async () => {

@@ -137,7 +137,10 @@ describe('YtkFire', () => {
 
   describe('#newParty()', () => {
     let partyId = 'summer-time-4898',
-      partyData = { name: 'Summer Time' };
+      partyData = {
+        name: 'Summer Time',
+        users: [{ name: 'Foo', uid: 'FUID' }],
+      };
 
     it('throws error when not signed in', async () => {
       await expect(ytkFire.newParty(partyData)).rejects.toThrow(
@@ -165,7 +168,7 @@ describe('YtkFire', () => {
 
       it('adds the user as the first party member', () => {
         expect(fakeFs.partySetMock).toHaveBeenCalledWith(
-          expect.objectContaining({ users: [ytkFire.uid] })
+          expect.objectContaining(partyData)
         );
       });
     });

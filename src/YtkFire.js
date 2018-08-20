@@ -89,9 +89,8 @@ export default class YtkFire {
     return this.currentUserRef().set(userData);
   }
 
-  async newParty(partyData) {
-    const id = idFromName(partyData.name);
-    const party = { ...partyData, users: [this.uid] };
+  async newParty(party) {
+    const id = idFromName(party.name);
     await this.saveParty(id, party);
     return { id, party };
   }
@@ -114,14 +113,19 @@ export default class YtkFire {
     return doc.data();
   }
 
-  async joinParty(partyId) {
+  addUser(party, newUser) {
+    return party.users
+      .filter(user => user.uid !== newUser.uid)
+      .concat([newUser]);
+  }
+
+  async joinParty(partyId, user) {
     this._throwOrSignedIn();
     const partyRef = this._partyDoc(partyId);
     return await this.db.runTransaction(async transaction => {
       const doc = await transaction.get(partyRef);
       if (!doc.exists) throw new PartyDoesNotExist(partyId);
-      const partyData = doc.data();
-      const users = Array.from(new Set(partyData.users.concat([this.uid])));
+      const users = this.addUser(doc.data(), user);
       return await transaction.update(partyRef, { users });
     });
   }

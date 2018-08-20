@@ -1,4 +1,5 @@
 import { ActionTypes as types } from '../constants';
+import { partyShape, validateReducer } from 'components/propTypes';
 
 export const defaultState = {
   name: '',
@@ -6,7 +7,7 @@ export const defaultState = {
   queue: [],
 };
 
-export default function party(state = defaultState, action = {}) {
+export function party(state = defaultState, action = {}) {
   switch (action.type) {
     case types.PARTY_LOAD:
       return {
@@ -17,3 +18,5 @@ export default function party(state = defaultState, action = {}) {
       return state;
   }
 }
+
+export default validateReducer(partyShape, 'party')(party);
