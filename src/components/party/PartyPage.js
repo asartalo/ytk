@@ -22,7 +22,7 @@ export class PartyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAddMenu: true,
+      showAddMenu: !props.party.current,
       openStandalonePlayer: false,
     };
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
