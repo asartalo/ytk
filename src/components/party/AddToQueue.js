@@ -13,7 +13,7 @@ import List from '@material-ui/core/List';
 import SearchIcon from '@material-ui/icons/Search';
 
 import debounce from 'helpers/debounce';
-import { search } from 'actions/partyActions';
+import * as partyActions from 'actions/partyActions';
 import VideoListItem from './VideoListItem';
 
 const styles = theme => ({
@@ -54,16 +54,26 @@ export class AddToQueue extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onAddToQueue();
   }
 
   handleSearch() {
-    this.props.dispatch(search(this.inputRef.value));
+    this.props.dispatch(partyActions.search(this.inputRef.value));
+  }
+
+  handleAddToQueue(video) {
+    const { dispatch, onAddToQueue, uid } = this.props;
+    dispatch(partyActions.addToQueue(video, uid));
+    onAddToQueue(video);
   }
 
   renderSearchResultItems() {
     return this.props.searchResults.map(video => (
-      <VideoListItem button key={video.videoId} video={video} />
+      <VideoListItem
+        button
+        key={video.videoId}
+        video={video}
+        onClick={() => this.handleAddToQueue(video)}
+      />
     ));
   }
 
@@ -112,9 +122,10 @@ export class AddToQueue extends Component {
 }
 
 export default connect(state => {
-  const { ui } = state;
+  const { ui, firestore } = state;
 
   return {
     searchResults: ui.searchResults,
+    uid: firestore.uid,
   };
 })(withStyles(styles)(AddToQueue));

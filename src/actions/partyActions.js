@@ -56,3 +56,11 @@ export function search(query) {
 export function searchResult(result) {
   return action(types.PARTY_SEARCH_RESULT, result);
 }
+
+export function addToQueue(video, addedBy) {
+  return action(types.PARTY_ADD_TO_QUEUE, { video, addedBy });
+}
+
+export function updateParty(party) {
+  return action(types.PARTY_UPDATE_PARTY, party);
+}

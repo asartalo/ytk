@@ -124,11 +124,12 @@ class ControlPanel extends Component {
               <Current
                 onOpenStandalonePlayer={this.handleToggleStandalonePlayer}
                 current={party.current}
+                users={party.users}
                 {...{ currentUser, openStandalonePlayer }}
               />
             </If>
             <Divider />
-            <Queue queue={party.queue} />
+            <Queue queue={party.queue} users={party.users} />
           </div>
           <div className={this.panelClasses(openStandalonePlayer)}>
             <div className={classes.panelControlWrap}>

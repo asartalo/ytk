@@ -42,6 +42,7 @@ function VideoListItem({
   secondaryAction,
   button,
   key,
+  addedBy,
 }) {
   const secondary = secondaryAction ? (
     <ListItemSecondaryAction>{secondaryAction}</ListItemSecondaryAction>
@@ -56,7 +57,16 @@ function VideoListItem({
           alt="thumbnail"
         />
       </ListItemIcon>
-      <ListItemText primary={video.title} secondary={video.channelTitle} />
+      <ListItemText
+        primary={video.title}
+        secondary={
+          <span>
+            Added by: <strong>{addedBy}</strong>
+            <br />
+            Video From: {video.channelTitle}
+          </span>
+        }
+      />
       {secondary}
     </ListItem>
   );

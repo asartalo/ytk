@@ -29,6 +29,11 @@ const videoCommon = {
 
 export const videoShape = PropTypes.shape(videoCommon);
 
+export const queueVideo = PropTypes.shape({
+  ...videoCommon,
+  queueId: PropTypes.string.isRequired,
+});
+
 export const currentVideoShape = PropTypes.shape({
   ...videoCommon,
   isPlaying: PropTypes.bool,
@@ -39,11 +44,14 @@ export const profileShape = PropTypes.shape({
   uid: PropTypes.string.isRequired,
 });
 
+export const arrayOfQueueVideo = PropTypes.arrayOf(queueVideo);
+export const arrayOfProfiles = PropTypes.arrayOf(profileShape);
+
 export const partyShape = PropTypes.shape({
   name: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(profileShape).isRequired,
-  queue: PropTypes.arrayOf(videoShape).isRequired,
+  users: arrayOfProfiles.isRequired,
+  queue: arrayOfQueueVideo.isRequired,
   current: currentVideoShape,
 });
 

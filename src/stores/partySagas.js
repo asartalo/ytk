@@ -13,7 +13,11 @@ import { eventChannel } from 'redux-saga';
 import { ActionTypes as types } from '../constants';
 import * as partyActions from 'actions/partyActions';
 import { setParty } from 'actions/currentUserActions';
-import { continueIfSignedIn, getUserAndUidFromState } from './sagasCommon';
+import {
+  continueIfSignedIn,
+  getUserAndUidFromState,
+  getPartyFromState,
+} from './sagasCommon';
 import { defaultState as defaultParty } from 'reducers/party';
 
 export default function partySagas(ytkFire, ytSearch) {
@@ -114,6 +118,24 @@ export default function partySagas(ytkFire, ytSearch) {
     yield put(partyActions.searchResult(searchResult));
   }
 
+  function* watchPartyChanges() {
+    yield* continueIfSignedIn();
+    yield takeLatest(action => {
+      switch (action.type) {
+        case types.PARTY_ADD_TO_QUEUE:
+          return true;
+        default:
+          return false;
+      }
+    }, syncPartyChanges);
+  }
+
+  function* syncPartyChanges() {
+    const party = yield getPartyFromState();
+    yield put(partyActions.updateParty(party));
+    yield ytkFire.saveParty(party.id, party);
+  }
+
   function* allPartySagas() {
     yield all([
       watchNewParty(),
@@ -121,6 +143,7 @@ export default function partySagas(ytkFire, ytSearch) {
       watchGetParty(),
       watchJoinParty(),
       watchPartyUpdated(),
+      watchPartyChanges(),
       watchSearch(),
     ]);
   }
@@ -130,6 +153,8 @@ export default function partySagas(ytkFire, ytSearch) {
     watchNewPartySuccess,
     watchGetParty,
     watchJoinParty,
+    watchPartyChanges,
+    watchSearch,
     allPartySagas,
   };
 }

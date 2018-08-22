@@ -68,6 +68,12 @@ export default function ui(state = defaultState, action = {}) {
         searchResults: action.data,
       };
 
+    case types.PARTY_ADD_TO_QUEUE:
+      return {
+        ...state,
+        searchResults: [],
+      };
+
     default:
       return state;
   }

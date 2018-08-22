@@ -16,6 +16,10 @@ export function getUidFromState() {
   return select(({ firestore }) => firestore.uid);
 }
 
+export function getPartyFromState() {
+  return select(({ party }) => party);
+}
+
 export function* continueIfSignedIn() {
   let uid = yield getUidFromState();
   if (!uid) {

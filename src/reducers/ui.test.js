@@ -75,5 +75,11 @@ describe('ui', () => {
       action: partyActions.searchResult(staticQueueData),
       expect: { searchResults: staticQueueData },
     },
+
+    PARTY_ADD_TO_QUEUE: {
+      from: { searchResults: staticQueueData },
+      action: partyActions.addToQueue(staticQueueData[0]),
+      expect: { searchResults: [] },
+    },
   });
 });

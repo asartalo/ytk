@@ -12,6 +12,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import { findUserNameFromId } from 'helpers/party';
 import { currentVideoShape, currentUserShape } from 'components/propTypes';
 import styles from './Current.styles.js';
 
@@ -66,7 +67,7 @@ class Current extends Component {
   }
 
   render() {
-    const { current, classes } = this.props;
+    const { current, users, classes } = this.props;
 
     return (
       <Card square className={classes.card} elevation={0}>
@@ -79,7 +80,8 @@ class Current extends Component {
             <Typography variant="subheading" color="textSecondary">
               {current.channelTitle}
               <br />
-              Added by: <strong>Janice</strong>
+              Added by:{' '}
+              <strong>{findUserNameFromId(current.addedBy, users)}</strong>
             </Typography>
           </CardContent>
           <div className={classes.controls}>

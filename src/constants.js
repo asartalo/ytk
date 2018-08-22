@@ -29,6 +29,8 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_UNLOAD',
   'PARTY_SEARCH',
   'PARTY_SEARCH_RESULT',
+  'PARTY_ADD_TO_QUEUE',
+  'PARTY_UPDATE_PARTY',
 
   // UI
   'UI_REDIRECT',

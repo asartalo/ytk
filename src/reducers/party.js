@@ -1,5 +1,6 @@
 import { ActionTypes as types } from '../constants';
 import { partyShape, validateReducer } from 'components/propTypes';
+import { prepForQueue } from 'helpers/party';
 
 export const defaultState = {
   name: '',
@@ -14,6 +15,23 @@ export function party(state = defaultState, action = {}) {
       return {
         ...state,
         ...action.data,
+      };
+
+    case types.PARTY_ADD_TO_QUEUE:
+      const { video, addedBy } = action.data;
+      const videoData = prepForQueue(video, addedBy);
+      if (state.queue.length > 0 || state.current) {
+        return {
+          ...state,
+          queue: state.queue.concat([videoData]),
+        };
+      }
+      return {
+        ...state,
+        current: {
+          ...videoData,
+          isPlaying: false,
+        },
       };
     default:
       return state;

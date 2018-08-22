@@ -6,6 +6,8 @@ import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ClearIcon from '@material-ui/icons/Clear';
 
+import { arrayOfQueueVideo, arrayOfProfiles } from 'components/propTypes';
+import { findUserNameFromId } from 'helpers/party';
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import VideoListItem from './VideoListItem';
 
@@ -41,14 +43,17 @@ class Queue extends Component {
     classes: PropTypes.object.isRequired,
     children: PropTypes.node,
     className: PropTypes.string,
+    queue: arrayOfQueueVideo.isRequired,
+    users: arrayOfProfiles.isRequired,
   };
 
   renderQueueItems() {
-    const { queue, classes } = this.props;
-    return queue.concat(queue).map((item, i) => (
+    const { queue, users, classes } = this.props;
+    return queue.map((item, i) => (
       <VideoListItem
-        key={`${item.videoId}-${i}`}
+        key={item.queueId}
         video={item}
+        addedBy={findUserNameFromId(item.addedBy, users)}
         secondaryAction={
           <IconButtonWithTooltip
             tooltipTitle="Remove item"

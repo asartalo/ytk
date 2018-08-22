@@ -18,8 +18,14 @@ export default function reducerTest(reducer, initialState, testData) {
     expect(reducer()).toEqual(initialState);
   });
 
-  Object.entries(testData).forEach(([actionType, data]) => {
-    it(`handles ${actionType}`, () => {
+  Object.entries(testData).forEach(([actionInstance, data]) => {
+    const match = actionInstance.match(/(\S+) (.+)$/);
+
+    const [actionInfo, actionType] = match
+      ? [`${match[1]} ${match[2]}`, match[1]]
+      : [actionInstance, actionInstance];
+
+    it(`handles ${actionInfo}`, () => {
       const { action, from } = data;
 
       throwForUndefinedActionOrExpect(action, data.expect);
