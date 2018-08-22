@@ -31,6 +31,7 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_ADD_TO_QUEUE',
   'PARTY_UPDATE_PARTY',
   'PARTY_REMOVE_FROM_QUEUE',
+  'PARTY_SET_CURRENT_PLAYBACK',
 
   // UI
   'UI_REDIRECT',

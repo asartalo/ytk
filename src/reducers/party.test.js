@@ -78,5 +78,21 @@ describe('party', () => {
       action: actions.removeFromQueue(queuedVideos[0]),
       expect: { queue: [...queuedVideos].slice(1) },
     },
+
+    'PARTY_SET_CURRENT_PLAYBACK true when current.isPlaying is false': {
+      from: { current: currentVideo },
+      action: actions.setPlayback(true),
+      expect: {
+        current: { ...currentVideo, isPlaying: true },
+      },
+    },
+
+    'PARTY_SET_CURRENT_PLAYBACK false when current.isPlaying is true': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+      },
+      action: actions.setPlayback(false),
+      expect: { current: currentVideo },
+    },
   });
 });

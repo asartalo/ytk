@@ -30,6 +30,14 @@ export class PartyPage extends Component {
     this.handleToggleStandalonePlayer = this.handleToggleStandalonePlayer.bind(
       this
     );
+    this.handlePlayerReady = this.handlePlayerReady.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { party } = this.props;
+    if (party.current.isPlaying !== prevProps.party.current.isPlaying) {
+      this.setPlayback(party.current.isPlaying);
+    }
   }
 
   handleToggleMenu() {
@@ -51,6 +59,22 @@ export class PartyPage extends Component {
     }));
   }
 
+  handlePlayerReady(e) {
+    console.log(e);
+    const { party } = this.props;
+    this.player = e.target;
+    this.setPlayback(party.current.isPlaying);
+    // e.target.playVideo();
+  }
+
+  setPlayback(shouldPlay) {
+    if (shouldPlay) {
+      this.player.playVideo();
+    } else {
+      this.player.pauseVideo();
+    }
+  }
+
   renderPlayer(classes, party) {
     if (party.current) {
       return (
@@ -58,6 +82,7 @@ export class PartyPage extends Component {
           className={classes.mainPlayer}
           videoId={party.current.videoId}
           isPlaying={party.current.isPlaying}
+          onReady={this.handlePlayerReady}
         />
       );
     } else {

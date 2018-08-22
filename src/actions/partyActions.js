@@ -68,3 +68,7 @@ export function updateParty(party) {
 export function removeFromQueue(video) {
   return action(types.PARTY_REMOVE_FROM_QUEUE, video);
 }
+
+export function setPlayback(status) {
+  return action(types.PARTY_SET_CURRENT_PLAYBACK, status);
+}

@@ -40,6 +40,15 @@ export function party(state = defaultState, action = {}) {
         queue: state.queue.filter(item => item.queueId !== action.data.queueId),
       };
 
+    case types.PARTY_SET_CURRENT_PLAYBACK:
+      return {
+        ...state,
+        current: {
+          ...state.current,
+          isPlaying: action.data,
+        },
+      };
+
     default:
       return state;
   }

@@ -23,6 +23,7 @@
     "react-router-scroll-4": "^1.0.0-beta.1",
     "react-scripts": "2.0.0-next.3e165448",
     "react-swipeable-views": "^0.12.16",
+    "react-youtube": "^7.6.0",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",

@@ -109,13 +109,7 @@ class ControlPanel extends Component {
   }
 
   render() {
-    const {
-      classes,
-      currentUser,
-      party,
-      showAddMenu,
-      openStandalonePlayer,
-    } = this.props;
+    const { classes, party, showAddMenu, openStandalonePlayer } = this.props;
 
     return (
       <div className={classes.root}>
@@ -128,9 +122,7 @@ class ControlPanel extends Component {
             <If condition={party.current}>
               <Current
                 onOpenStandalonePlayer={this.handleToggleStandalonePlayer}
-                current={party.current}
-                users={party.users}
-                {...{ currentUser, openStandalonePlayer }}
+                {...{ openStandalonePlayer }}
               />
             </If>
             <Divider />

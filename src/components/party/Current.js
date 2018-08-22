@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -11,6 +12,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
+import * as partyActions from 'actions/partyActions';
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import { findUserNameFromId } from 'helpers/party';
 import { currentVideoShape, currentUserShape } from 'components/propTypes';
@@ -27,6 +29,7 @@ class Current extends Component {
   constructor(props) {
     super(props);
     this.handleStandalonePlayer = this.handleStandalonePlayer.bind(this);
+    this.handlePlayerToggle = this.handlePlayerToggle.bind(this);
   }
 
   handleStandalonePlayer() {
@@ -36,12 +39,20 @@ class Current extends Component {
     this.props.onOpenStandalonePlayer();
   }
 
+  handlePlayerToggle() {
+    const { current, dispatch } = this.props;
+    dispatch(partyActions.setPlayback(!current.isPlaying));
+  }
+
   renderPlayPauseButton() {
     const { classes, current } = this.props;
     const { isPlaying } = current;
 
     return (
-      <IconButtonWithTooltip tooltipTitle={isPlaying ? 'Pause' : 'Play'}>
+      <IconButtonWithTooltip
+        tooltipTitle={isPlaying ? 'Pause' : 'Play'}
+        onClick={this.handlePlayerToggle}
+      >
         {isPlaying ? (
           <PauseIcon className={classes.playerIcon} />
         ) : (
@@ -101,4 +112,12 @@ class Current extends Component {
   }
 }
 
-export default withStyles(styles)(Current);
+export default connect(state => {
+  const { party, currentUser } = state;
+
+  return {
+    currentUser,
+    current: party.current,
+    users: party.users,
+  };
+})(withStyles(styles)(Current));

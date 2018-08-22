@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import YouTube from 'react-youtube';
+
+function originUrl() {
+  const loc = window.location;
+  return loc.protocol + '//' + loc.host;
+}
 
 const styles = theme => ({
   root: {
@@ -29,35 +35,32 @@ class Player extends Component {
     className: PropTypes.string,
   };
 
-  iframeProps() {
+  ytProps() {
     const props = { ...this.props };
-    ['videoId', 'classes', 'children', 'className', 'isPlaying'].forEach(
+    ['classes', 'children', 'className', 'isPlaying'].forEach(
       item => delete props[item]
     );
     return props;
   }
 
   render() {
-    const { videoId, classes, className, wideRatio } = this.props;
-    const videoUrl = `https://www.youtube.com/embed/${videoId}`;
-    const iframeProps = this.iframeProps();
+    const { classes, className, wideRatio } = this.props;
+    const ytProps = this.ytProps();
     const rootClasses = [classes.root, className];
 
     if (wideRatio) {
       rootClasses.push(classes.rootWide);
     }
 
+    const opts = {
+      playerVars: {
+        origin: originUrl(),
+      },
+    };
+
     return (
       <div className={rootClasses.join(' ')}>
-        <iframe
-          title="Hello Video"
-          className={classes.iframe}
-          src={videoUrl}
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          {...iframeProps}
-        />
+        <YouTube className={classes.iframe} opts={opts} {...ytProps} />
       </div>
     );
   }
