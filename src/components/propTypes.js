@@ -44,6 +44,7 @@ export const profileShape = PropTypes.shape({
   uid: PropTypes.string.isRequired,
 });
 
+export const arrayOfVideos = PropTypes.arrayOf(videoShape);
 export const arrayOfQueueVideo = PropTypes.arrayOf(queueVideo);
 export const arrayOfProfiles = PropTypes.arrayOf(profileShape);
 

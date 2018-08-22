@@ -12,6 +12,7 @@ import List from '@material-ui/core/List';
 
 import SearchIcon from '@material-ui/icons/Search';
 
+import { arrayOfVideos } from 'components/propTypes';
 import debounce from 'helpers/debounce';
 import * as partyActions from 'actions/partyActions';
 import VideoListItem from './VideoListItem';
@@ -38,18 +39,23 @@ export class AddToQueue extends Component {
   static displayName = 'AddToQueue';
   static defaultProps = {
     searchResults: [],
+    classes: {},
   };
 
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
+    dispatch: PropTypes.func.isRequired,
+    onAddToQueue: PropTypes.func.isRequired,
+    inputRef: PropTypes.func,
+    classes: PropTypes.object,
     className: PropTypes.string,
+    searchResults: arrayOfVideos,
   };
 
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSearch = debounce(this.handleSearch.bind(this), 300);
+    this.setInputRef = this.setInputRef.bind(this);
   }
 
   handleSubmit(e) {
@@ -64,6 +70,7 @@ export class AddToQueue extends Component {
     const { dispatch, onAddToQueue, uid } = this.props;
     dispatch(partyActions.addToQueue(video, uid));
     onAddToQueue(video);
+    this.inputRef.value = '';
   }
 
   renderSearchResultItems() {
@@ -75,6 +82,11 @@ export class AddToQueue extends Component {
         onClick={() => this.handleAddToQueue(video)}
       />
     ));
+  }
+
+  setInputRef(input) {
+    this.inputRef = input;
+    if (this.props.inputRef) this.props.inputRef(input);
   }
 
   render() {
@@ -91,9 +103,7 @@ export class AddToQueue extends Component {
                   fullWidth
                   id="search-field"
                   label="Search"
-                  inputRef={input =>
-                    (this.inputRef = input && this.props.inputRef(input))
-                  }
+                  inputRef={this.setInputRef}
                   onChange={this.handleSearch}
                   InputProps={{
                     endAdornment: (
