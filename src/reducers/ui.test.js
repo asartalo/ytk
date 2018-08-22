@@ -1,10 +1,9 @@
 import { ActionTypes as types } from '../constants';
+import staticVideoData from 'fixtures/staticVideoData';
 import reducerTest from 'helpers/reducerTest';
 import * as uiActions from 'actions/uiActions';
 import * as userActions from 'actions/currentUserActions';
 import * as partyActions from 'actions/partyActions';
-
-import staticQueueData from 'components/party/staticQueueData';
 
 import ui from './ui';
 
@@ -72,13 +71,13 @@ describe('ui', () => {
     },
 
     PARTY_SEARCH_RESULT: {
-      action: partyActions.searchResult(staticQueueData),
-      expect: { searchResults: staticQueueData },
+      action: partyActions.searchResult(staticVideoData),
+      expect: { searchResults: staticVideoData },
     },
 
     PARTY_ADD_TO_QUEUE: {
-      from: { searchResults: staticQueueData },
-      action: partyActions.addToQueue(staticQueueData[0]),
+      from: { searchResults: staticVideoData },
+      action: partyActions.addToQueue(staticVideoData[0]),
       expect: { searchResults: [] },
     },
   });

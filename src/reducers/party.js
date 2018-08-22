@@ -33,6 +33,13 @@ export function party(state = defaultState, action = {}) {
           isPlaying: false,
         },
       };
+
+    case types.PARTY_REMOVE_FROM_QUEUE:
+      return {
+        ...state,
+        queue: state.queue.filter(item => item.queueId !== action.data.queueId),
+      };
+
     default:
       return state;
   }

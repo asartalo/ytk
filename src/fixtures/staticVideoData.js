@@ -75,6 +75,7 @@ const queue = [
     videoId: '6kfEgFR_mgs',
     publishedAt: '2017-06-25T07:13:31.000Z',
     channelId: 'UCuK2vgMIcLQcmQGw2k4t9sQ',
+    channelTitle: 'Jimmy Loram',
     title: 'Hootie & The Blowfish Let Her Cry Karaoke - Best Karaoke Versions',
     thumbnails: {
       default: {
@@ -92,7 +93,6 @@ const queue = [
         width: 480,
         height: 360,
       },
-      channelTitle: 'Jimmy Loram',
     },
   },
 

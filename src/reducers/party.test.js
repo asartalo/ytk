@@ -1,7 +1,8 @@
 import { mockRandomForEach } from 'jest-mock-random';
 import reducerTest from 'helpers/reducerTest';
 import * as actions from 'actions/partyActions';
-import staticQueueData from 'components/party/staticQueueData';
+import staticVideoData from 'fixtures/staticVideoData';
+import queuedVideos from 'fixtures/queuedVideos';
 import party from './party';
 
 describe('party', () => {
@@ -13,17 +14,16 @@ describe('party', () => {
     id: '',
   };
 
-  const sampleQueuedVideo = {
-    ...staticQueueData[1],
-    queueId: `${staticQueueData[1].videoId}-12233}`,
-    addedBy: 'SOMEID',
-  };
+  const sampleQueuedVideo = queuedVideos[1];
 
-  const video = staticQueueData[0];
-  const currentVideo = {
-    ...video,
+  const video = staticVideoData[0];
+  const videoQueued = {
+    ...queuedVideos[0],
     queueId: `${video.videoId}-${99999}`,
     addedBy: 'MYUID',
+  }; // this is based on staticVideoData[0]
+  const currentVideo = {
+    ...sampleQueuedVideo,
     isPlaying: false,
   };
 
@@ -50,10 +50,7 @@ describe('party', () => {
     'PARTY_ADD_TO_QUEUE when queue is empty and there is current': {
       from: {
         queue: [],
-        current: {
-          ...sampleQueuedVideo,
-          isPlaying: false,
-        },
+        current: currentVideo,
       },
       action: actions.addToQueue(video, 'MYUID'),
       expect: {
@@ -64,10 +61,7 @@ describe('party', () => {
             addedBy: 'MYUID',
           },
         ],
-        current: {
-          ...sampleQueuedVideo,
-          isPlaying: false,
-        },
+        current: currentVideo,
       },
     },
 
@@ -75,15 +69,14 @@ describe('party', () => {
       from: { queue: [sampleQueuedVideo] },
       action: actions.addToQueue(video, 'MYUID'),
       expect: {
-        queue: [
-          sampleQueuedVideo,
-          {
-            ...video,
-            queueId: `${video.videoId}-${99999}`,
-            addedBy: 'MYUID',
-          },
-        ],
+        queue: [sampleQueuedVideo, videoQueued],
       },
+    },
+
+    PARTY_REMOVE_FROM_QUEUE: {
+      from: { queue: [...queuedVideos] },
+      action: actions.removeFromQueue(queuedVideos[0]),
+      expect: { queue: [...queuedVideos].slice(1) },
     },
   });
 });

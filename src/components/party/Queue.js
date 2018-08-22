@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
@@ -8,6 +9,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 import { arrayOfQueueVideo, arrayOfProfiles } from 'components/propTypes';
 import { findUserNameFromId } from 'helpers/party';
+import { removeFromQueue } from 'actions/partyActions';
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import VideoListItem from './VideoListItem';
 
@@ -38,14 +40,23 @@ const styles = theme => ({
   },
 });
 
-class Queue extends Component {
+export class Queue extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
+    dispatch: PropTypes.func.isRequired,
     className: PropTypes.string,
     queue: arrayOfQueueVideo.isRequired,
     users: arrayOfProfiles.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.handleClearItem = this.handleClearItem.bind(this);
+  }
+
+  handleClearItem(item) {
+    this.props.dispatch(removeFromQueue(item));
+  }
 
   renderQueueItems() {
     const { queue, users, classes } = this.props;
@@ -59,6 +70,7 @@ class Queue extends Component {
             tooltipTitle="Remove item"
             tooltipPlacement="top"
             className={classes.clearButton}
+            onClick={() => this.handleClearItem(item)}
           >
             <ClearIcon className={classes.clearIcon} />
           </IconButtonWithTooltip>
@@ -79,4 +91,4 @@ class Queue extends Component {
   }
 }
 
-export default withStyles(styles)(Queue);
+export default connect(state => ({}))(withStyles(styles)(Queue));

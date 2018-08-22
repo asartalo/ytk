@@ -123,6 +123,7 @@ export default function partySagas(ytkFire, ytSearch) {
     yield takeLatest(action => {
       switch (action.type) {
         case types.PARTY_ADD_TO_QUEUE:
+        case types.PARTY_REMOVE_FROM_QUEUE:
           return true;
         default:
           return false;

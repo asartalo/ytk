@@ -4,12 +4,12 @@ import ReactRouterEnzymeContext from 'react-router-enzyme-context';
 
 import userReducer from 'reducers/currentUser';
 import partyReducer from 'reducers/party';
-import staticQueueData from 'components/party/staticQueueData';
+import staticVideoData from 'fixtures/staticVideoData';
 import { partyActions } from 'actions';
 
 import PartyPageWithStyle, { PartyPage } from './PartyPage';
 
-const sampleVideo = staticQueueData[0];
+const sampleVideo = staticVideoData[0];
 
 const defaultProps = {
   dispatch: jest.fn(),

@@ -5,7 +5,7 @@ import {
   findUserNameFromId,
 } from './party';
 import { mockRandomForEach } from 'jest-mock-random';
-import staticQueueData from 'components/party/staticQueueData';
+import staticVideoData from 'fixtures/staticVideoData';
 
 describe('helpers/party', () => {
   describe('idToPath()', () => {
@@ -22,7 +22,7 @@ describe('helpers/party', () => {
 
   describe('prepForQueue()', () => {
     let result, video;
-    video = staticQueueData[0];
+    video = staticVideoData[0];
 
     mockRandomForEach(0.888888);
     beforeEach(() => {

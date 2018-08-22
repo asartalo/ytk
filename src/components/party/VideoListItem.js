@@ -34,7 +34,7 @@ const styles = theme => ({
   },
 });
 
-function VideoListItem({
+export function VideoListItem({
   video,
   classes,
   className,

@@ -64,3 +64,7 @@ export function addToQueue(video, addedBy) {
 export function updateParty(party) {
   return action(types.PARTY_UPDATE_PARTY, party);
 }
+
+export function removeFromQueue(video) {
+  return action(types.PARTY_REMOVE_FROM_QUEUE, video);
+}
