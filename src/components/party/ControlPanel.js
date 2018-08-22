@@ -18,6 +18,11 @@ const styles = theme => ({
   panel: {
     overflow: 'auto',
     height: 'calc(100vh - 56px)',
+
+    [theme.breakpoints.down('sm')]: {
+      overflow: 'visible',
+      height: 'auto',
+    },
   },
 
   panelStandalone: {
