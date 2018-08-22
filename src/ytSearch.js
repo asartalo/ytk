@@ -5,6 +5,7 @@ export default function ytSearch(query) {
     q: query,
     part: 'snippet',
     type: 'video',
+    maxResults: 10,
   };
 
   return youtubeSearch(process.env.REACT_APP_YOUTUBE_API_KEY, options).then(

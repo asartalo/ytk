@@ -9,7 +9,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const styles = theme => ({
   thumbnail: {
-    maxHeight: 40,
+    width: 53,
+    height: 40,
     marginRight: theme.spacing.unit,
   },
 
