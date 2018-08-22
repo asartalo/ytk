@@ -21,7 +21,7 @@ export class PartyUiGrid extends Component {
       <Grid
         item
         iid="player"
-        className={classes.videoContainer}
+        className={classes.mainSection}
         xs={12}
         sm={12}
         md={8}

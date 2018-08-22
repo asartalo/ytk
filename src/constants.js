@@ -11,6 +11,8 @@ export const ActionTypes = enforcedActionTypes(
   'CURRENT_USER_UI_HOME_SET_STATE',
   'CURRENT_USER_LOAD_USER',
   'CURRENT_USER_NOT_SIGNED_IN',
+  'CURRENT_USER_SHOW_ADD_MENU',
+  'CURRENT_USER_HIDE_ADD_MENU',
 
   // party
   'PARTY_NEW',
@@ -23,6 +25,10 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_JOIN',
   'PARTY_JOIN_SUCCESS',
   'PARTY_JOIN_ERROR',
+  'PARTY_UPDATED',
+  'PARTY_UNLOAD',
+  'PARTY_SEARCH',
+  'PARTY_SEARCH_RESULT',
 
   // UI
   'UI_REDIRECT',

@@ -18,6 +18,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       paddingTop: 0,
       maxHeight: 'auto',
+      borderTop: `1px solid ${borderColor(theme)}`,
     },
   },
 
@@ -26,10 +27,10 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
   },
 
-  videoContainer: {
+  mainSection: {
     paddingTop: 56,
     maxHeight: '100vh',
-    backgroundColor: 'black',
+    backgroundColor: theme.palette.background.default,
   },
 });
 

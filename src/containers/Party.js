@@ -10,8 +10,6 @@ import ProgressOrChildren from 'components/ProgressOrChildren';
 import PartyPage from 'components/party/PartyPage';
 import PartyPlayerPage from 'components/party/PartyPlayerPage';
 
-import queueData from 'components/party/staticQueueData';
-
 export class Party extends Component {
   static propTypes = {
     className: PropTypes.string,
@@ -27,21 +25,36 @@ export class Party extends Component {
     dispatch(partyActions.getParty(match.params.party));
   }
 
+  componentWillUnmount() {
+    const { dispatch, match } = this.props;
+    dispatch(partyActions.unloadParty(match.params.party));
+  }
+
   render() {
-    const { currentUser, match, party, partyGetInProgress } = this.props;
+    const {
+      currentUser,
+      match,
+      party,
+      partyGetInProgress,
+      dispatch,
+    } = this.props;
     return (
       <Body className="Party">
-        <ProgressOrChildren inProgress={partyGetInProgress}>
+        <ProgressOrChildren inProgress={partyGetInProgress} fullscreen>
           <Switch>
             <Route
               exact
               path={match.url}
-              render={props => <PartyPage {...{ currentUser, party }} />}
+              render={props => (
+                <PartyPage {...{ currentUser, party, dispatch }} />
+              )}
             />
             <Route
               exact
               path={match.url + '/player'}
-              render={props => <PartyPlayerPage {...{ currentUser, party }} />}
+              render={props => (
+                <PartyPlayerPage {...{ currentUser, party, dispatch }} />
+              )}
             />
           </Switch>
         </ProgressOrChildren>
@@ -51,29 +64,11 @@ export class Party extends Component {
 }
 
 export default connect((state, props) => {
-  // const { currentUser, party, ui } = state;
+  const { currentUser, party, ui } = state;
 
-  // return {
-  //   currentUser,
-  //   party,
-  //   partyGetInProgress: ui.partyGetInProgress
-  // };
-  const queue = [...queueData];
-  const current = queue.shift();
-  current.isPlaying = false;
   return {
-    currentUser: {
-      name: 'Jesus Maria Jose',
-      intent: '',
-      party: '',
-      homeState: 'start',
-    },
-    party: {
-      name: 'Birthday Bash!',
-      users: ['anid'],
-      queue,
-      current,
-    },
-    partyGetInProgress: false,
+    currentUser,
+    party,
+    partyGetInProgress: ui.partyGetInProgress,
   };
 })(Party);

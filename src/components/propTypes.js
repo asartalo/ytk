@@ -41,6 +41,7 @@ export const profileShape = PropTypes.shape({
 
 export const partyShape = PropTypes.shape({
   name: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(profileShape).isRequired,
   queue: PropTypes.arrayOf(videoShape).isRequired,
   current: currentVideoShape,

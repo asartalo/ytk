@@ -7,6 +7,7 @@ describe('party', () => {
     name: '',
     users: [],
     queue: [],
+    id: '',
   };
 
   reducerTest(party, initialState, {

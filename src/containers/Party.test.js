@@ -23,6 +23,7 @@ describe('Party', () => {
         name: '',
         queue: [],
         users: [],
+        id: '',
       },
       dispatch: jest.fn(),
       match: {

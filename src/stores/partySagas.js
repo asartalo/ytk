@@ -1,4 +1,14 @@
-import { all, put, take, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+  all,
+  cancel,
+  cancelled,
+  fork,
+  put,
+  take,
+  takeEvery,
+  takeLatest,
+} from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 
 import { ActionTypes as types } from '../constants';
 import * as partyActions from 'actions/partyActions';
@@ -6,7 +16,7 @@ import { setParty } from 'actions/currentUserActions';
 import { continueIfSignedIn, getUserAndUidFromState } from './sagasCommon';
 import { defaultState as defaultParty } from 'reducers/party';
 
-export default function partySagas(ytkFire) {
+export default function partySagas(ytkFire, ytSearch) {
   function* watchNewParty() {
     yield take(types.FIRESTORE_SYNC_READY);
     yield takeEvery(types.PARTY_NEW, newParty);
@@ -36,22 +46,46 @@ export default function partySagas(ytkFire) {
   }
 
   function* watchGetParty() {
-    yield takeLatest(types.PARTY_GET, announceLoadParty);
+    yield takeLatest(types.PARTY_GET, getParty);
   }
 
-  function* announceLoadParty({ data }) {
+  function* getParty({ data }) {
     yield* continueIfSignedIn();
     const party = yield ytkFire.getParty(data);
     yield put(partyActions.loadParty(party));
+    const syncTask = yield fork(watchSyncChanges, data);
+    yield take(types.PARTY_UNLOAD);
+    yield cancel(syncTask);
   }
 
-  function* allPartySagas() {
-    yield all([
-      watchNewParty(),
-      watchNewPartySuccess(),
-      watchGetParty(),
-      watchJoinParty(),
-    ]);
+  function partySync(partyId) {
+    return eventChannel(emitter =>
+      ytkFire.syncParty(partyId, doc => {
+        emitter(doc.data());
+      })
+    );
+  }
+
+  function* watchSyncChanges(partyId) {
+    const chan = partySync(partyId);
+    try {
+      while (true) {
+        const party = yield take(chan);
+        yield put(partyActions.partyUpdated(party));
+      }
+    } finally {
+      if (yield cancelled()) {
+        chan.close();
+      }
+    }
+  }
+
+  function* watchPartyUpdated() {
+    yield takeLatest(types.PARTY_UPDATED, partyUpdated);
+  }
+
+  function* partyUpdated(action) {
+    yield put(partyActions.loadParty(action.data));
   }
 
   function* watchJoinParty() {
@@ -68,6 +102,27 @@ export default function partySagas(ytkFire) {
     } catch (error) {
       yield put(partyActions.joinPartyError(error));
     }
+  }
+
+  function* watchSearch() {
+    yield takeLatest(types.PARTY_SEARCH, searchVideos);
+  }
+
+  function* searchVideos(action) {
+    yield* continueIfSignedIn();
+    const searchResult = yield ytSearch('karaoke ' + action.data);
+    yield put(partyActions.searchResult(searchResult));
+  }
+
+  function* allPartySagas() {
+    yield all([
+      watchNewParty(),
+      watchNewPartySuccess(),
+      watchGetParty(),
+      watchJoinParty(),
+      watchPartyUpdated(),
+      watchSearch(),
+    ]);
   }
 
   return {

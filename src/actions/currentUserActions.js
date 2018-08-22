@@ -24,3 +24,11 @@ export function loadUser(user) {
 export function userNotSignedIn() {
   return action(types.CURRENT_USER_NOT_SIGNED_IN);
 }
+
+export function showAddMenu() {
+  return action(types.CURRENT_USER_SHOW_ADD_MENU);
+}
+
+export function hideAddMenu() {
+  return action(types.CURRENT_USER_HIDE_ADD_MENU);
+}

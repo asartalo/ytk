@@ -10,6 +10,7 @@ import FabAddButton from './FabAddButton';
 import Current from './Current';
 import Queue from './Queue';
 import AddToQueue from './AddToQueue';
+import If from 'components/If';
 
 const styles = theme => ({
   root: {},
@@ -76,6 +77,12 @@ class ControlPanel extends Component {
     this.handleToggleMenu();
   }
 
+  componentDidMount() {
+    if (this.props.showAddMenu) {
+      this.searchInput.focus();
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (
       prevProps.showAddMenu !== this.props.showAddMenu &&
@@ -113,11 +120,13 @@ class ControlPanel extends Component {
           onChangeIndex={this.handleChangePanel}
         >
           <div className={this.panelClasses(openStandalonePlayer)}>
-            <Current
-              onOpenStandalonePlayer={this.handleToggleStandalonePlayer}
-              current={party.current}
-              {...{ currentUser, openStandalonePlayer }}
-            />
+            <If condition={party.current}>
+              <Current
+                onOpenStandalonePlayer={this.handleToggleStandalonePlayer}
+                current={party.current}
+                {...{ currentUser, openStandalonePlayer }}
+              />
+            </If>
             <Divider />
             <Queue queue={party.queue} />
           </div>

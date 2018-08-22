@@ -14,10 +14,7 @@ export class AppRedirect extends PureComponent {
 
   render() {
     const { to } = this.props;
-    if (to) {
-      return <Redirect to={to} />;
-    }
-    return null;
+    return to ? <Redirect to={to} /> : null;
   }
 }
 

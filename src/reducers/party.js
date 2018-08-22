@@ -5,6 +5,7 @@ export const defaultState = {
   name: '',
   users: [],
   queue: [],
+  id: '',
 };
 
 export function party(state = defaultState, action = {}) {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -11,7 +12,8 @@ import List from '@material-ui/core/List';
 
 import SearchIcon from '@material-ui/icons/Search';
 
-import queueData from './staticQueueData';
+import debounce from 'helpers/debounce';
+import { search } from 'actions/partyActions';
 import VideoListItem from './VideoListItem';
 
 const styles = theme => ({
@@ -33,6 +35,11 @@ const styles = theme => ({
 });
 
 export class AddToQueue extends Component {
+  static displayName = 'AddToQueue';
+  static defaultProps = {
+    searchResults: [],
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     children: PropTypes.node,
@@ -42,6 +49,7 @@ export class AddToQueue extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSearch = debounce(this.handleSearch.bind(this), 300);
   }
 
   handleSubmit(e) {
@@ -49,8 +57,12 @@ export class AddToQueue extends Component {
     this.props.onAddToQueue();
   }
 
+  handleSearch() {
+    this.props.dispatch(search(this.inputRef.value));
+  }
+
   renderSearchResultItems() {
-    return queueData.map(video => (
+    return this.props.searchResults.map(video => (
       <VideoListItem button key={video.videoId} video={video} />
     ));
   }
@@ -60,7 +72,7 @@ export class AddToQueue extends Component {
     const rootClass = [classes.root, className].filter(x => x).join(' ');
 
     return (
-      <div id="AddToQueue">
+      <div id="add-to-queue">
         <Card square elevation={0} className={rootClass}>
           <CardContent>
             <div className={classes.searchField}>
@@ -69,7 +81,10 @@ export class AddToQueue extends Component {
                   fullWidth
                   id="search-field"
                   label="Search"
-                  inputRef={this.props.inputRef}
+                  inputRef={input =>
+                    (this.inputRef = input && this.props.inputRef(input))
+                  }
+                  onChange={this.handleSearch}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment
@@ -96,4 +111,10 @@ export class AddToQueue extends Component {
   }
 }
 
-export default withStyles(styles)(AddToQueue);
+export default connect(state => {
+  const { ui } = state;
+
+  return {
+    searchResults: ui.searchResults,
+  };
+})(withStyles(styles)(AddToQueue));

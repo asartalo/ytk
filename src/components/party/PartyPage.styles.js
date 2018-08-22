@@ -14,6 +14,16 @@ const styles = theme => ({
       paddingTop: '56.25%',
     },
   },
+
+  emptyQueueHelp: {
+    ...theme.typography.headline,
+    textAlign: 'center',
+    paddingTop: 56,
+  },
+
+  emptyQueueHeadline: {
+    ...theme.typography.display3,
+  },
 });
 
 export default styles;

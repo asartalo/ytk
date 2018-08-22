@@ -19,7 +19,7 @@ class Current extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.string,
-    current: currentVideoShape.isRequired,
+    current: currentVideoShape,
     currentUser: currentUserShape.isRequired,
   };
 

@@ -20,7 +20,7 @@ import { UserDataDoesNotExist } from '../YtkFire';
 
 import partySagas from './partySagas';
 
-export default function setup(ytkFire) {
+export default function setup(ytkFire, ytSearch) {
   function* signInAnonymously() {
     yield put(signInAnonymouslyRequest());
     yield put(setHomeState('loading'));
@@ -104,7 +104,7 @@ export default function setup(ytkFire) {
     );
   }
 
-  const { allPartySagas } = partySagas(ytkFire);
+  const { allPartySagas } = partySagas(ytkFire, ytSearch);
 
   function* rootSaga() {
     yield all([

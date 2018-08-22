@@ -2,10 +2,10 @@ import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { shallow } from 'enzyme';
 
-import ProgressOrChildren from './ProgressOrChildren';
+import { ProgressOrChildren } from './ProgressOrChildren';
 
 describe('ProgressOrChildren', () => {
-  let component, props, child;
+  let component, props;
 
   const renderComponent = () => {
     return shallow(
@@ -18,6 +18,7 @@ describe('ProgressOrChildren', () => {
   beforeEach(() => {
     props = {
       inProgress: false,
+      classes: {},
     };
     component = renderComponent();
   });
@@ -34,6 +35,7 @@ describe('ProgressOrChildren', () => {
     beforeEach(() => {
       props = {
         inProgress: true,
+        classes: {},
       };
       component = renderComponent();
     });
@@ -44,6 +46,21 @@ describe('ProgressOrChildren', () => {
 
     it('shows progress indicator', () => {
       expect(component.find(CircularProgress)).toExist();
+    });
+  });
+
+  describe('when fullscreen is set', () => {
+    beforeEach(() => {
+      props = {
+        inProgress: true,
+        fullscreen: true,
+        classes: { progressFullscreen: 'foo' },
+      };
+      component = renderComponent();
+    });
+
+    it('adds class to progress', () => {
+      expect(component.find(CircularProgress)).toHaveProp('className', 'foo');
     });
   });
 });

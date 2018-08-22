@@ -91,6 +91,7 @@ export default class YtkFire {
 
   async newParty(party) {
     const id = idFromName(party.name);
+    party.id = id;
     await this.saveParty(id, party);
     return { id, party };
   }
@@ -111,6 +112,10 @@ export default class YtkFire {
       throw new PartyDoesNotExist(partyId);
     }
     return doc.data();
+  }
+
+  syncParty(partyId, callback) {
+    return this._partyDoc(partyId).onSnapshot(callback);
   }
 
   addUser(party, newUser) {

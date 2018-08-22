@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import GroupIcon from '@material-ui/icons/Group';
 
+import { idToFullUrl } from 'helpers/party';
 import micIcon from 'images/okee_logo_1.svg';
 import PartyGoersMenu from './PartyGoersMenu';
 
@@ -80,35 +81,9 @@ class AppBar extends Component {
 
   render() {
     const { classes, party } = this.props;
-    const userProfiles = [
-      {
-        name: 'Jane',
-        uid: 'j1',
-      },
-      {
-        name: 'John',
-        uid: 'j2',
-      },
-      {
-        name: 'Anna Marie',
-        uid: 'am',
-      },
-      {
-        name: 'Peter',
-        uid: 'p1',
-      },
-      {
-        name: 'Phoebe',
-        uid: 'p2',
-      },
-      {
-        name: 'George',
-        uid: 'gg',
-      },
-    ];
     // mic by sasicreatives from the Noun Project
     return (
-      <div className={classes.root}>
+      <div className={classes.root} id="party-app-bar">
         <MaterialAppBar
           className={classes.appBar}
           position="fixed"
@@ -137,7 +112,7 @@ class AppBar extends Component {
             <div>
               <Badge
                 classes={{ badge: classes.userBadge }}
-                badgeContent={userProfiles.length}
+                badgeContent={party.users.length}
                 color="default"
               >
                 <IconButton onClick={this.togglePartyGoers}>
@@ -148,8 +123,8 @@ class AppBar extends Component {
                 anchorEl={this.state.partyGoersAnchor}
                 open={Boolean(this.state.partyGoersAnchor)}
                 onClose={this.closePartyGoers}
-                partyGoers={userProfiles}
-                partyUrl="http://localhost:3000/lorem-ipsum-change-this-12123"
+                partyGoers={party.users}
+                partyUrl={idToFullUrl(party.id)}
               />
             </div>
           </Toolbar>

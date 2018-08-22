@@ -1,13 +1,15 @@
 import { ActionTypes as types } from '../constants';
+import { currentUserShape, validateReducer } from 'components/propTypes';
 
 const defaultState = {
   name: '',
   intent: '',
   party: '',
   homeState: 'start',
+  playerShowAddMenu: false,
 };
 
-export default function currentUser(state = defaultState, action = {}) {
+export function currentUser(state = defaultState, action = {}) {
   switch (action.type) {
     case types.CURRENT_USER_SET_NAME:
       return {
@@ -41,7 +43,19 @@ export default function currentUser(state = defaultState, action = {}) {
         ...state,
         ...action.data,
       };
+    case types.CURRENT_USER_SHOW_ADD_MENU:
+      return {
+        ...state,
+        playerShowAddMenu: true,
+      };
+    case types.CURRENT_USER_HIDE_ADD_MENU:
+      return {
+        ...state,
+        playerShowAddMenu: false,
+      };
     default:
       return state;
   }
 }
+
+export default validateReducer(currentUserShape, 'currentUser')(currentUser);

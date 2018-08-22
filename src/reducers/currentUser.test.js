@@ -9,6 +9,7 @@ describe('currentUser', () => {
     intent: '',
     party: '',
     homeState: 'start',
+    playerShowAddMenu: false,
   };
 
   it('noops for invalid action', () => {
@@ -40,6 +41,17 @@ describe('currentUser', () => {
     PARTY_NEW_SUCCESS: {
       action: newPartySuccess({ name: 'The Party' }, 'the-party-id-1777'),
       expect: { party: 'the-party-id-1777' },
+    },
+
+    CURRENT_USER_SHOW_ADD_MENU: {
+      action: actions.showAddMenu(),
+      expect: { playerShowAddMenu: true },
+    },
+
+    CURRENT_USER_HIDE_ADD_MENU: {
+      from: { playerShowAddMenu: true },
+      action: actions.hideAddMenu(),
+      expect: { playerShowAddMenu: false },
     },
   });
 });

@@ -4,6 +4,8 @@ import * as uiActions from 'actions/uiActions';
 import * as userActions from 'actions/currentUserActions';
 import * as partyActions from 'actions/partyActions';
 
+import staticQueueData from 'components/party/staticQueueData';
+
 import ui from './ui';
 
 describe('ui', () => {
@@ -12,6 +14,7 @@ describe('ui', () => {
     partyJoinError: null,
     partyJoinInProgress: false,
     partyGetInProgress: false,
+    searchResults: [],
   };
 
   reducerTest(ui, initialState, {
@@ -66,6 +69,11 @@ describe('ui', () => {
       from: { partyGetInProgress: true },
       action: partyActions.loadParty({ name: 'Foo' }),
       expect: { partyGetInProgress: false },
+    },
+
+    PARTY_SEARCH_RESULT: {
+      action: partyActions.searchResult(staticQueueData),
+      expect: { searchResults: staticQueueData },
     },
   });
 });

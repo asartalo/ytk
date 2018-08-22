@@ -56,6 +56,7 @@ describe('partySagas', () => {
           ...newParty,
           users: [{ name: 'Juan', uid: 'AUID' }],
           queue: [],
+          id: newPartyId,
         };
         ytkFire.newParty.mockImplementation(() =>
           promise.resolvesTo({ id: newPartyId, party: savedParty })
@@ -68,7 +69,8 @@ describe('partySagas', () => {
           .dispatch(partyActions.newParty(newParty))
           .put(partyActions.newPartySuccess(savedParty, newPartyId))
           .silentRun();
-        expect(ytkFire.newParty).toHaveBeenCalledWith(savedParty);
+        const passedParty = { ...savedParty, id: '' };
+        expect(ytkFire.newParty).toHaveBeenCalledWith(passedParty);
       });
 
       it('sends error when there is an error', async () => {
@@ -137,6 +139,7 @@ describe('partySagas', () => {
         queue: [],
       };
       ytkFire.getParty = jest.fn(() => promise.resolvesTo(partyData));
+      ytkFire.syncParty = jest.fn(() => () => {});
       await saga
         .dispatch(partyActions.getParty(partyId))
         .put(partyActions.loadParty(partyData))

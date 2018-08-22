@@ -13,7 +13,7 @@ import styles from './PartyPage.styles.js';
 export class PartyPage extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    children: PropTypes.node,
+    dispatch: PropTypes.func.isRequired,
     className: PropTypes.string,
     currentUser: currentUserShape.isRequired,
     party: partyShape.isRequired,
@@ -22,7 +22,7 @@ export class PartyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showAddMenu: false,
+      showAddMenu: true,
       openStandalonePlayer: false,
     };
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
@@ -51,6 +51,28 @@ export class PartyPage extends Component {
     }));
   }
 
+  renderPlayer(classes, party) {
+    if (party.current) {
+      return (
+        <Player
+          className={classes.mainPlayer}
+          videoId={party.current.videoId}
+          isPlaying={party.current.isPlaying}
+        />
+      );
+    } else {
+      return (
+        <div className={classes.emptyQueueHelp}>
+          <h1 className={classes.emptyQueueHeadline}>Let’s Go!</h1>
+          <p>
+            Use the search form to find a video. <br />
+            Your video will then appear here.
+          </p>
+        </div>
+      );
+    }
+  }
+
   render() {
     const { classes, currentUser, party } = this.props;
     const { showAddMenu, openStandalonePlayer } = this.state;
@@ -60,12 +82,9 @@ export class PartyPage extends Component {
         <AppBar party={party} />
         <div className={classes.mainContent}>
           <PartyUiGrid hidePlayer={openStandalonePlayer}>
-            <Player
-              className={classes.mainPlayer}
-              videoId={party.current.videoId}
-              isPlaying={party.current.isPlaying}
-            />
+            <div id="video-main">{this.renderPlayer(classes, party)}</div>
             <ControlPanel
+              onSearch={this.handleSearch}
               onChanePanel={this.handleChangePanel}
               onToggleStandalonePlayer={this.handleToggleStandalonePlayer}
               onToggleMenu={this.handleToggleMenu}

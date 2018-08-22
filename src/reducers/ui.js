@@ -6,6 +6,7 @@ export const defaultState = {
   partyJoinError: null,
   partyJoinInProgress: false,
   partyGetInProgress: false,
+  searchResults: [],
 };
 
 export default function ui(state = defaultState, action = {}) {
@@ -59,6 +60,12 @@ export default function ui(state = defaultState, action = {}) {
       return {
         ...state,
         redirectTo: idToPath(action.data),
+      };
+
+    case types.PARTY_SEARCH_RESULT:
+      return {
+        ...state,
+        searchResults: action.data,
       };
 
     default:
