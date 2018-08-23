@@ -125,6 +125,7 @@ export default function partySagas(ytkFire, ytSearch) {
         case types.PARTY_ADD_TO_QUEUE:
         case types.PARTY_REMOVE_FROM_QUEUE:
         case types.PARTY_SET_CURRENT_PLAYBACK:
+        case types.PARTY_SKIP:
           return true;
         default:
           return false;

@@ -34,10 +34,6 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
   },
-  playerIcon: {
-    height: 36,
-    width: 36,
-  },
 });
 
 export default styles;

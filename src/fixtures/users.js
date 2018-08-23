@@ -12,3 +12,10 @@ export const profiles = [
     uid: 'CUID',
   },
 ];
+
+export const currentUser = {
+  ...profiles[0],
+  intent: '',
+  homeState: '',
+  party: '',
+};

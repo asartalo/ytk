@@ -27,6 +27,10 @@ describe('party', () => {
     isPlaying: false,
   };
 
+  const queuedVideosWithoutCurrent = queuedVideos.filter(
+    video => video.queueId !== currentVideo.queueId
+  );
+
   reducerTest(party, initialState, {
     PARTY_LOAD: {
       action: actions.loadParty({ name: 'New Year' }),
@@ -93,6 +97,28 @@ describe('party', () => {
       },
       action: actions.setPlayback(false),
       expect: { current: currentVideo },
+    },
+
+    'PARTY_SKIP when queue is empty pauses the current video': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+      },
+      action: actions.skip(),
+      expect: {
+        current: { ...currentVideo, isPlaying: false },
+      },
+    },
+
+    'PARTY_SKIP when queue is filled shifts queue first item to current': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+        queue: [...queuedVideosWithoutCurrent],
+      },
+      action: actions.skip(),
+      expect: {
+        current: { ...queuedVideosWithoutCurrent[0], isPlaying: true },
+        queue: queuedVideosWithoutCurrent.slice(1),
+      },
     },
   });
 });

@@ -72,3 +72,7 @@ export function removeFromQueue(video) {
 export function setPlayback(status) {
   return action(types.PARTY_SET_CURRENT_PLAYBACK, status);
 }
+
+export function skip() {
+  return action(types.PARTY_SKIP);
+}

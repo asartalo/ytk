@@ -7,29 +7,35 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 import * as partyActions from 'actions/partyActions';
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import { findUserNameFromId } from 'helpers/party';
-import { currentVideoShape, currentUserShape } from 'components/propTypes';
+import {
+  currentVideoShape,
+  currentUserShape,
+  arrayOfProfiles,
+} from 'components/propTypes';
+import PlaybackButton from './PlaybackButton';
+import SkipButton from './SkipButton';
 import styles from './Current.styles.js';
 
-class Current extends Component {
+export class Current extends Component {
   static propTypes = {
-    children: PropTypes.node,
     className: PropTypes.string,
     current: currentVideoShape,
+    users: arrayOfProfiles,
     currentUser: currentUserShape.isRequired,
+    onOpenStandalonePlayer: PropTypes.func,
+    openStandalonePlayer: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
     this.handleStandalonePlayer = this.handleStandalonePlayer.bind(this);
     this.handlePlayerToggle = this.handlePlayerToggle.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
 
   handleStandalonePlayer() {
@@ -44,22 +50,9 @@ class Current extends Component {
     dispatch(partyActions.setPlayback(!current.isPlaying));
   }
 
-  renderPlayPauseButton() {
-    const { classes, current } = this.props;
-    const { isPlaying } = current;
-
-    return (
-      <IconButtonWithTooltip
-        tooltipTitle={isPlaying ? 'Pause' : 'Play'}
-        onClick={this.handlePlayerToggle}
-      >
-        {isPlaying ? (
-          <PauseIcon className={classes.playerIcon} />
-        ) : (
-          <PlayArrowIcon className={classes.playerIcon} />
-        )}
-      </IconButtonWithTooltip>
-    );
+  handleNext() {
+    const { dispatch } = this.props;
+    dispatch(partyActions.skip());
   }
 
   renderStandAloneControl() {
@@ -97,10 +90,11 @@ class Current extends Component {
           </CardContent>
           <div className={classes.controls}>
             <div className={classes.playerControls}>
-              {this.renderPlayPauseButton()}
-              <IconButtonWithTooltip tooltipTitle="Next">
-                <SkipNextIcon />
-              </IconButtonWithTooltip>
+              <PlaybackButton
+                isPlaying={current.isPlaying}
+                onClick={this.handlePlayerToggle}
+              />
+              <SkipButton onClick={this.handleNext} />
             </div>
             <div className={classes.miscControls}>
               {this.renderStandAloneControl()}

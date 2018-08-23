@@ -41,12 +41,34 @@ export function party(state = defaultState, action = {}) {
       };
 
     case types.PARTY_SET_CURRENT_PLAYBACK:
+      if (state.current && state.current.isPlaying === action.data) {
+        return state;
+      }
       return {
         ...state,
         current: {
           ...state.current,
           isPlaying: action.data,
         },
+      };
+
+    case types.PARTY_SKIP:
+      if (state.queue.length === 0) {
+        return {
+          ...state,
+          current: {
+            ...state.current,
+            isPlaying: false,
+          },
+        };
+      }
+      return {
+        ...state,
+        current: {
+          ...state.queue[0],
+          isPlaying: true,
+        },
+        queue: state.queue.slice(1),
       };
 
     default:
