@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 
 import styles from './PartyUiGrid.styles.js';
 
@@ -18,17 +19,19 @@ export class PartyUiGrid extends Component {
       return null;
     }
     return (
-      <Grid
-        item
-        iid="player"
-        className={classes.mainSection}
-        xs={12}
-        sm={12}
-        md={8}
-        lg={9}
-      >
-        {playerComponent}
-      </Grid>
+      <Hidden only="xs">
+        <Grid
+          item
+          iid="player"
+          className={classes.mainSection}
+          xs={12}
+          sm={12}
+          md={8}
+          lg={9}
+        >
+          {playerComponent}
+        </Grid>
+      </Hidden>
     );
   }
 

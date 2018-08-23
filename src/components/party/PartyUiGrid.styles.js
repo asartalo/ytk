@@ -20,6 +20,10 @@ const styles = theme => ({
       maxHeight: 'auto',
       borderTop: `1px solid ${borderColor(theme)}`,
     },
+
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: 56,
+    },
   },
 
   sidePanelStandalone: {
