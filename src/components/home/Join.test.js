@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import { Redirect } from 'react-router-dom';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
+
+import mountWithRouter from 'helpers/mountWithRouter';
 
 import { joinParty } from 'actions/partyActions';
 import { clearNewPartyJoined } from 'actions/uiActions';
@@ -12,8 +12,7 @@ describe('Join', () => {
   let component, props, redirect;
 
   function mountJoin() {
-    const options = new ReactRouterEnzymeContext();
-    return mount(<Join {...props} />, options.get());
+    return mountWithRouter(<Join {...props} />);
   }
 
   beforeEach(() => {

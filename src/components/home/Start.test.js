@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import { Redirect } from 'react-router-dom';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
+
+import mountWithRouter from 'helpers/mountWithRouter';
 
 import { newParty } from 'actions/partyActions';
 import StartForm from './StartForm';
@@ -11,8 +11,7 @@ describe('Start', () => {
   let component, props, redirect;
 
   function mountStart() {
-    const options = new ReactRouterEnzymeContext();
-    return mount(<Start {...props} />, options.get());
+    return mountWithRouter(<Start {...props} />);
   }
 
   beforeEach(() => {
