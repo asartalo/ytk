@@ -126,6 +126,18 @@ describe('Home', () => {
         );
       });
 
+      describe('when user has a party', () => {
+        beforeEach(() => {
+          props.currentUser.party = 'my-current-party-1234';
+        });
+
+        it('should pass in an array to Choose Party UI', () => {
+          home = mountHome();
+          chooseUi = home.find(ChooseParty);
+          expect(chooseUi).toHaveProp('parties', ['my-current-party-1234']);
+        });
+      });
+
       describe('when handleSetIntent is called', () => {
         beforeEach(() => {
           home.instance().handleSetIntent('join');

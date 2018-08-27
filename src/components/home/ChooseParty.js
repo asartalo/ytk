@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 import HomeButton from 'components/ytk/HomeButton';
+import UserParties from './UserParties';
+import If from 'components/If';
 
 const styles = theme => ({
   mainTitle: {
@@ -13,7 +16,8 @@ const styles = theme => ({
   },
 
   divider: {
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 4,
   },
 
   subtitle: {
@@ -23,11 +27,16 @@ const styles = theme => ({
 });
 
 class ChooseParty extends Component {
+  static defaultProps = {
+    parties: [],
+  };
+
   static propTypes = {
     classes: PropTypes.object.isRequired,
     className: PropTypes.string,
     userName: PropTypes.string.isRequired,
     onSetIntent: PropTypes.func.isRequired,
+    parties: PropTypes.array,
   };
 
   constructor(props) {
@@ -40,11 +49,15 @@ class ChooseParty extends Component {
   }
 
   render() {
-    const { classes, userName } = this.props;
+    const { classes, userName, parties } = this.props;
     return (
       <div className={classes.root}>
         <h1 className={classes.mainTitle}>Hello, {userName}</h1>
         <p className={classes.subtitle}>What do you want to do?</p>
+        <If condition={parties.length > 0}>
+          <UserParties parties={parties} />
+          <Divider className={classes.divider} />
+        </If>
         <HomeButton
           color="primary"
           value="start"

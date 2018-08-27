@@ -1,13 +1,15 @@
 import React from 'react';
-import { mount } from 'enzyme';
+
+import mountWithRouter from 'helpers/mountWithRouter';
 
 import ChooseParty from './ChooseParty';
+import UserParties from './UserParties';
 
 describe('ChooseParty', () => {
   let component, props;
 
   function mountUi() {
-    return mount(<ChooseParty {...props} />);
+    return mountWithRouter(<ChooseParty {...props} />);
   }
 
   beforeEach(() => {
@@ -35,6 +37,11 @@ describe('ChooseParty', () => {
     expect(button).toExist();
   });
 
+  it('does not render parties ui', () => {
+    const parties = mountUi().find(UserParties);
+    expect(parties).not.toExist();
+  });
+
   describe('when Join button is clicked', () => {
     beforeEach(() => {
       const button = mountUi().find('button[value="join"]');
@@ -54,6 +61,22 @@ describe('ChooseParty', () => {
 
     it('calls onSetIntent with "start" value', () => {
       expect(props.onSetIntent).toHaveBeenCalledWith('start');
+    });
+  });
+
+  describe('when user has a party', () => {
+    beforeEach(() => {
+      props = { ...props, parties: ['a-party'] };
+    });
+
+    it('renders parties link', () => {
+      const parties = mountUi().find(UserParties);
+      expect(parties).toExist();
+    });
+
+    it('should pass parties prop to UserParties', () => {
+      const parties = mountUi().find(UserParties);
+      expect(parties).toHaveProp('parties', props.parties);
     });
   });
 });
