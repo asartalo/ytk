@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import mountWithRouter from 'helpers/mountWithRouter';
+import { mountWithRouter } from 'helpers/enzymeTest';
 
 import { joinParty } from 'actions/partyActions';
 import { clearNewPartyJoined } from 'actions/uiActions';

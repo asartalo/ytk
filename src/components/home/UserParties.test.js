@@ -1,6 +1,6 @@
 import React from 'react';
 
-import mountWithRouter from 'helpers/mountWithRouter';
+import { mountWithRouter } from 'helpers/enzymeTest';
 
 import UserParties from './UserParties';
 import ListItem from '@material-ui/core/ListItem';
