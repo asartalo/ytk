@@ -6,6 +6,7 @@ export const ActionTypes = enforcedActionTypes(
 
   // currentUser
   'CURRENT_USER_SET_NAME',
+  'CURRENT_USER_SET_INTENT',
   'CURRENT_USER_SET_NAME_AND_INTENT',
   'CURRENT_USER_SET_PARTY',
   'CURRENT_USER_UI_HOME_SET_STATE',

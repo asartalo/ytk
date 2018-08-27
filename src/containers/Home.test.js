@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 import { Home } from './Home';
 import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
+import ChooseParty from 'components/home/ChooseParty';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
 import { currentUserActions } from 'actions';
@@ -20,6 +21,9 @@ describe('Home', () => {
         name: '',
         intent: '',
         homeState: 'started',
+      },
+      firestore: {
+        userDataLoaded: true,
       },
       dispatch: jest.fn(),
     };
@@ -59,12 +63,12 @@ describe('Home', () => {
     describe('when #handleNameSet() is called', () => {
       describe('with start intent', () => {
         beforeEach(() => {
-          home.instance().handleNameSet('Arnold', 'start');
+          home.instance().handleNameSet('Arnold');
         });
 
         it('dispatches a set current user name and intent action ', () => {
           expect(props.dispatch).toHaveBeenCalledWith(
-            currentUserActions.setNameAndIntent('Arnold', 'start')
+            currentUserActions.setName('Arnold')
           );
         });
       });
@@ -98,6 +102,41 @@ describe('Home', () => {
   describe('when the user name is set', () => {
     beforeEach(() => {
       props.currentUser.name = 'Armee';
+    });
+
+    describe('Choose Party', () => {
+      let chooseUi, home;
+      beforeEach(() => {
+        home = mountHome();
+        chooseUi = home.find(ChooseParty);
+      });
+
+      it('should show Choose Party UI', () => {
+        expect(chooseUi).toExist();
+      });
+
+      it('should pass user name to ChooseParty', () => {
+        expect(chooseUi).toHaveProp('userName', props.currentUser.name);
+      });
+
+      it('should pass handleSetIntent callback', () => {
+        expect(chooseUi).toHaveProp(
+          'onSetIntent',
+          home.instance().handleSetIntent
+        );
+      });
+
+      describe('when handleSetIntent is called', () => {
+        beforeEach(() => {
+          home.instance().handleSetIntent('join');
+        });
+
+        it('dispatches setIntent action', () => {
+          expect(props.dispatch).toHaveBeenCalledWith(
+            currentUserActions.setIntent('join')
+          );
+        });
+      });
     });
 
     describe('and the intent is start', () => {

@@ -8,6 +8,8 @@ import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
 import Start from 'components/home/Start';
 import Join from 'components/home/Join';
+import ChooseParty from 'components/home/ChooseParty';
+import uiState from 'components/home/uiState';
 
 export class Home extends Component {
   static propTypes = {
@@ -20,30 +22,43 @@ export class Home extends Component {
     super(props);
     this.handleNameSet = this.handleNameSet.bind(this);
     this.handleInputStarted = this.handleInputStarted.bind(this);
+    this.handleSetIntent = this.handleSetIntent.bind(this);
   }
 
   handleNameSet(name, intent) {
-    this.props.dispatch(currentUserActions.setNameAndIntent(name, intent));
+    this.props.dispatch(currentUserActions.setName(name, intent));
   }
 
   handleInputStarted() {
     this.props.dispatch(currentUserActions.setHomeState('inputStarted'));
   }
 
+  handleSetIntent(intent) {
+    this.props.dispatch(currentUserActions.setIntent(intent));
+  }
+
   renderHomeBody() {
     const { currentUser } = this.props;
-    if (currentUser.name && currentUser.intent) {
-      if (currentUser.intent === 'join') {
+    switch (uiState(this.props)) {
+      case 'choose_party':
+        return (
+          <ChooseParty
+            userName={currentUser.name}
+            onSetIntent={this.handleSetIntent}
+          />
+        );
+      case 'join_party':
         return <Join />;
-      }
-      return <Start />;
-    } else {
-      return (
-        <NameForm
-          onNameSet={this.handleNameSet}
-          onInputStarted={this.handleInputStarted}
-        />
-      );
+      case 'start_party':
+        return <Start />;
+      default:
+        return (
+          <NameForm
+            userName={currentUser.name}
+            onNameSet={this.handleNameSet}
+            onInputStarted={this.handleInputStarted}
+          />
+        );
     }
   }
 
@@ -58,6 +73,6 @@ export class Home extends Component {
 }
 
 export default connect((state, props) => {
-  const { currentUser } = state;
-  return { currentUser };
+  const { currentUser, firestore } = state;
+  return { currentUser, firestore };
 })(Home);

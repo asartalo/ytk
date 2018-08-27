@@ -13,7 +13,7 @@ describe('NameForm', () => {
   });
 
   it('disables submit buttons by default', () => {
-    const buttons = form.find('button[name="intent"]');
+    const buttons = form.find('button[type="submit"]');
     buttons.forEach(button => {
       expect(button.prop('disabled')).toBe(true);
     });
@@ -44,25 +44,20 @@ describe('NameForm', () => {
     });
 
     it('enables submit button', () => {
-      const buttons = form.find('button[name="intent"]');
+      const buttons = form.find('button[type="submit"]');
       buttons.forEach(button => {
         expect(button.prop('disabled')).toBe(false);
       });
     });
 
-    it('calls onNameSet with intent as start when that button is clicked', () => {
-      form.find('button#button-intent-start').simulate('click');
-      expect(props.onNameSet).toHaveBeenCalledWith('Someone', 'start');
+    it('calls onNameSet when that button is clicked', () => {
+      form.find('button[type="submit"]').simulate('click');
+      expect(props.onNameSet).toHaveBeenCalledWith('Someone');
     });
 
-    it('calls onNameSet with intent as join when regular submit is done (pressing enter)', () => {
+    it('calls onNameSet when regular submit is done (pressing enter)', () => {
       form.simulate('submit');
-      expect(props.onNameSet).toHaveBeenCalledWith('Someone', 'start');
-    });
-
-    it('calls onNameSet with intent as join when that button is clicked', () => {
-      form.find('button#button-intent-join').simulate('click');
-      expect(props.onNameSet).toHaveBeenCalledWith('Someone', 'join');
+      expect(props.onNameSet).toHaveBeenCalledWith('Someone');
     });
   });
 });

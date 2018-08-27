@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import CenterTextField from 'components/ytk/CenterTextField';
 import HomeButton from 'components/ytk/HomeButton';
-import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   actions: {
@@ -26,11 +25,12 @@ class NameForm extends Component {
     classes: PropTypes.object.isRequired,
     onNameSet: PropTypes.func.isRequired,
     onInputStarted: PropTypes.func.isRequired,
+    userName: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
-    this.state = { name: '', started: false };
+    this.state = { name: props.userName || '', started: false };
     this.canContinue = this.canContinue.bind(this);
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleClickSubmit = this.handleClickSubmit.bind(this);
@@ -39,7 +39,8 @@ class NameForm extends Component {
   }
 
   canContinue() {
-    return this.state.name && this.state.name.length > 0;
+    const { name } = this.state;
+    return name && name.length > 0;
   }
 
   handleChangeName(e) {
@@ -47,17 +48,17 @@ class NameForm extends Component {
   }
 
   handleClickSubmit(e) {
-    this.invokeOnNameSet(e, e.target.value);
+    this.invokeOnNameSet(e);
   }
 
   handleSubmit(e) {
-    this.invokeOnNameSet(e, 'start');
+    this.invokeOnNameSet(e);
   }
 
-  invokeOnNameSet(e, intent) {
+  invokeOnNameSet(e) {
     e.preventDefault();
     if (!this.canContinue()) return;
-    this.props.onNameSet(this.state.name, intent || 'start');
+    this.props.onNameSet(this.state.name);
   }
 
   handleFocus() {
@@ -83,6 +84,7 @@ class NameForm extends Component {
               required: false,
               classes: { formControl: classes.inputLabel },
             }}
+            value={this.state.name}
             onChange={this.handleChangeName}
             onFocus={this.handleFocus}
           />
@@ -90,26 +92,12 @@ class NameForm extends Component {
         <div className={classes.actions}>
           <HomeButton
             color="primary"
-            value="start"
-            type="submit"
-            name="intent"
-            id="button-intent-start"
             disabled={!this.canContinue()}
+            type="submit"
             onClick={this.handleClickSubmit}
           >
-            Start a Party!
+            Next
           </HomeButton>
-          <p>&nbsp;or&nbsp;</p>
-          <Button
-            disabled={!this.canContinue()}
-            value="join"
-            type="submit"
-            name="intent"
-            id="button-intent-join"
-            onClick={this.handleClickSubmit}
-          >
-            Join a Party
-          </Button>
         </div>
       </form>
     );

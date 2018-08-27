@@ -27,6 +27,11 @@ export class StartForm extends Component {
     this.state = { name: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.inputRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.inputRef.current.focus();
   }
 
   handleNameChange(e) {
@@ -51,6 +56,7 @@ export class StartForm extends Component {
             label="Party Name"
             id="new-party-name"
             onChange={this.handleNameChange}
+            inputRef={this.inputRef}
           />
           <div className={classes.spacer}>
             <HomeButton type="submit">Start a Party</HomeButton>

@@ -17,12 +17,13 @@ const styles = theme => ({
   },
 });
 
-class JoinForm extends Component {
+export class JoinForm extends Component {
   static propTypes = {
     children: PropTypes.node,
     classes: PropTypes.object.isRequired,
     userName: PropTypes.string.isRequired,
     inProgress: PropTypes.bool.isRequired,
+    onPartySet: PropTypes.func.isRequired,
     error: PropTypes.string,
   };
 
@@ -31,10 +32,24 @@ class JoinForm extends Component {
     this.state = { id: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePartyIdChange = this.handlePartyIdChange.bind(this);
+    this.inputRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
+
+  cleanupId(str) {
+    let cleaned = str.trim();
+    const url = cleaned.match(/^https?:\/\/[^/]+\/([^/]+)/);
+    if (url) {
+      return url[1];
+    }
+    return cleaned;
   }
 
   handlePartyIdChange(e) {
-    this.setState({ id: e.target.value });
+    this.setState({ id: this.cleanupId(e.target.value) });
   }
 
   handleSubmit(e) {
@@ -56,7 +71,8 @@ class JoinForm extends Component {
             error={!!error}
             helperText={error}
             label="Party Link or ID"
-            id="new-party-id"
+            inputRef={this.inputRef}
+            id="join-party-id"
             onChange={this.handlePartyIdChange}
           />
           <div className={classes.spacer}>

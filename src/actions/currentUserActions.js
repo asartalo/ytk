@@ -9,6 +9,10 @@ export function setNameAndIntent(name, intent) {
   return action(types.CURRENT_USER_SET_NAME_AND_INTENT, { name, intent });
 }
 
+export function setIntent(intent) {
+  return action(types.CURRENT_USER_SET_INTENT, intent);
+}
+
 export function setParty(partyId) {
   return action(types.CURRENT_USER_SET_PARTY, partyId);
 }
