@@ -13,11 +13,24 @@ const currentVideoTemplate = {
 };
 
 describe('ConnectedPlayer', () => {
-  let component, props;
+  let component, props, instance, playerObj;
 
   function mountComponent() {
     return shallow(<ConnectedPlayer {...props} />);
   }
+
+  const playerPaused = () => {
+    component = mountComponent();
+    instance = component.instance();
+    instance.handleReady(playerObj);
+  };
+
+  const playerPlaying = () => {
+    props = { ...props, isPlaying: true };
+    component = mountComponent();
+    instance = component.instance();
+    instance.handleReady(playerObj);
+  };
 
   beforeEach(() => {
     props = {
@@ -66,7 +79,7 @@ describe('ConnectedPlayer', () => {
   });
 
   describe('playback', () => {
-    let player, playerObj;
+    let player;
     beforeEach(() => {
       playerObj = {
         playVideo: jest.fn(),
@@ -167,19 +180,6 @@ describe('ConnectedPlayer', () => {
     });
 
     describe('Events', () => {
-      let instance;
-
-      const playerPaused = () => {
-        instance = mountComponent().instance();
-        instance.handleReady(playerObj);
-      };
-
-      const playerPlaying = () => {
-        props = { ...props, isPlaying: true };
-        instance = mountComponent().instance();
-        instance.handleReady(playerObj);
-      };
-
       describe('Pause', () => {
         describe('when paused', () => {
           beforeEach(() => {
@@ -272,6 +272,39 @@ describe('ConnectedPlayer', () => {
             expect(playerObj.playVideo).toHaveBeenCalled();
           });
         });
+      });
+    });
+  });
+
+  describe('Pausing and Skipping', () => {
+    let playerComponent;
+    beforeEach(() => {
+      props = { ...props, at: 3.0 };
+      playerPlaying();
+      playerComponent = component.find(Player);
+    });
+
+    it('passes at to Player component', () => {
+      expect(playerComponent).toHaveProp('start', 3.0);
+    });
+
+    describe('when the at prop is modified', () => {
+      beforeEach(() => {
+        component.setProps({ at: 8.0 });
+      });
+
+      it('does not pass new at to Player', () => {
+        expect(component.find(Player).prop('start')).toEqual(3.0);
+      });
+    });
+
+    describe('when the videoId and at prop is changed ', () => {
+      beforeEach(() => {
+        component.setProps({ at: 9.0, videoId: 'somethingElse' });
+      });
+
+      it('passes new at to Player', () => {
+        expect(component.find(Player).prop('start')).toEqual(9.0);
       });
     });
   });

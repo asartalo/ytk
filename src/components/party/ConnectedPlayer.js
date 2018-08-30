@@ -22,8 +22,7 @@ export class ConnectedPlayer extends Component {
 
   constructor(props) {
     super(props);
-    this.startAt = props.at;
-    this.state = { loaded: false };
+    this.state = { loaded: false, startAt: props.at };
     playerEvents.forEach(event => {
       this[`handle${event}`] = this[`handle${event}`].bind(this);
     });
@@ -34,10 +33,17 @@ export class ConnectedPlayer extends Component {
     if (this.playBackChanged(prevProps)) {
       this.setPlayback(isPlaying);
     }
+    if (this.videoChanged(prevProps)) {
+      this.setState({ startAt: this.props.at });
+    }
   }
 
   playBackChanged(prev) {
     return prev.isPlaying !== this.props.isPlaying;
+  }
+
+  videoChanged(prev) {
+    return prev.videoId !== this.props.videoId;
   }
 
   handleReady(player) {
@@ -101,7 +107,7 @@ export class ConnectedPlayer extends Component {
       <Player
         className={className}
         videoId={videoId}
-        start={this.startAt}
+        start={this.state.startAt}
         {...this.eventHandlers()}
       />
     );
