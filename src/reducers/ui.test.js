@@ -80,5 +80,11 @@ describe('ui', () => {
       action: partyActions.addToQueue(staticVideoData[0]),
       expect: { searchResults: [] },
     },
+
+    PARTY_CURRENT_USER_NOT_A_MEMBER: {
+      from: { partyGetInProgress: true },
+      action: partyActions.notAMember('the-party-id-123'),
+      expect: { redirectTo: '/the-party-id-123/join' },
+    },
   });
 });

@@ -15,6 +15,7 @@ import * as partyActions from 'actions/partyActions';
 import { setParty } from 'actions/currentUserActions';
 import {
   continueIfSignedIn,
+  getUidFromState,
   getUserAndUidFromState,
   getPartyFromState,
 } from './sagasCommon';
@@ -56,10 +57,19 @@ export default function partySagas(ytkFire, ytSearch) {
   function* getParty({ data }) {
     yield* continueIfSignedIn();
     const party = yield ytkFire.getParty(data);
-    yield put(partyActions.loadParty(party));
-    const syncTask = yield fork(watchSyncChanges, data);
-    yield take(types.PARTY_UNLOAD);
-    yield cancel(syncTask);
+    const isMember = isPartyMember(party, yield getUidFromState());
+    if (isMember) {
+      yield put(partyActions.loadParty(party));
+      const syncTask = yield fork(watchSyncChanges, data);
+      yield take(types.PARTY_UNLOAD);
+      yield cancel(syncTask);
+    } else {
+      yield put(partyActions.notAMember(data));
+    }
+  }
+
+  function isPartyMember({ users }, userUid) {
+    return (users || []).find(({ uid }) => uid === userUid);
   }
 
   function partySync(partyId) {

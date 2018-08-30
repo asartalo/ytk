@@ -21,6 +21,10 @@ export function getParty(partyId) {
   return action(types.PARTY_GET, partyId);
 }
 
+export function notAMember(partyId) {
+  return action(types.PARTY_CURRENT_USER_NOT_A_MEMBER, partyId);
+}
+
 export function getPartySuccess(id, party) {
   return action(types.PARTY_GET_SUCCESS, { id, party });
 }

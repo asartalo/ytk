@@ -123,7 +123,7 @@ describe('partySagas', () => {
       };
       initialState.firestore = {
         ...initialState.firestore,
-        uid: 'AUID',
+        uid: 'PDoA',
       };
       partyId = 'pedro-penduko-1234';
       saga = expectSaga(sagas.watchGetParty).withReducer(
@@ -145,6 +145,24 @@ describe('partySagas', () => {
         .put(partyActions.loadParty(partyData))
         .silentRun();
       expect(ytkFire.getParty).toHaveBeenCalledWith(partyId);
+    });
+
+    it('redirects to join page when user is not a party member', async () => {
+      const partyData = {
+        name: 'Pedro Penduko',
+        users: [{ name: 'Maria', uid: 'Mid' }],
+        queue: [],
+      };
+      ytkFire.getParty = jest.fn(() => promise.resolvesTo(partyData));
+      ytkFire.syncParty = jest.fn(() => () => {});
+      await saga
+        .dispatch(partyActions.getParty(partyId))
+        .put(partyActions.notAMember(partyId))
+        .not.put(partyActions.loadParty(partyData))
+        .silentRun()
+        .then(({ storeState }) => {
+          expect(storeState.ui.redirectTo).toEqual(`/${partyId}/join`);
+        });
     });
   });
 

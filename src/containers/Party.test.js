@@ -22,7 +22,7 @@ describe('Party', () => {
       party: {
         name: '',
         queue: [],
-        users: [],
+        users: [{ name: 'Carol', uid: 'MYUID' }],
         id: '',
       },
       dispatch: jest.fn(),
@@ -44,5 +44,19 @@ describe('Party', () => {
     expect(props.dispatch).toHaveBeenCalledWith(
       partyActions.getParty('the-party-id-8844')
     );
+  });
+
+  describe('when party unmounts', () => {
+    beforeEach(() => {
+      mountParty()
+        .instance()
+        .componentWillUnmount();
+    });
+
+    it('dispatches unloadParty action', () => {
+      expect(props.dispatch).toHaveBeenCalledWith(
+        partyActions.unloadParty('the-party-id-8844')
+      );
+    });
   });
 });

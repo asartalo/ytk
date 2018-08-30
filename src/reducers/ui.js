@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import { idToPath } from 'helpers/party';
+import { idToPath, idToJoinPath } from 'helpers/party';
 
 export const defaultState = {
   redirectTo: null,
@@ -48,6 +48,13 @@ export default function ui(state = defaultState, action = {}) {
       return {
         ...state,
         partyGetInProgress: false,
+      };
+
+    case types.PARTY_CURRENT_USER_NOT_A_MEMBER:
+      return {
+        ...state,
+        partyGetInProgress: false,
+        redirectTo: idToJoinPath(action.data),
       };
 
     case types.UI_REDIRECT_CLEAR:

@@ -8,6 +8,10 @@ export function idToPlayerPath(id) {
   return `${idToPath(id)}/player`;
 }
 
+export function idToJoinPath(id) {
+  return `${idToPath(id)}/join`;
+}
+
 export function idToFullUrl(id) {
   const loc = window.location;
   return loc.protocol + '//' + loc.host + idToPath(id);

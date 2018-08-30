@@ -22,6 +22,7 @@ export const ActionTypes = enforcedActionTypes(
   'PARTY_GET',
   'PARTY_GET_SUCCESS',
   'PARTY_GET_ERROR',
+  'PARTY_CURRENT_USER_NOT_A_MEMBER',
   'PARTY_JOIN',
   'PARTY_JOIN_SUCCESS',
   'PARTY_JOIN_ERROR',

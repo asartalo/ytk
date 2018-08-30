@@ -9,6 +9,7 @@ import Body from 'components/ytk/Body';
 import ProgressOrChildren from 'components/ProgressOrChildren';
 import PartyPage from 'components/party/PartyPage';
 import PartyPlayerPage from 'components/party/PartyPlayerPage';
+import PartyJoinPage from 'components/party/PartyJoinPage';
 
 export class Party extends Component {
   static propTypes = {
@@ -54,6 +55,13 @@ export class Party extends Component {
               path={match.url + '/player'}
               render={props => (
                 <PartyPlayerPage {...{ currentUser, party, dispatch }} />
+              )}
+            />
+            <Route
+              exact
+              path={match.url + '/join'}
+              render={props => (
+                <PartyJoinPage {...{ currentUser, party, dispatch }} />
               )}
             />
           </Switch>
