@@ -2,11 +2,13 @@ import React from 'react';
 import { mount } from 'enzyme';
 import searchResults from 'fixtures/staticVideoData';
 import { profiles } from 'fixtures/users';
+import { Provider } from 'react-redux';
+import mockStore from 'helpers/mockStore';
 
 import { search, addToQueue } from 'actions/partyActions';
 import VideoListItem from './VideoListItem';
 
-import { AddToQueue } from './AddToQueue';
+import AddToQueueWithStyles, { AddToQueue } from './AddToQueue';
 
 describe('AddToQueue', () => {
   let component, props;
@@ -83,5 +85,25 @@ describe('AddToQueue', () => {
         expect(searchField.instance().value).toEqual('');
       });
     });
+  });
+});
+
+describe('AddToQueueWithStyles', () => {
+  let component, props, store;
+  beforeEach(() => {
+    store = mockStore();
+    props = {
+      onAddToQueue: jest.fn(),
+      uid: 'MYUID',
+    };
+  });
+
+  it('renders without crashing', () => {
+    component = mount(
+      <Provider store={store}>
+        <AddToQueueWithStyles {...props} />
+      </Provider>
+    );
+    expect(component).toExist();
   });
 });

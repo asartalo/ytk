@@ -36,7 +36,8 @@ export const queueVideo = PropTypes.shape({
 
 export const currentVideoShape = PropTypes.shape({
   ...videoCommon,
-  isPlaying: PropTypes.bool,
+  isPlaying: PropTypes.bool.isRequired,
+  at: PropTypes.number.isRequired,
 });
 
 export const profileShape = PropTypes.shape({
@@ -56,6 +57,15 @@ export const partyShape = PropTypes.shape({
   current: currentVideoShape,
 });
 
+function watchConsole(fn) {
+  const oldConsole = console.error;
+  let message;
+  console.error = msg => (message = msg);
+  fn();
+  console.error = oldConsole;
+  return message;
+}
+
 export const validateReducer = (shape, reducerName) => reducer => {
   const env = process.env.NODE_ENV;
 
@@ -63,13 +73,18 @@ export const validateReducer = (shape, reducerName) => reducer => {
     return (state, action) => {
       const newState = reducer(state, action);
       const getStack = () => Error().stack;
-      PropTypes.checkPropTypes(
-        { state: shape },
-        { state: newState },
-        'property',
-        reducerName,
-        getStack
+      const result = watchConsole(() =>
+        PropTypes.checkPropTypes(
+          { state: shape },
+          { state: newState },
+          'property',
+          reducerName,
+          getStack
+        )
       );
+      if (result) {
+        console.error(`${reducerName} Failed on action: `, action, result);
+      }
       return newState;
     };
   }

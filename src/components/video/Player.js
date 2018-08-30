@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { ytPlayerState } from 'helpers/player';
 import YouTube from 'react-youtube';
 
 function originUrl() {
@@ -29,22 +30,56 @@ const styles = theme => ({
   },
 });
 
-class Player extends Component {
+const eventTypes = ['Play', 'Pause', 'Ready', 'End', 'StateChange'];
+
+export class Player extends Component {
   static propTypes = {
-    children: PropTypes.node,
     className: PropTypes.string,
+    videoId: PropTypes.string.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    eventTypes.forEach(type => {
+      this[`handle${type}`] = this[`handle${type}`].bind(this);
+    });
+  }
+
   ytProps() {
-    const props = { ...this.props };
-    ['classes', 'children', 'className', 'isPlaying'].forEach(
-      item => delete props[item]
-    );
+    const props = { videoId: this.props.videoId };
+    eventTypes.forEach(type => {
+      props[`on${type}`] = this[`handle${type}`];
+    });
     return props;
   }
 
+  getHandler(prop) {
+    const handler = this.props[prop];
+    return handler ? handler : () => {};
+  }
+
+  handlePlay(event) {
+    this.getHandler('onPlay')(event.target.getCurrentTime());
+  }
+
+  handlePause(event) {
+    this.getHandler('onPause')(event.target.getCurrentTime());
+  }
+
+  handleReady(event) {
+    this.getHandler('onReady')(event.target);
+  }
+
+  handleEnd(event) {
+    this.getHandler('onEnd')(event.target);
+  }
+
+  handleStateChange(event) {
+    this.getHandler('onStateChange')(ytPlayerState(event.data));
+  }
+
   render() {
-    const { classes, className, wideRatio } = this.props;
+    const { classes, className, wideRatio, start } = this.props;
     const ytProps = this.ytProps();
     const rootClasses = [classes.root, className];
 
@@ -55,6 +90,9 @@ class Player extends Component {
     const opts = {
       playerVars: {
         origin: originUrl(),
+        iv_load_policy: 3,
+        fs: 1,
+        start: Math.floor(start) || 0,
       },
     };
 

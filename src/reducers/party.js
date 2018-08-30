@@ -9,6 +9,14 @@ export const defaultState = {
   id: '',
 };
 
+function toCurrent(video) {
+  return {
+    isPlaying: false,
+    at: 0.0,
+    ...video,
+  };
+}
+
 export function party(state = defaultState, action = {}) {
   switch (action.type) {
     case types.PARTY_LOAD:
@@ -28,10 +36,7 @@ export function party(state = defaultState, action = {}) {
       }
       return {
         ...state,
-        current: {
-          ...videoData,
-          isPlaying: false,
-        },
+        current: toCurrent(videoData),
       };
 
     case types.PARTY_REMOVE_FROM_QUEUE:
@@ -64,11 +69,18 @@ export function party(state = defaultState, action = {}) {
       }
       return {
         ...state,
-        current: {
+        current: toCurrent({
           ...state.queue[0],
           isPlaying: true,
-        },
+        }),
         queue: state.queue.slice(1),
+      };
+
+    case types.PARTY_SET_CURRENT_AT:
+      if (state.current.at === action.data) return state;
+      return {
+        ...state,
+        current: { ...state.current, at: action.data },
       };
 
     default:

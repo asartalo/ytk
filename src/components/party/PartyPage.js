@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { currentUserShape, partyShape } from 'components/propTypes';
 import AppBar from './AppBar';
 import PartyUiGrid from './PartyUiGrid';
-import Player from 'components/video/Player';
+import ConnectedPlayer from './ConnectedPlayer';
 import ControlPanel from './ControlPanel';
 
 import styles from './PartyPage.styles.js';
@@ -30,14 +30,6 @@ export class PartyPage extends Component {
     this.handleToggleStandalonePlayer = this.handleToggleStandalonePlayer.bind(
       this
     );
-    this.handlePlayerReady = this.handlePlayerReady.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { party } = this.props;
-    if (party.current.isPlaying !== prevProps.party.current.isPlaying) {
-      this.setPlayback(party.current.isPlaying);
-    }
   }
 
   handleToggleMenu() {
@@ -59,32 +51,9 @@ export class PartyPage extends Component {
     }));
   }
 
-  handlePlayerReady(e) {
-    console.log(e);
-    const { party } = this.props;
-    this.player = e.target;
-    this.setPlayback(party.current.isPlaying);
-    // e.target.playVideo();
-  }
-
-  setPlayback(shouldPlay) {
-    if (shouldPlay) {
-      this.player.playVideo();
-    } else {
-      this.player.pauseVideo();
-    }
-  }
-
   renderPlayer(classes, party) {
     if (party.current) {
-      return (
-        <Player
-          className={classes.mainPlayer}
-          videoId={party.current.videoId}
-          isPlaying={party.current.isPlaying}
-          onReady={this.handlePlayerReady}
-        />
-      );
+      return <ConnectedPlayer className={classes.mainPlayer} />;
     } else {
       return (
         <div className={classes.emptyQueueHelp}>

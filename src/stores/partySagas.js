@@ -8,7 +8,7 @@ import {
   takeEvery,
   takeLatest,
 } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { eventChannel, delay } from 'redux-saga';
 
 import { ActionTypes as types } from '../constants';
 import * as partyActions from 'actions/partyActions';
@@ -120,20 +120,29 @@ export default function partySagas(ytkFire, ytSearch) {
 
   function* watchPartyChanges() {
     yield* continueIfSignedIn();
-    yield takeLatest(action => {
-      switch (action.type) {
-        case types.PARTY_ADD_TO_QUEUE:
-        case types.PARTY_REMOVE_FROM_QUEUE:
-        case types.PARTY_SET_CURRENT_PLAYBACK:
-        case types.PARTY_SKIP:
-          return true;
-        default:
-          return false;
+    let task;
+    while (true) {
+      const action = yield take(action => {
+        switch (action.type) {
+          case types.PARTY_ADD_TO_QUEUE:
+          case types.PARTY_REMOVE_FROM_QUEUE:
+          case types.PARTY_SET_CURRENT_PLAYBACK:
+          case types.PARTY_SET_CURRENT_AT:
+          case types.PARTY_SKIP:
+            return true;
+          default:
+            return false;
+        }
+      });
+      if (task) {
+        yield cancel(task);
       }
-    }, syncPartyChanges);
+      task = yield fork(syncPartyChanges, action);
+    }
   }
 
   function* syncPartyChanges() {
+    yield delay(300);
     const party = yield getPartyFromState();
     yield put(partyActions.updateParty(party));
     yield ytkFire.saveParty(party.id, party);

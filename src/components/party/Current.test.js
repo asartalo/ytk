@@ -13,6 +13,7 @@ import { Current } from './Current';
 const currentVideo = {
   ...queuedVideos[0],
   isPlaying: false,
+  at: 0.0,
 };
 
 describe('Current', () => {

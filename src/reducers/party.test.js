@@ -25,6 +25,7 @@ describe('party', () => {
   const currentVideo = {
     ...sampleQueuedVideo,
     isPlaying: false,
+    at: 0.0,
   };
 
   const queuedVideosWithoutCurrent = queuedVideos.filter(
@@ -47,6 +48,7 @@ describe('party', () => {
           queueId: `${video.videoId}-${99999}`,
           addedBy: 'MYUID',
           isPlaying: false,
+          at: 0.0,
         },
       },
     },
@@ -109,6 +111,20 @@ describe('party', () => {
       },
     },
 
+    PARTY_SET_CURRENT_AT: {
+      from: { current: currentVideo },
+      action: actions.setCurrentAt(6),
+      expect: {
+        current: { ...currentVideo, at: 6 },
+      },
+    },
+
+    'PARTY_SET_CURRENT_AT with no change': {
+      from: { current: { ...currentVideo, at: 7 } },
+      action: actions.setCurrentAt(7),
+      expect: 'same',
+    },
+
     'PARTY_SKIP when queue is filled shifts queue first item to current': {
       from: {
         current: { ...currentVideo, isPlaying: true },
@@ -116,7 +132,7 @@ describe('party', () => {
       },
       action: actions.skip(),
       expect: {
-        current: { ...queuedVideosWithoutCurrent[0], isPlaying: true },
+        current: { ...queuedVideosWithoutCurrent[0], isPlaying: true, at: 0.0 },
         queue: queuedVideosWithoutCurrent.slice(1),
       },
     },

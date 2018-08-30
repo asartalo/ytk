@@ -28,6 +28,7 @@
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "screenfull": "^3.3.2",
+    "voca": "^1.4.0",
     "youtube-api-v3-search": "^1.0.2"
   },
   "lint-staged": {

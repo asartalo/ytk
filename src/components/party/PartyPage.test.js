@@ -1,18 +1,18 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
+
+import { shallowWithRouter } from 'helpers/enzymeTest';
 
 import userReducer from 'reducers/currentUser';
 import partyReducer from 'reducers/party';
 import staticVideoData from 'fixtures/staticVideoData';
 import { partyActions } from 'actions';
+import ConnectedPlayer from './ConnectedPlayer';
 
 import PartyPageWithStyle, { PartyPage } from './PartyPage';
 
 const sampleVideo = staticVideoData[0];
 
 const defaultProps = {
-  dispatch: jest.fn(),
   currentUser: {
     ...userReducer(),
     name: 'Jane',
@@ -26,36 +26,18 @@ const defaultProps = {
 
 const defaultPropsNaked = {
   ...defaultProps,
-  classes: {},
+  classes: {
+    emptyQueueHelp: 'emptyQueueHelp',
+  },
 };
 
-describe('PartyPageWithStyles', () => {
+describe('PartyPage', () => {
   let page, props;
 
-  const mountPage = () =>
-    shallow(
-      <PartyPageWithStyle {...props} />,
-      new ReactRouterEnzymeContext().get()
-    );
+  const mountPage = () => shallowWithRouter(<PartyPage {...props} />);
 
   beforeEach(() => {
-    props = { ...defaultProps };
-    page = mountPage();
-  });
-
-  it('renders without crashing', () => {
-    expect(page).toExist();
-  });
-});
-
-describe('PartyPageWithStyles', () => {
-  let page, props;
-
-  const mountPage = () =>
-    shallow(<PartyPage {...props} />, new ReactRouterEnzymeContext().get());
-
-  beforeEach(() => {
-    props = { ...defaultPropsNaked };
+    props = { ...defaultPropsNaked, dispatch: jest.fn() };
     page = mountPage();
   });
 
@@ -63,24 +45,70 @@ describe('PartyPageWithStyles', () => {
     expect(page.instance().state.showAddMenu).toBe(true);
   });
 
+  it('does not show a player as there is no current video', () => {
+    const player = page.find(ConnectedPlayer);
+    expect(player).not.toExist();
+  });
+
+  it('renders help text for empty queue', () => {
+    const help = page.find('.emptyQueueHelp');
+    expect(help).toExist();
+  });
+
   describe('when there is current item on party', () => {
-    beforeEach(() => {
-      props = {
-        ...defaultPropsNaked,
-        party: {
-          ...defaultPropsNaked.party,
-          current: {
-            ...sampleVideo,
-            addedBy: 'JID',
-            queueId: 'FOO-bar-18388',
-          },
+    const setCurrent = current => ({
+      ...props,
+      party: {
+        ...props.party,
+        current: {
+          ...sampleVideo,
+          addedBy: 'JID',
+          queueId: 'FOO-bar-18388',
+          isPlaying: false,
+          at: 0.0,
+          ...current,
         },
-      };
+      },
+    });
+
+    beforeEach(() => {
+      props = setCurrent({});
       page = mountPage();
     });
 
     it('sets showAddMenu to false', () => {
       expect(page.instance().state.showAddMenu).toBe(false);
     });
+
+    it('does not render help text for empty queue', () => {
+      const help = page.find('.emptyQueueHelp');
+      expect(help).not.toExist();
+    });
+
+    describe('rendered ConnectedPlayer', () => {
+      let player;
+      beforeEach(() => {
+        player = page.find(ConnectedPlayer);
+      });
+
+      it('renders a video player', () => {
+        expect(player).toExist();
+      });
+    });
+  });
+});
+
+describe('PartyPageWithStyles', () => {
+  let page, props;
+
+  const mountPage = () => shallowWithRouter(<PartyPageWithStyle {...props} />);
+
+  beforeEach(() => {
+    props = { ...defaultProps, dispatch: jest.fn() };
+    page = mountPage();
+  });
+
+  it('renders without crashing', () => {
+    expect(page).toExist();
   });
 });

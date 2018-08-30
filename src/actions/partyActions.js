@@ -73,6 +73,10 @@ export function setPlayback(status) {
   return action(types.PARTY_SET_CURRENT_PLAYBACK, status);
 }
 
+export function setCurrentAt(time) {
+  return action(types.PARTY_SET_CURRENT_AT, time);
+}
+
 export function skip() {
   return action(types.PARTY_SKIP);
 }
