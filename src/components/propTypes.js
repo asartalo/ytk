@@ -1,60 +1,69 @@
 import PropTypes from 'prop-types';
 
-export const currentUserShape = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  intent: PropTypes.string.isRequired,
-  homeState: PropTypes.string.isRequired,
-  party: PropTypes.string,
+const { bool, number, string, arrayOf, shape, checkPropTypes } = PropTypes;
+
+export const currentUserShape = shape({
+  name: string.isRequired,
+  intent: string.isRequired,
+  homeState: string.isRequired,
+  party: string,
 });
 
-export const videoThumbnailShape = PropTypes.shape({
-  url: PropTypes.string.isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
+export const videoThumbnailShape = shape({
+  url: string.isRequired,
+  width: number,
+  height: number,
 });
 
-export const videoThumbnailsShape = PropTypes.shape({
+export const videoThumbnailsShape = shape({
   default: videoThumbnailShape,
   medium: videoThumbnailShape,
   high: videoThumbnailShape,
 });
 
 const videoCommon = {
-  videoId: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  channelTitle: PropTypes.string,
-  thumbnails: PropTypes.videoThumbnailsShape,
-  addedBy: PropTypes.string,
+  videoId: string.isRequired,
+  title: string.isRequired,
+  channelTitle: string,
+  thumbnails: videoThumbnailsShape,
+  addedBy: string,
 };
 
-export const videoShape = PropTypes.shape(videoCommon);
+export const videoShape = shape(videoCommon);
 
-export const queueVideo = PropTypes.shape({
+export const queueVideo = shape({
   ...videoCommon,
-  queueId: PropTypes.string.isRequired,
+  queueId: string.isRequired,
 });
 
-export const currentVideoShape = PropTypes.shape({
+export const currentVideoShape = shape({
   ...videoCommon,
-  isPlaying: PropTypes.bool.isRequired,
-  at: PropTypes.number.isRequired,
+  isPlaying: bool.isRequired,
+  at: number.isRequired,
 });
 
-export const profileShape = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  uid: PropTypes.string.isRequired,
+export const profileShape = shape({
+  name: string.isRequired,
+  uid: string.isRequired,
 });
 
-export const arrayOfVideos = PropTypes.arrayOf(videoShape);
-export const arrayOfQueueVideo = PropTypes.arrayOf(queueVideo);
-export const arrayOfProfiles = PropTypes.arrayOf(profileShape);
+export const arrayOfVideos = arrayOf(videoShape);
+export const arrayOfQueueVideo = arrayOf(queueVideo);
+export const arrayOfProfiles = arrayOf(profileShape);
 
-export const partyShape = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+export const partyShape = shape({
+  name: string.isRequired,
+  id: string.isRequired,
   users: arrayOfProfiles.isRequired,
   queue: arrayOfQueueVideo.isRequired,
   current: currentVideoShape,
+});
+
+export const firestoreShape = shape({
+  signedIn: bool,
+  userDataLoaded: bool,
+  partyLoaded: bool,
+  uid: string,
 });
 
 function watchConsole(fn) {
@@ -74,7 +83,7 @@ export const validateReducer = (shape, reducerName) => reducer => {
       const newState = reducer(state, action);
       const getStack = () => Error().stack;
       const result = watchConsole(() =>
-        PropTypes.checkPropTypes(
+        checkPropTypes(
           { state: shape },
           { state: newState },
           'property',
