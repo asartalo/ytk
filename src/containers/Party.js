@@ -19,11 +19,19 @@ export class Party extends Component {
     party: partyShape.isRequired,
     match: PropTypes.object.isRequired,
     partyGetInProgress: PropTypes.bool.isRequired,
+    partyJoinInProgress: PropTypes.bool.isRequired,
   };
 
   componentDidMount() {
     const { dispatch, match } = this.props;
     dispatch(partyActions.getParty(match.params.party));
+  }
+
+  componentDidUpdate(prevProps) {
+    const { dispatch, match, partyJoinInProgress } = this.props;
+    if (prevProps.partyJoinInProgress && !partyJoinInProgress) {
+      dispatch(partyActions.getParty(match.params.party));
+    }
   }
 
   componentWillUnmount() {
@@ -61,7 +69,9 @@ export class Party extends Component {
               exact
               path={match.url + '/join'}
               render={props => (
-                <PartyJoinPage {...{ currentUser, party, dispatch }} />
+                <PartyJoinPage
+                  {...{ currentUser, dispatch, partyId: match.params.party }}
+                />
               )}
             />
           </Switch>
@@ -78,5 +88,6 @@ export default connect((state, props) => {
     currentUser,
     party,
     partyGetInProgress: ui.partyGetInProgress,
+    partyJoinInProgress: ui.partyJoinInProgress,
   };
 })(Party);

@@ -31,11 +31,15 @@ class NameForm extends Component {
   constructor(props) {
     super(props);
     this.state = { name: props.userName || '', started: false };
-    this.canContinue = this.canContinue.bind(this);
-    this.handleChangeName = this.handleChangeName.bind(this);
-    this.handleClickSubmit = this.handleClickSubmit.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
+    [
+      'canContinue',
+      'handleChangeName',
+      'handleClickSubmit',
+      'handleSubmit',
+      'handleFocus',
+    ].forEach(method => {
+      this[method] = this[method].bind(this);
+    });
   }
 
   canContinue() {

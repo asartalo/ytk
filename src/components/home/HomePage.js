@@ -10,8 +10,14 @@ function loadingOrChildren(isLoading, children) {
   return isLoading ? <CircularProgress /> : children;
 }
 
+const defaultText = (
+  <React.Fragment>
+    YouTube-Powered<br />Karaoke Party
+  </React.Fragment>
+);
+
 function HomePage(props) {
-  const { classes, children, homeState } = props;
+  const { classes, children, homeState, subtext } = props;
   const homeClass = `${classes.home} ${classes[homeState]}`;
   const isLoading = homeState === 'start' || homeState === 'loading';
   const elevation = isLoading ? 0 : 3;
@@ -20,9 +26,7 @@ function HomePage(props) {
       <div className={classes.revealer}>
         <Paper elevation={elevation} className={classes.paperRoot}>
           <h1 className={classes.mainTitle}>Okee!</h1>
-          <p className={classes.subHeading}>
-            YouTube-Powered<br />Karaoke Party
-          </p>
+          <p className={classes.subHeading}>{subtext || defaultText}</p>
           <div className={classes.body}>
             {loadingOrChildren(isLoading, children)}
           </div>
@@ -35,6 +39,7 @@ function HomePage(props) {
 HomePage.propTypes = {
   classes: PropTypes.object.isRequired,
   homeState: PropTypes.string.isRequired,
+  subtext: PropTypes.string,
 };
 
 export default withStyles(styles)(HomePage);

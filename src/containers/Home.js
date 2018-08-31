@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { currentUserShape } from 'components/propTypes';
+import { currentUserShape, firestoreShape } from 'components/propTypes';
 import { currentUserActions } from 'actions';
 import HomePage from 'components/home/HomePage';
 import NameForm from 'components/home/NameForm';
@@ -16,6 +16,7 @@ export class Home extends Component {
     className: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     currentUser: currentUserShape.isRequired,
+    firestore: firestoreShape.isRequired,
   };
 
   constructor(props) {

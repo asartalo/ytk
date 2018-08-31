@@ -32,6 +32,7 @@ describe('Party', () => {
         },
       },
       partyGetInProgress: true,
+      partyJoinInProgress: false,
     };
   });
 
@@ -44,6 +45,22 @@ describe('Party', () => {
     expect(props.dispatch).toHaveBeenCalledWith(
       partyActions.getParty('the-party-id-8844')
     );
+  });
+
+  describe('when user just joined party', () => {
+    let newDispatch;
+    beforeEach(() => {
+      props = { ...props, partyJoinInProgress: true };
+      const page = mountParty();
+      newDispatch = jest.fn();
+      page.setProps({ partyJoinInProgress: false, dispatch: newDispatch });
+    });
+
+    it('sends a request to get party', () => {
+      expect(newDispatch).toHaveBeenCalledWith(
+        partyActions.getParty('the-party-id-8844')
+      );
+    });
   });
 
   describe('when party unmounts', () => {
