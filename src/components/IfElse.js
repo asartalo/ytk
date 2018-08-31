@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { node, any } from 'prop-types';
 
 function IfElse({ condition, children }) {
   return condition ? children[0] : children[1];
@@ -10,7 +10,8 @@ IfElse.defaultProps = {
 };
 
 IfElse.propTypes = {
-  condition: PropTypes.bool,
+  children: node.isRequired,
+  condition: any,
 };
 
 export default IfElse;

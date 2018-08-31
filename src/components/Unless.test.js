@@ -1,22 +1,22 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import If from './If';
+import Unless from './Unless';
 
-describe('If', () => {
+describe('Unless', () => {
   let component;
 
   const mountComponent = props =>
     shallow(
-      <If {...props}>
-        <h1>If True</h1>
+      <Unless {...props}>
+        <h1>Unless True</h1>
         <h2>And True</h2>
-      </If>
+      </Unless>
     );
 
-  describe('if condition is truthy', () => {
+  describe('if condition is falsy', () => {
     beforeEach(() => {
-      component = mountComponent({ condition: true });
+      component = mountComponent({ condition: false });
     });
 
     it('renders children', () => {
@@ -25,9 +25,9 @@ describe('If', () => {
     });
   });
 
-  describe('if condition is falsy', () => {
+  describe('if condition is truthy', () => {
     beforeEach(() => {
-      component = mountComponent({ condition: false });
+      component = mountComponent({ condition: true });
     });
 
     it('does not render children', () => {

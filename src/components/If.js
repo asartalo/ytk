@@ -1,15 +1,14 @@
-import PropTypes from 'prop-types';
+import { node, any } from 'prop-types';
 
 function If({ condition, children }) {
-  if (condition) return children;
-  return null;
+  return condition ? children : null;
 }
 
 If.defaultProps = {};
 
 If.propTypes = {
-  children: PropTypes.node.isRequired,
-  condition: PropTypes.any,
+  children: node.isRequired,
+  condition: any,
 };
 
 export default If;
