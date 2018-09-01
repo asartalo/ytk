@@ -10,6 +10,7 @@ describe('currentUser', () => {
     party: '',
     homeState: 'start',
     playerShowAddMenu: false,
+    standAlonePlayer: false,
   };
 
   it('noops for invalid action', () => {
@@ -59,6 +60,17 @@ describe('currentUser', () => {
       from: { playerShowAddMenu: true },
       action: actions.hideAddMenu(),
       expect: { playerShowAddMenu: false },
+    },
+
+    CURRENT_USER_STANDALONE_PLAYER_ON: {
+      action: actions.standAlonePlayerOn(),
+      expect: { standAlonePlayer: true },
+    },
+
+    CURRENT_USER_STANDALONE_PLAYER_OFF: {
+      expect: { standAlonePlayer: true },
+      action: actions.standAlonePlayerOff(),
+      expect: { standAlonePlayer: false },
     },
   });
 });

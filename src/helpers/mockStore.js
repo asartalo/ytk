@@ -1,7 +1,7 @@
 import rootReducer from '../reducers/index';
 
-export default function mockStore() {
-  let state = rootReducer(undefined, {});
+export default function mockStore(initialState = undefined) {
+  let state = rootReducer(initialState, {});
   const dispatchedActions = [];
 
   const store = {

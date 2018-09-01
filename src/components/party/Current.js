@@ -7,10 +7,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-
 import * as partyActions from 'actions/partyActions';
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import * as userActions from 'actions/currentUserActions';
 import { findUserNameFromId } from 'helpers/party';
 import {
   currentVideoShape,
@@ -19,6 +17,8 @@ import {
 } from 'components/propTypes';
 import PlaybackButton from './PlaybackButton';
 import SkipButton from './SkipButton';
+import StandaloneButton from './StandaloneButton';
+import { idToPlayerUrl } from 'helpers/party';
 import styles from './Current.styles.js';
 
 export class Current extends Component {
@@ -28,7 +28,6 @@ export class Current extends Component {
     users: arrayOfProfiles,
     currentUser: currentUserShape.isRequired,
     onOpenStandalonePlayer: PropTypes.func,
-    openStandalonePlayer: PropTypes.bool,
   };
 
   constructor(props) {
@@ -39,10 +38,15 @@ export class Current extends Component {
   }
 
   handleStandalonePlayer() {
-    const { currentUser } = this.props;
-    const url = `${window.location}/player`;
-    window.open(url, `Okee ${currentUser.name}`);
-    this.props.onOpenStandalonePlayer();
+    const { currentUser, dispatch } = this.props;
+    if (currentUser.standAlonePlayer) {
+      dispatch(userActions.standAlonePlayerOff());
+      if (this.playerWindow) this.playerWindow.close();
+    } else {
+      dispatch(userActions.standAlonePlayerOn());
+      const url = idToPlayerUrl(currentUser.party);
+      this.playerWindow = global.open(url, `Okee ${currentUser.name}`);
+    }
   }
 
   handlePlayerToggle() {
@@ -56,17 +60,12 @@ export class Current extends Component {
   }
 
   renderStandAloneControl() {
-    const { openStandalonePlayer } = this.props;
-    if (openStandalonePlayer) {
-      return null;
-    }
+    const { currentUser } = this.props;
     return (
-      <IconButtonWithTooltip
-        tooltipTitle="Open player in new window"
+      <StandaloneButton
+        isStandalone={currentUser.standAlonePlayer}
         onClick={this.handleStandalonePlayer}
-      >
-        <OpenInNewIcon />
-      </IconButtonWithTooltip>
+      />
     );
   }
 

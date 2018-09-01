@@ -54,21 +54,19 @@ export class Party extends Component {
             <Route
               exact
               path={match.url}
-              render={props => (
-                <PartyPage {...{ currentUser, party, dispatch }} />
-              )}
+              render={() => <PartyPage {...{ currentUser, party, dispatch }} />}
             />
             <Route
               exact
               path={match.url + '/player'}
-              render={props => (
+              render={() => (
                 <PartyPlayerPage {...{ currentUser, party, dispatch }} />
               )}
             />
             <Route
               exact
               path={match.url + '/join'}
-              render={props => (
+              render={() => (
                 <PartyJoinPage
                   {...{ currentUser, dispatch, partyId: match.params.party }}
                 />

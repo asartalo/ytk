@@ -7,6 +7,7 @@ const defaultState = {
   party: '',
   homeState: 'start',
   playerShowAddMenu: false,
+  standAlonePlayer: false,
 };
 
 export function currentUser(state = defaultState, action = {}) {
@@ -66,6 +67,18 @@ export function currentUser(state = defaultState, action = {}) {
       return {
         ...state,
         playerShowAddMenu: false,
+      };
+
+    case types.CURRENT_USER_STANDALONE_PLAYER_ON:
+      return {
+        ...state,
+        standAlonePlayer: true,
+      };
+
+    case types.CURRENT_USER_STANDALONE_PLAYER_OFF:
+      return {
+        ...state,
+        standAlonePlayer: false,
       };
 
     default:

@@ -60,18 +60,11 @@ class ControlPanel extends Component {
     super(props);
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleChangePanel = this.handleChangePanel.bind(this);
-    this.handleToggleStandalonePlayer = this.handleToggleStandalonePlayer.bind(
-      this
-    );
     this.handleAddToQueue = this.handleAddToQueue.bind(this);
   }
 
   handleChangePanel() {
     this.props.onChangePanel();
-  }
-
-  handleToggleStandalonePlayer() {
-    this.props.onToggleStandalonePlayer();
   }
 
   handleToggleMenu() {
@@ -109,7 +102,7 @@ class ControlPanel extends Component {
   }
 
   render() {
-    const { classes, party, showAddMenu, openStandalonePlayer } = this.props;
+    const { classes, party, showAddMenu, currentUser } = this.props;
 
     return (
       <div className={classes.root}>
@@ -118,17 +111,14 @@ class ControlPanel extends Component {
           index={showAddMenu ? 1 : 0}
           onChangeIndex={this.handleChangePanel}
         >
-          <div className={this.panelClasses(openStandalonePlayer)}>
+          <div className={this.panelClasses(currentUser.standAlonePlayer)}>
             <If condition={party.current}>
-              <Current
-                onOpenStandalonePlayer={this.handleToggleStandalonePlayer}
-                {...{ openStandalonePlayer }}
-              />
+              <Current />
             </If>
             <Divider />
             <Queue queue={party.queue} users={party.users} />
           </div>
-          <div className={this.panelClasses(openStandalonePlayer)}>
+          <div className={this.panelClasses(currentUser.standAlonePlayer)}>
             <div className={classes.panelControlWrap}>
               <IconButtonWithTooltip
                 tooltipTitle="Back to playlist"

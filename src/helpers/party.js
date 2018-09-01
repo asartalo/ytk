@@ -17,6 +17,11 @@ export function idToFullUrl(id) {
   return loc.protocol + '//' + loc.host + idToPath(id);
 }
 
+export function idToPlayerUrl(id) {
+  const loc = window.location;
+  return loc.protocol + '//' + loc.host + idToPlayerPath(id);
+}
+
 export function prepForQueue(video, uid) {
   return {
     ...video,

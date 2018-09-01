@@ -1,4 +1,3 @@
-import React from 'react';
 import { node, any } from 'prop-types';
 
 function IfElse({ condition, children }) {

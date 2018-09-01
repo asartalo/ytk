@@ -9,7 +9,8 @@ import screenfull from 'screenfull';
 import injectProp from 'helpers/injectProp';
 import { currentUserShape, partyShape } from 'components/propTypes';
 import ButtonWithTooltip from 'components/ytk/ButtonWithTooltip';
-import Player from 'components/video/Player';
+import ConnectedPlayer from './ConnectedPlayer';
+import IfElse from 'components/IfElse';
 
 const styles = theme => ({
   root: {},
@@ -39,9 +40,13 @@ const styles = theme => ({
     minHeight: '100vh',
     minWidth: '100vw',
   },
+
+  noVideoHelp: {
+    ...theme.typography.body1,
+  },
 });
 
-class PartyPlayerPage extends Component {
+export class PartyPlayerPage extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
     children: PropTypes.node,
@@ -68,6 +73,16 @@ class PartyPlayerPage extends Component {
         fullScreen: this.props.screenfull.isFullscreen,
       }));
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { currentUser } = this.props;
+    if (
+      !currentUser.standAlonePlayer &&
+      prevProps.currentUser.standAlonePlayer
+    ) {
+      global.close();
+    }
   }
 
   handleFullScreenToggle() {
@@ -120,17 +135,22 @@ class PartyPlayerPage extends Component {
     const { classes, party } = this.props;
     const { current } = party;
     return (
-      <IdleTimer
-        element={document}
-        onActive={this.handleActive}
-        onIdle={this.handleIdle}
-        timeout={1000 * 5}
-      >
-        <div className={classes.root}>
-          <Player className={classes.player} videoId={current.videoId} />
-          {this.renderControls()}
+      <IfElse condition={!!current}>
+        <IdleTimer
+          element={document}
+          onActive={this.handleActive}
+          onIdle={this.handleIdle}
+          timeout={1000 * 5}
+        >
+          <div className={classes.root}>
+            {this.renderControls()}
+            <ConnectedPlayer className={classes.player} />
+          </div>
+        </IdleTimer>
+        <div className={classes.noVideoHelp}>
+          <p>There is no video yet.</p>
         </div>
-      </IdleTimer>
+      </IfElse>
     );
   }
 }

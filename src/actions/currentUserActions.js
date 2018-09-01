@@ -32,3 +32,11 @@ export function showAddMenu() {
 export function hideAddMenu() {
   return action(types.CURRENT_USER_HIDE_ADD_MENU);
 }
+
+export function standAlonePlayerOn() {
+  return action(types.CURRENT_USER_STANDALONE_PLAYER_ON);
+}
+
+export function standAlonePlayerOff() {
+  return action(types.CURRENT_USER_STANDALONE_PLAYER_OFF);
+}

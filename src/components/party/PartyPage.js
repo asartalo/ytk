@@ -23,13 +23,9 @@ export class PartyPage extends Component {
     super(props);
     this.state = {
       showAddMenu: !props.party.current,
-      openStandalonePlayer: false,
     };
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleChangePanel = this.handleChangePanel.bind(this);
-    this.handleToggleStandalonePlayer = this.handleToggleStandalonePlayer.bind(
-      this
-    );
   }
 
   handleToggleMenu() {
@@ -43,12 +39,6 @@ export class PartyPage extends Component {
       const showAddMenu = index === 1;
       return { showAddMenu };
     });
-  }
-
-  handleToggleStandalonePlayer() {
-    this.setState(state => ({
-      openStandalonePlayer: !state.openStandalonePlayer,
-    }));
   }
 
   renderPlayer(classes, party) {
@@ -69,24 +59,22 @@ export class PartyPage extends Component {
 
   render() {
     const { classes, currentUser, party } = this.props;
-    const { showAddMenu, openStandalonePlayer } = this.state;
+    const { showAddMenu } = this.state;
 
     return (
       <div className={classes.root}>
         <AppBar party={party} />
         <div className={classes.mainContent}>
-          <PartyUiGrid hidePlayer={openStandalonePlayer}>
+          <PartyUiGrid hidePlayer={currentUser.standAlonePlayer}>
             <div id="video-main">{this.renderPlayer(classes, party)}</div>
             <ControlPanel
               onSearch={this.handleSearch}
               onChanePanel={this.handleChangePanel}
-              onToggleStandalonePlayer={this.handleToggleStandalonePlayer}
               onToggleMenu={this.handleToggleMenu}
               {...{
                 currentUser,
                 party,
                 showAddMenu,
-                openStandalonePlayer,
               }}
             />
           </PartyUiGrid>
