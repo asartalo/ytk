@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 
-import GroupIcon from '@material-ui/icons/Group';
-
+import { partyShape } from 'components/propTypes';
 import { idToFullUrl } from 'helpers/party';
 import micIcon from 'images/okee_logo_1.svg';
+import GroupButton from './GroupButton';
 import PartyGoersMenu from './PartyGoersMenu';
 
 const minHeight = '56px';
@@ -31,10 +31,6 @@ const styles = theme => ({
   title: {
     flex: 1,
     fontSize: '20px',
-  },
-
-  partyGoers: {
-    color: '#fff',
   },
 
   userBadge: {
@@ -60,7 +56,12 @@ const styles = theme => ({
   },
 });
 
-class AppBar extends Component {
+export class AppBar extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    party: partyShape.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = { partyGoersAnchor: null };
@@ -115,9 +116,7 @@ class AppBar extends Component {
                 badgeContent={party.users.length}
                 color="default"
               >
-                <IconButton onClick={this.togglePartyGoers}>
-                  <GroupIcon className={classes.partyGoers} />
-                </IconButton>
+                <GroupButton onClick={this.togglePartyGoers} />
               </Badge>
               <PartyGoersMenu
                 anchorEl={this.state.partyGoersAnchor}
@@ -133,9 +132,5 @@ class AppBar extends Component {
     );
   }
 }
-
-AppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(AppBar);
