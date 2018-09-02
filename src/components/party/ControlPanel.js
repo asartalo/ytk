@@ -81,10 +81,14 @@ export class ControlPanel extends Component {
 
   componentDidMount() {
     if (this.props.showAddMenu) {
-      setTimeout(() => {
-        this.searchInput && this.searchInput.focus();
-      }, 300);
+      this.focusSearch();
     }
+  }
+
+  focusSearch() {
+    setTimeout(() => {
+      this.searchInput && this.searchInput.focus();
+    }, 300);
   }
 
   componentDidUpdate(prevProps) {
@@ -92,9 +96,7 @@ export class ControlPanel extends Component {
       prevProps.showAddMenu !== this.props.showAddMenu &&
       this.props.showAddMenu
     ) {
-      setTimeout(() => {
-        this.searchInput.focus();
-      }, 300);
+      this.focusSearch();
     }
   }
 
