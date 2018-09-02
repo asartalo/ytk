@@ -18,4 +18,5 @@ export const currentUser = {
   intent: '',
   homeState: '',
   party: '',
+  standAlonePlayer: false,
 };

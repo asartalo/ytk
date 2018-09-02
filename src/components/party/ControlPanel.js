@@ -5,6 +5,7 @@ import SwipeableViews from 'react-swipeable-views';
 import Divider from '@material-ui/core/Divider';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+import { currentUserShape, partyShape } from 'components/propTypes';
 import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
 import FabAddButton from './FabAddButton';
 import Current from './Current';
@@ -49,11 +50,14 @@ const styles = theme => ({
   },
 });
 
-class ControlPanel extends Component {
+export class ControlPanel extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    showAddMenu: PropTypes.bool.isRequired,
     children: PropTypes.node,
     className: PropTypes.string,
+    currentUser: currentUserShape.isRequired,
+    party: partyShape.isRequired,
   };
 
   constructor(props) {
@@ -77,7 +81,9 @@ class ControlPanel extends Component {
 
   componentDidMount() {
     if (this.props.showAddMenu) {
-      this.searchInput.focus();
+      setTimeout(() => {
+        this.searchInput && this.searchInput.focus();
+      }, 300);
     }
   }
 
@@ -88,7 +94,7 @@ class ControlPanel extends Component {
     ) {
       setTimeout(() => {
         this.searchInput.focus();
-      }, 100);
+      }, 300);
     }
   }
 
