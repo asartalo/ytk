@@ -16,6 +16,11 @@
 .env.test.local
 .env.production.local
 
+# firebase
+firebase*
+firestore*
+.firebaserc
+
 **/*.css
 
 npm-debug.log*
