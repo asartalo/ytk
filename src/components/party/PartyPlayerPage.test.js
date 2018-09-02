@@ -1,6 +1,5 @@
 import React from 'react';
 
-// import { mountWithRouter } from 'helpers/enzymeTest';
 import { mount, shallow } from 'enzyme';
 
 import { Provider } from 'react-redux';
@@ -39,7 +38,7 @@ const defaultPropsNaked = {
 };
 
 describe('PartyPlayerPage', () => {
-  let page, props, store;
+  let page, props, store, oldAddEventListener;
 
   const mountPage = () =>
     mount(
@@ -50,6 +49,8 @@ describe('PartyPlayerPage', () => {
 
   beforeEach(() => {
     store = mockStore();
+    oldAddEventListener = global.addEventListener;
+    global.addEventListener = jest.fn();
     props = {
       ...defaultPropsNaked,
       dispatch: jest.fn(),
@@ -58,8 +59,15 @@ describe('PartyPlayerPage', () => {
         on: jest.fn(),
         toggle: jest.fn(),
       },
+      signal: {
+        send: jest.fn(),
+      },
     };
     page = mountPage();
+  });
+
+  afterEach(() => {
+    global.addEventListener = oldAddEventListener;
   });
 
   it('does not show a player as there is no current video', () => {
@@ -195,6 +203,28 @@ describe('PartyPlayerPage', () => {
       it('closes the window', () => {
         expect(global.close).toHaveBeenCalled();
       });
+    });
+  });
+
+  it('listens to "beforeunload" event', () => {
+    const instance = page.find(PartyPlayerPage).instance();
+    expect(global.addEventListener).toHaveBeenCalledWith(
+      'beforeunload',
+      instance.handleWindowClose
+    );
+  });
+
+  describe('when window is closed', () => {
+    beforeEach(() => {
+      const instance = page.find(PartyPlayerPage).instance();
+      instance.handleWindowClose();
+    });
+
+    it('sends closeStandalonePlayer signal', () => {
+      expect(props.signal.send).toHaveBeenCalledWith(
+        'closeStandalonePlayer',
+        true
+      );
     });
   });
 });

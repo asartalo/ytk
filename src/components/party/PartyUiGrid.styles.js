@@ -28,7 +28,11 @@ const styles = theme => ({
 
   sidePanelStandalone: {
     borderRight: `1px solid ${borderColor(theme)}`,
+    borderTop: `1px solid ${borderColor(theme)}`,
     backgroundColor: theme.palette.background.paper,
+    marginTop: 80,
+    minHeight: 'calc(100vh - 80px)',
+    paddingTop: 0,
   },
 
   mainSection: {

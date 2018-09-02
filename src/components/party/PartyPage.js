@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import { currentUserShape, partyShape } from 'components/propTypes';
+import { currentUserActions } from 'actions';
 import AppBar from './AppBar';
 import PartyUiGrid from './PartyUiGrid';
 import ConnectedPlayer from './ConnectedPlayer';
@@ -17,6 +18,7 @@ export class PartyPage extends Component {
     className: PropTypes.string,
     currentUser: currentUserShape.isRequired,
     party: partyShape.isRequired,
+    signal: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -26,6 +28,23 @@ export class PartyPage extends Component {
     };
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleChangePanel = this.handleChangePanel.bind(this);
+    this.handleStandalonePlayerClose = this.handleStandalonePlayerClose.bind(
+      this
+    );
+  }
+
+  componentDidMount() {
+    this.props.signal.listen(
+      'closeStandalonePlayer',
+      this.handleStandalonePlayerClose
+    );
+  }
+
+  componentWillUnmount() {
+    this.props.signal.clear(
+      'closeStandalonePlayer',
+      this.handleStandalonePlayerClose
+    );
   }
 
   handleToggleMenu() {
@@ -39,6 +58,10 @@ export class PartyPage extends Component {
       const showAddMenu = index === 1;
       return { showAddMenu };
     });
+  }
+
+  handleStandalonePlayerClose() {
+    this.props.dispatch(currentUserActions.standAlonePlayerOff());
   }
 
   renderPlayer(classes, party) {

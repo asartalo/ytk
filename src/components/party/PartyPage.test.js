@@ -5,7 +5,7 @@ import { shallowWithRouter } from 'helpers/enzymeTest';
 import userReducer from 'reducers/currentUser';
 import partyReducer from 'reducers/party';
 import staticVideoData from 'fixtures/staticVideoData';
-import { partyActions } from 'actions';
+import { currentUserActions } from 'actions';
 import ConnectedPlayer from './ConnectedPlayer';
 
 import PartyPageWithStyle, { PartyPage } from './PartyPage';
@@ -37,8 +37,42 @@ describe('PartyPage', () => {
   const mountPage = () => shallowWithRouter(<PartyPage {...props} />);
 
   beforeEach(() => {
-    props = { ...defaultPropsNaked, dispatch: jest.fn() };
+    props = {
+      ...defaultPropsNaked,
+      dispatch: jest.fn(),
+      signal: {
+        listen: jest.fn(),
+        clear: jest.fn(),
+      },
+    };
     page = mountPage();
+  });
+
+  describe('when component has mounted', () => {
+    let instance;
+    beforeEach(() => {
+      instance = page.instance();
+    });
+
+    it('listens to closeStandalonePlayer signal', () => {
+      expect(props.signal.listen).toHaveBeenCalledWith(
+        'closeStandalonePlayer',
+        instance.handleStandalonePlayerClose
+      );
+    });
+
+    describe('when component unmounts', () => {
+      beforeEach(() => {
+        page.unmount();
+      });
+
+      it('clears closeStandalonePlayer signal listener', () => {
+        expect(props.signal.clear).toHaveBeenCalledWith(
+          'closeStandalonePlayer',
+          instance.handleStandalonePlayerClose
+        );
+      });
+    });
   });
 
   it('sets showAddmenu to true when there is no current and queue is empty', () => {
@@ -96,6 +130,18 @@ describe('PartyPage', () => {
       });
     });
   });
+
+  describe('when handleStandalonePlayerClose is called', () => {
+    beforeEach(() => {
+      page.instance().handleStandalonePlayerClose();
+    });
+
+    it('dispatches standAlonePlayerOff action', () => {
+      expect(props.dispatch).toHaveBeenCalledWith(
+        currentUserActions.standAlonePlayerOff()
+      );
+    });
+  });
 });
 
 describe('PartyPageWithStyles', () => {
@@ -104,7 +150,13 @@ describe('PartyPageWithStyles', () => {
   const mountPage = () => shallowWithRouter(<PartyPageWithStyle {...props} />);
 
   beforeEach(() => {
-    props = { ...defaultProps, dispatch: jest.fn() };
+    props = {
+      ...defaultProps,
+      dispatch: jest.fn(),
+      signal: {
+        listen: jest.fn(),
+      },
+    };
     page = mountPage();
   });
 

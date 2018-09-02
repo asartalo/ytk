@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { partyActions } from 'actions';
 import { currentUserShape, partyShape } from 'components/propTypes';
+import Signal from 'lib/signal';
 import Body from 'components/ytk/Body';
 import ProgressOrChildren from 'components/ProgressOrChildren';
 import PartyPage from 'components/party/PartyPage';
@@ -21,6 +22,11 @@ export class Party extends Component {
     partyGetInProgress: PropTypes.bool.isRequired,
     partyJoinInProgress: PropTypes.bool.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.signal = new Signal(global.localStorage, global.window, Date.now);
+  }
 
   componentDidMount() {
     const { dispatch, match } = this.props;
@@ -47,6 +53,8 @@ export class Party extends Component {
       partyGetInProgress,
       dispatch,
     } = this.props;
+    const signal = this.signal;
+    const partyId = match.params.party;
     return (
       <Body className="Party">
         <ProgressOrChildren inProgress={partyGetInProgress} fullscreen>
@@ -54,22 +62,24 @@ export class Party extends Component {
             <Route
               exact
               path={match.url}
-              render={() => <PartyPage {...{ currentUser, party, dispatch }} />}
+              render={() => (
+                <PartyPage {...{ currentUser, party, dispatch, signal }} />
+              )}
             />
             <Route
               exact
               path={match.url + '/player'}
               render={() => (
-                <PartyPlayerPage {...{ currentUser, party, dispatch }} />
+                <PartyPlayerPage
+                  {...{ currentUser, party, dispatch, signal }}
+                />
               )}
             />
             <Route
               exact
               path={match.url + '/join'}
               render={() => (
-                <PartyJoinPage
-                  {...{ currentUser, dispatch, partyId: match.params.party }}
-                />
+                <PartyJoinPage {...{ currentUser, dispatch, partyId }} />
               )}
             />
           </Switch>

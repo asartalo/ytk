@@ -18,11 +18,6 @@ const styles = theme => ({
   controls: {
     transition: '300ms',
     opacity: 1,
-    // position: 'absolute',
-    // top: 0,
-    // left: 0,
-    // right: 0,
-    // bottom: 40,
   },
 
   invisible: {
@@ -53,6 +48,7 @@ export class PartyPlayerPage extends Component {
     className: PropTypes.string,
     party: partyShape.isRequired,
     currentUser: currentUserShape.isRequired,
+    signal: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -65,6 +61,7 @@ export class PartyPlayerPage extends Component {
     this.handleFullScreenToggle = this.handleFullScreenToggle.bind(this);
     this.handleActive = this.handleActive.bind(this);
     this.handleIdle = this.handleIdle.bind(this);
+    this.handleWindowClose = this.handleWindowClose.bind(this);
   }
 
   componentDidMount() {
@@ -73,6 +70,7 @@ export class PartyPlayerPage extends Component {
         fullScreen: this.props.screenfull.isFullscreen,
       }));
     });
+    global.addEventListener('beforeunload', this.handleWindowClose);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -95,6 +93,10 @@ export class PartyPlayerPage extends Component {
 
   handleIdle() {
     this.setState({ showControls: false });
+  }
+
+  handleWindowClose() {
+    this.props.signal.send('closeStandalonePlayer', true);
   }
 
   renderControls() {
@@ -143,8 +145,8 @@ export class PartyPlayerPage extends Component {
           timeout={1000 * 5}
         >
           <div className={classes.root}>
-            {this.renderControls()}
             <ConnectedPlayer className={classes.player} />
+            {this.renderControls()}
           </div>
         </IdleTimer>
         <div className={classes.noVideoHelp}>
