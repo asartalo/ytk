@@ -31,17 +31,17 @@ const styles = theme => {
 
     mainTitle: {
       ...theme.typography.display4,
+      fontSize: '6rem',
       fontWeight: 100,
       color: theme.palette.primary.main,
-      margin: '75px 0 0 0',
-      // transition: easings.rubber,
+      margin: '70px 0 0 0',
       transition: homeTransition,
       transitionDuration: '300ms',
     },
 
     subHeading: {
       ...theme.typography.display1,
-      marginBottom: '68px',
+      marginBottom: 68,
       transition: '500ms',
     },
 
@@ -59,9 +59,7 @@ const styles = theme => {
 
     inputStarted: {
       '& $mainTitle': {
-        transform: 'scale3d(0.6, 0.6, 1)',
         color: theme.palette.primary.main,
-        margin: '10px 0 0',
       },
 
       '& $subHeading': {
