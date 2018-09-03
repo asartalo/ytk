@@ -55,7 +55,7 @@ export class PartyPage extends Component {
 
   handleChangePanel(index) {
     this.setState(state => {
-      const showAddMenu = index === 1;
+      const showAddMenu = index === 2;
       return { showAddMenu };
     });
   }
@@ -92,7 +92,7 @@ export class PartyPage extends Component {
             <div id="video-main">{this.renderPlayer(classes, party)}</div>
             <ControlPanel
               onSearch={this.handleSearch}
-              onChanePanel={this.handleChangePanel}
+              onChangePanel={this.handleChangePanel}
               onToggleMenu={this.handleToggleMenu}
               {...{
                 currentUser,

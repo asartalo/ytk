@@ -58,6 +58,8 @@ export class ControlPanel extends Component {
     className: PropTypes.string,
     currentUser: currentUserShape.isRequired,
     party: partyShape.isRequired,
+    onChangePanel: PropTypes.func.isRequired,
+    onToggleMenu: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -67,8 +69,8 @@ export class ControlPanel extends Component {
     this.handleAddToQueue = this.handleAddToQueue.bind(this);
   }
 
-  handleChangePanel() {
-    this.props.onChangePanel();
+  handleChangePanel(e) {
+    this.props.onChangePanel(e);
   }
 
   handleToggleMenu() {
@@ -86,9 +88,7 @@ export class ControlPanel extends Component {
   }
 
   focusSearch() {
-    setTimeout(() => {
-      this.searchInput && this.searchInput.focus();
-    }, 300);
+    this.searchInput && this.searchInput.focus();
   }
 
   componentDidUpdate(prevProps) {

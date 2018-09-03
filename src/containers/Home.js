@@ -46,7 +46,7 @@ export class Home extends Component {
           <ChooseParty
             userName={currentUser.name}
             onSetIntent={this.handleSetIntent}
-            parties={[currentUser.party]}
+            parties={currentUser.party ? [currentUser.party] : []}
           />
         );
       case 'join_party':
