@@ -72,6 +72,10 @@ export class JoinForm extends Component {
             helperText={error}
             label="Party Link or ID"
             inputRef={this.inputRef}
+            inputProps={{
+              autoCorrect: 'off',
+              autoCapitalize: 'off',
+            }}
             id="join-party-id"
             onChange={this.handlePartyIdChange}
           />
