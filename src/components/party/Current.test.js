@@ -34,6 +34,7 @@ describe('Current', () => {
       },
       users: [...profiles],
       dispatch: jest.fn(),
+      queue: queuedVideos.slice(1),
     };
   });
 
@@ -70,7 +71,12 @@ describe('Current', () => {
     });
 
     it('calls dispatch to set playback', () => {
-      expect(props.dispatch).toHaveBeenCalledWith(skip());
+      expect(props.dispatch).toHaveBeenCalledWith(
+        skip({
+          from: props.current.queueId,
+          to: props.queue[0].queueId,
+        })
+      );
     });
   });
 

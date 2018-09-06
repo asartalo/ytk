@@ -17,6 +17,19 @@ function toCurrent(video) {
   };
 }
 
+function setNext(to, queue) {
+  const newQueue = [];
+  let next;
+  queue.forEach(item => {
+    if (item.queueId === to) {
+      next = item;
+    } else {
+      newQueue.push(item);
+    }
+  });
+  return { next, newQueue };
+}
+
 export function party(state = defaultState, action = {}) {
   switch (action.type) {
     case types.PARTY_LOAD:
@@ -58,23 +71,29 @@ export function party(state = defaultState, action = {}) {
       };
 
     case types.PARTY_SKIP:
+      const { queue, current } = state;
       if (state.queue.length === 0) {
         return {
           ...state,
           current: {
-            ...state.current,
+            ...current,
             isPlaying: false,
           },
         };
       }
-      return {
-        ...state,
-        current: toCurrent({
-          ...state.queue[0],
-          isPlaying: true,
-        }),
-        queue: state.queue.slice(1),
-      };
+      const { from, to } = action.data;
+      const { next, newQueue } = setNext(to, queue);
+      if (current.queueId === from && next) {
+        return {
+          ...state,
+          current: toCurrent({
+            ...next,
+            isPlaying: true,
+          }),
+          queue: newQueue,
+        };
+      }
+      return state;
 
     case types.PARTY_SET_CURRENT_AT:
       if (state.current.at === action.data) return state;

@@ -14,6 +14,7 @@ import {
   currentVideoShape,
   currentUserShape,
   arrayOfProfiles,
+  arrayOfQueueVideo,
 } from 'components/propTypes';
 import PlaybackButton from './PlaybackButton';
 import SkipButton from './SkipButton';
@@ -28,6 +29,7 @@ export class Current extends Component {
     users: arrayOfProfiles,
     currentUser: currentUserShape.isRequired,
     onOpenStandalonePlayer: PropTypes.func,
+    queue: arrayOfQueueVideo,
   };
 
   constructor(props) {
@@ -55,8 +57,13 @@ export class Current extends Component {
   }
 
   handleNext() {
-    const { dispatch } = this.props;
-    dispatch(partyActions.skip());
+    const { dispatch, current, queue } = this.props;
+    dispatch(
+      partyActions.skip({
+        from: current.queueId,
+        to: queue[0].queueId,
+      })
+    );
   }
 
   renderStandAloneControl() {
@@ -112,5 +119,6 @@ export default connect(state => {
     currentUser,
     current: party.current,
     users: party.users,
+    queue: party.queue,
   };
 })(withStyles(styles)(Current));

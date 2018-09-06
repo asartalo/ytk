@@ -101,16 +101,6 @@ describe('party', () => {
       expect: { current: currentVideo },
     },
 
-    'PARTY_SKIP when queue is empty pauses the current video': {
-      from: {
-        current: { ...currentVideo, isPlaying: true },
-      },
-      action: actions.skip(),
-      expect: {
-        current: { ...currentVideo, isPlaying: false },
-      },
-    },
-
     PARTY_SET_CURRENT_AT: {
       from: { current: currentVideo },
       action: actions.setCurrentAt(6),
@@ -125,15 +115,81 @@ describe('party', () => {
       expect: 'same',
     },
 
+    'PARTY_SKIP when queue is empty pauses the current video': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+      },
+      action: actions.skip(null),
+      expect: {
+        current: { ...currentVideo, isPlaying: false },
+      },
+    },
+
     'PARTY_SKIP when queue is filled shifts queue first item to current': {
       from: {
         current: { ...currentVideo, isPlaying: true },
         queue: [...queuedVideosWithoutCurrent],
       },
-      action: actions.skip(),
+      action: actions.skip({
+        from: currentVideo.queueId,
+        to: queuedVideosWithoutCurrent[0].queueId,
+      }),
       expect: {
         current: { ...queuedVideosWithoutCurrent[0], isPlaying: true, at: 0.0 },
         queue: queuedVideosWithoutCurrent.slice(1),
+      },
+    },
+
+    'PARTY_SKIP when from item does not match current does nothing': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+        queue: [...queuedVideosWithoutCurrent],
+      },
+      action: actions.skip({
+        from: queuedVideosWithoutCurrent[0].queueId,
+        to: queuedVideosWithoutCurrent[1].queueId,
+      }),
+      expect: 'same',
+    },
+
+    'PARTY_SKIP when to already matches current it does nothing': {
+      from: {
+        current: { ...queuedVideosWithoutCurrent[0], isPlaying: true, at: 0.0 },
+        queue: queuedVideosWithoutCurrent.slice(1),
+      },
+      action: actions.skip({
+        from: currentVideo.queueId,
+        to: queuedVideosWithoutCurrent[0].queueId,
+      }),
+      expect: 'same',
+    },
+
+    'PARTY_SKIP when to is not in queue does nothing': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+        queue: [...queuedVideosWithoutCurrent],
+      },
+      action: actions.skip({
+        from: currentVideo.queueId,
+        to: 'some-other-id-that-does-not-exist',
+      }),
+      expect: 'same',
+    },
+
+    'PARTY_SKIP can skip to any video in queue': {
+      from: {
+        current: { ...currentVideo, isPlaying: true },
+        queue: [...queuedVideosWithoutCurrent],
+      },
+      action: actions.skip({
+        from: currentVideo.queueId,
+        to: queuedVideosWithoutCurrent[2].queueId,
+      }),
+      expect: {
+        current: { ...queuedVideosWithoutCurrent[2], isPlaying: true, at: 0.0 },
+        queue: queuedVideosWithoutCurrent.filter(
+          item => queuedVideosWithoutCurrent[2] !== item
+        ),
       },
     },
   });
