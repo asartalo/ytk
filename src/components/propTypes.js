@@ -38,6 +38,7 @@ export const queueVideo = shape({
 
 export const currentVideoShape = shape({
   ...videoCommon,
+  queueId: string.isRequired,
   isPlaying: bool.isRequired,
   at: number.isRequired,
 });
