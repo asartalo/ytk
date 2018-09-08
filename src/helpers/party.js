@@ -34,3 +34,40 @@ export function findUserNameFromId(id, users) {
   const found = users.find(user => user.uid === id);
   return found ? found.name : null;
 }
+
+export function secondsDifference(a, b) {
+  if (typeof a !== 'number' || typeof b !== 'number') return false;
+  return Math.abs(a - b) > 1;
+}
+
+export function hasPartyChanged(before, after) {
+  if (before === after) {
+    return false;
+  }
+
+  if (before.queue.length !== after.queue.length) {
+    return true;
+  }
+  if (hasCurrentChanged(before.current, after.current)) {
+    return true;
+  }
+  return false;
+}
+
+export function hasCurrentChanged(before, after) {
+  if (!before !== !after) {
+    return true;
+  }
+
+  const valueFields = ['isPlaying', 'queueId'];
+  for (let field of valueFields) {
+    if (before[field] !== after[field]) {
+      return true;
+    }
+  }
+
+  if (secondsDifference(before.at, after.at)) {
+    return true;
+  }
+  return false;
+}
