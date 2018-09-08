@@ -7,6 +7,9 @@ import rootReducer from 'reducers/index';
 import { syncReady } from 'actions/firestoreActions';
 import setup from './partySagas';
 import YtkFire from '../YtkFire';
+import { party } from 'fixtures/parties';
+import queuedVideos from 'fixtures/queuedVideos';
+import { defaultParty } from 'fixtures/parties';
 
 describe('partySagas', () => {
   let initialState, sagas, saga, ytkFire;
@@ -214,6 +217,41 @@ describe('partySagas', () => {
           .put(partyActions.joinPartyError(error))
           .silentRun();
       });
+    });
+  });
+
+  describe('watchPartyUpdated()', () => {
+    beforeEach(() => {
+      initialState.firestore = {
+        ...initialState.firestore,
+        uid: 'JUID',
+      };
+      saga = expectSaga(sagas.watchPartyUpdated).withReducer(
+        rootReducer,
+        initialState
+      );
+    });
+
+    it('does nothing when party did not change', async () => {
+      await saga
+        .dispatch(
+          partyActions.partyUpdated({
+            ...initialState.party,
+          })
+        )
+        .not.put(partyActions.loadParty({ ...initialState.party }))
+        .silentRun();
+    });
+
+    it('loads party when there is some change', async () => {
+      const newParty = {
+        ...initialState.party,
+        queue: [...queuedVideos.slice(2)],
+      };
+      await saga
+        .dispatch(partyActions.partyUpdated(newParty))
+        .put(partyActions.loadParty(newParty))
+        .silentRun();
     });
   });
 });

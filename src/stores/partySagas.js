@@ -20,6 +20,7 @@ import {
   getPartyFromState,
 } from './sagasCommon';
 import { defaultState as defaultParty } from 'reducers/party';
+import { hasPartyChanged } from 'helpers/party';
 
 export default function partySagas(ytkFire, ytSearch) {
   function* watchNewParty() {
@@ -99,7 +100,10 @@ export default function partySagas(ytkFire, ytSearch) {
   }
 
   function* partyUpdated(action) {
-    yield put(partyActions.loadParty(action.data));
+    const party = yield getPartyFromState();
+    if (hasPartyChanged(party, action.data)) {
+      yield put(partyActions.loadParty(action.data));
+    }
   }
 
   function* watchJoinParty() {
@@ -175,6 +179,7 @@ export default function partySagas(ytkFire, ytSearch) {
     watchNewPartySuccess,
     watchGetParty,
     watchJoinParty,
+    watchPartyUpdated,
     watchPartyChanges,
     watchSearch,
     allPartySagas,

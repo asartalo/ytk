@@ -9,7 +9,7 @@ import {
 } from './party';
 import { mockRandomForEach } from 'jest-mock-random';
 import staticVideoData from 'fixtures/staticVideoData';
-import { party as defaultParty } from 'fixtures/parties';
+import { defaultParty } from 'fixtures/parties';
 
 describe('helpers/party', () => {
   describe('idToPath()', () => {
@@ -137,6 +137,24 @@ describe('helpers/party', () => {
         },
         result: true,
       },
+      {
+        desc: 'when before is null',
+        before: null,
+        after: defaultParty,
+        result: true,
+      },
+      {
+        desc: 'when after is null',
+        before: defaultParty,
+        after: null,
+        result: true,
+      },
+      {
+        desc: 'when before and after are nulls',
+        before: null,
+        after: null,
+        result: false,
+      },
     ].forEach(({ desc, before, after, result }) => {
       describe(desc, () => {
         it(`returns ${result}`, () => {
@@ -172,6 +190,12 @@ describe('helpers/party', () => {
         before: sample,
         after: null,
         result: true,
+      },
+      {
+        desc: 'when before and after are nulls',
+        before: null,
+        after: null,
+        result: false,
       },
       {
         desc: 'when queueId changed',

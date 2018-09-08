@@ -1,7 +1,7 @@
 import { profiles } from './users';
 import queuedVideos from './queuedVideos';
 
-export const party = {
+export const defaultParty = {
   name: 'The Party',
   id: 'the-party-123',
   users: [...profiles],

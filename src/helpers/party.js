@@ -41,33 +41,22 @@ export function secondsDifference(a, b) {
 }
 
 export function hasPartyChanged(before, after) {
-  if (before === after) {
-    return false;
-  }
-
-  if (before.queue.length !== after.queue.length) {
-    return true;
-  }
-  if (hasCurrentChanged(before.current, after.current)) {
-    return true;
-  }
+  if (before === after) return false;
+  if (!before === !!after) return true;
+  if (before.queue.length !== after.queue.length) return true;
+  if (hasCurrentChanged(before.current, after.current)) return true;
   return false;
 }
 
 export function hasCurrentChanged(before, after) {
-  if (!before !== !after) {
-    return true;
-  }
+  if (before === after) return false;
+  if (!before === !!after) return true;
 
   const valueFields = ['isPlaying', 'queueId'];
   for (let field of valueFields) {
-    if (before[field] !== after[field]) {
-      return true;
-    }
+    if (before[field] !== after[field]) return true;
   }
 
-  if (secondsDifference(before.at, after.at)) {
-    return true;
-  }
+  if (secondsDifference(before.at, after.at)) return true;
   return false;
 }
