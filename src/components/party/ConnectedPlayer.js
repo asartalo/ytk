@@ -18,6 +18,8 @@ export class ConnectedPlayer extends Component {
     at: PropTypes.number.isRequired,
     isPlaying: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
+    current: PropTypes.string.isRequired,
+    next: PropTypes.string,
   };
 
   constructor(props) {
@@ -34,7 +36,7 @@ export class ConnectedPlayer extends Component {
       this.setPlayback(isPlaying);
     }
     if (this.videoChanged(prevProps)) {
-      this.setState({ startAt: this.props.at });
+      this.setState({ startAt: this.props.at, loaded: false });
     }
   }
 
@@ -64,15 +66,19 @@ export class ConnectedPlayer extends Component {
   }
 
   handlePause(at) {
-    this.playPause(false, at);
+    if (this.state.loaded) {
+      this.playPause(false, at);
+    }
   }
 
   handlePlay(at) {
+    this.setState({ loaded: true });
     this.playPause(true, at);
   }
 
   handleEnd() {
-    this.props.dispatch(skip());
+    const { dispatch, current, next } = this.props;
+    dispatch(skip({ from: current, to: next }));
   }
 
   handleStateChange(playerState) {
@@ -115,10 +121,12 @@ export class ConnectedPlayer extends Component {
 }
 
 export default connect(state => {
-  const current = state.party.current;
+  const { current, queue } = state.party;
   return {
     videoId: current.videoId,
     at: current.at,
     isPlaying: current.isPlaying,
+    current: current.queueId,
+    next: queue[0] ? queue[0].queueId : null,
   };
 })(ConnectedPlayer);

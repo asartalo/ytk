@@ -39,6 +39,8 @@ describe('ConnectedPlayer', () => {
       isPlaying: currentVideoTemplate.isPlaying,
       className: 'playerClass',
       dispatch: jest.fn(),
+      current: 'currentId',
+      next: 'nextId',
     };
   });
 
@@ -245,7 +247,12 @@ describe('ConnectedPlayer', () => {
         });
 
         it('dispatches skip action', () => {
-          expect(props.dispatch).toHaveBeenCalledWith(skip());
+          expect(props.dispatch).toHaveBeenCalledWith(
+            skip({
+              from: props.current,
+              to: props.next,
+            })
+          );
         });
       });
 
@@ -305,6 +312,27 @@ describe('ConnectedPlayer', () => {
 
       it('passes new at to Player', () => {
         expect(component.find(Player).prop('start')).toEqual(9.0);
+      });
+
+      describe('when player pauses', () => {
+        beforeEach(() => {
+          component.instance().handlePause();
+        });
+
+        it('must not dispatch a pause action', () => {
+          expect(props.dispatch).not.toHaveBeenCalledWith(setPlayback(false));
+        });
+      });
+
+      describe('when player plays and then pauses', () => {
+        beforeEach(() => {
+          component.instance().handlePlay();
+          component.instance().handlePause();
+        });
+
+        it('can dispatch pause action', () => {
+          expect(props.dispatch).toHaveBeenCalledWith(setPlayback(false));
+        });
       });
     });
   });
