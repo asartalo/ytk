@@ -48,6 +48,13 @@ export function VideoListItem({
     <ListItemSecondaryAction>{secondaryAction}</ListItemSecondaryAction>
   ) : null;
 
+  const addedBySection = addedBy ? (
+    <React.Fragment>
+      Added by: <strong>{addedBy}</strong>
+      <br />
+    </React.Fragment>
+  ) : null;
+
   return (
     <ListItem {...{ onClick, className, button, key }}>
       <ListItemIcon>
@@ -61,8 +68,7 @@ export function VideoListItem({
         primary={video.title}
         secondary={
           <span>
-            Added by: <strong>{addedBy}</strong>
-            <br />
+            {addedBySection}
             Video From: {video.channelTitle}
           </span>
         }
