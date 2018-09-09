@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { setPlayback, setCurrentAt, skip } from 'actions/partyActions';
 import Player from 'components/video/Player';
 
-const playerEvents = ['Ready', 'Pause', 'Play', 'End', 'StateChange'];
+const playerEvents = ['Ready', 'Pause', 'Play', 'End', 'StateChange', 'Error'];
 
 function secondsDifference(a, b) {
   return Math.abs(a - b) > 1;
@@ -28,6 +28,7 @@ export class ConnectedPlayer extends Component {
     playerEvents.forEach(event => {
       this[`handle${event}`] = this[`handle${event}`].bind(this);
     });
+    this._skip = this._skip.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -77,14 +78,22 @@ export class ConnectedPlayer extends Component {
   }
 
   handleEnd() {
+    this._skip();
+  }
+
+  _skip() {
     const { dispatch, current, next } = this.props;
     dispatch(skip({ from: current, to: next }));
   }
 
   handleStateChange(playerState) {
-    if (playerState === 'unstarted') {
+    if (playerState === 'cued') {
       this.setPlayback(true);
     }
+  }
+
+  handleError(error) {
+    global.setTimeout(this._skip, 5000);
   }
 
   setPlayback(play) {

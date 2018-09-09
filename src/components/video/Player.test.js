@@ -71,6 +71,7 @@ describe('Player', () => {
         onReady: jest.fn(),
         onEnd: jest.fn(),
         onStateChange: jest.fn(),
+        onError: jest.fn(),
       };
       component = mountPlayer();
       instance = component.instance();
@@ -83,6 +84,7 @@ describe('Player', () => {
       ready: () => event.target,
       end: () => event.target,
       stateChange: 'unstarted',
+      error: () => event.data,
     }).forEach(([type, arg]) => {
       const capType = capitalize(type);
       describe(`on${capType}()`, () => {

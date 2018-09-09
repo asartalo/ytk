@@ -30,7 +30,7 @@ const styles = theme => ({
   },
 });
 
-const eventTypes = ['Play', 'Pause', 'Ready', 'End', 'StateChange'];
+const eventTypes = ['Play', 'Pause', 'Ready', 'End', 'StateChange', 'Error'];
 
 export class Player extends Component {
   static propTypes = {
@@ -76,6 +76,10 @@ export class Player extends Component {
 
   handleStateChange(event) {
     this.getHandler('onStateChange')(ytPlayerState(event.data));
+  }
+
+  handleError(error) {
+    this.getHandler('onError')(error.data);
   }
 
   render() {

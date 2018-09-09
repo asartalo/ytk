@@ -269,14 +269,36 @@ describe('ConnectedPlayer', () => {
           });
         });
 
-        describe('when playerState is unstarted and is currently playing', () => {
+        describe('when playerState is cued and is currently playing', () => {
           beforeEach(() => {
             playerPlaying();
-            instance.handleStateChange('unstarted');
+            playerObj.playVideo = jest.fn(); // Reset mock
+            instance.handleStateChange('cued');
           });
 
           it('means we loaded something so play', () => {
             expect(playerObj.playVideo).toHaveBeenCalled();
+          });
+        });
+      });
+
+      describe('Error', () => {
+        describe('when it errors in anyway', () => {
+          beforeEach(() => {
+            jest.useFakeTimers();
+            playerPaused();
+            instance.handleError(100);
+          });
+
+          afterEach(() => {
+            jest.clearAllTimers();
+          });
+
+          it('skips after 5 seconds', () => {
+            jest.advanceTimersByTime(5000);
+            expect(props.dispatch).toHaveBeenCalledWith(
+              skip({ from: props.current, to: props.next })
+            );
           });
         });
       });
