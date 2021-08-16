@@ -6,17 +6,17 @@ import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import IdleTimer from 'react-idle-timer';
 import screenfull from 'screenfull';
 
-import injectProp from 'helpers/injectProp';
-import { currentUserShape, partyShape } from 'components/propTypes';
-import ButtonWithTooltip from 'components/ytk/ButtonWithTooltip';
+import injectProp from '../../helpers/injectProp';
+import { currentUserShape, partyShape } from '../propTypes';
+import ButtonWithTooltip from '../ytk/ButtonWithTooltip';
 import ConnectedPlayer from './ConnectedPlayer';
-import IfElse from 'components/IfElse';
+import IfElse from '../IfElse';
 
-const styles = theme => ({
+const styles = ({ typography, spacing, transitions }) => ({
   root: {},
 
   controls: {
-    transition: '300ms',
+    transition: transitions.duration.standard,
     opacity: 1,
   },
 
@@ -27,8 +27,8 @@ const styles = theme => ({
 
   mainButton: {
     position: 'fixed',
-    top: theme.spacing.unit * 7,
-    right: theme.spacing.unit * 4,
+    top: spacing(7),
+    right: spacing(4),
   },
 
   player: {
@@ -37,7 +37,7 @@ const styles = theme => ({
   },
 
   noVideoHelp: {
-    ...theme.typography.body1,
+    ...typography.body1,
   },
 });
 

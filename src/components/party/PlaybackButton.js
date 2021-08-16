@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import IconButtonWithTooltip from '../ytk/IconButtonWithTooltip';
 
 const styles = theme => ({
   playerIcon: {

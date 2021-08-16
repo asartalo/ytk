@@ -1,9 +1,8 @@
-import microphoneBg from 'images/microphone02.jpg';
+import microphoneBg from '../../images/microphone02.jpg';
 
-const styles = theme => {
-  const homeTransition = `${theme.transitions.duration}ms ${
-    theme.transitions.easing.easeInOut
-  }`;
+const styles = ({ transitions, typography, palette, breakpoints, spacing }) => {
+  const { duration, easing } = transitions;
+  const homeTransition = `${duration.short}ms ${easing.easeInOut}`;
   return {
     home: {
       minHeight: '100vh',
@@ -21,7 +20,7 @@ const styles = theme => {
     paperRoot: {
       fontWeight: 300,
       padding: '10px 20px 80px',
-      transitionDuration: '200ms',
+      transitionDuration: duration.short,
     },
 
     body: {
@@ -30,17 +29,17 @@ const styles = theme => {
     },
 
     mainTitle: {
-      ...theme.typography.display4,
+      ...typography.h4,
       fontSize: '6rem',
       fontWeight: 100,
-      color: theme.palette.primary.main,
+      color: palette.primary.main,
       margin: '70px 0 0 0',
       transition: homeTransition,
-      transitionDuration: '300ms',
+      transitionDuration: duration.standard,
     },
 
     subHeading: {
-      ...theme.typography.display1,
+      ...typography.h4,
       marginBottom: 68,
       transition: '500ms',
     },
@@ -59,7 +58,7 @@ const styles = theme => {
 
     inputStarted: {
       '& $mainTitle': {
-        color: theme.palette.primary.main,
+        color: palette.primary.main,
       },
 
       '& $subHeading': {
@@ -70,7 +69,7 @@ const styles = theme => {
       },
     },
 
-    [theme.breakpoints.up('xs')]: {
+    [breakpoints.up('xs')]: {
       home: {
         backgroundImage: 'none',
       },
@@ -86,14 +85,14 @@ const styles = theme => {
       },
     },
 
-    [theme.breakpoints.up('sm')]: {
+    [breakpoints.up('sm')]: {
       home: {
         backgroundImage: `url('${microphoneBg}')`,
         backgroundSize: 'cover',
       },
 
       revealer: {
-        padding: theme.spacing.unit,
+        padding: spacing(1),
       },
 
       paperRoot: {

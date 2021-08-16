@@ -1,8 +1,8 @@
 import { take, call, all, put, takeLatest } from 'redux-saga/effects';
 
 import { ActionTypes as types } from '../constants';
-import { setHomeState, loadUser } from 'actions/currentUserActions';
-import { setErrorMessage } from 'actions/errorActions';
+import { setHomeState, loadUser } from '../actions/currentUserActions';
+import { setErrorMessage } from '../actions/errorActions';
 import {
   getUserDataError,
   getUserDataSuccess,
@@ -14,7 +14,7 @@ import {
   signInAnonymouslySuccess,
   syncReady,
   userDataDoesNotExist,
-} from 'actions/firestoreActions';
+} from '../actions/firestoreActions';
 import { getUserFromState } from './sagasCommon';
 import { UserDataDoesNotExist } from '../YtkFire';
 

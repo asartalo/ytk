@@ -11,16 +11,16 @@ import {
 import { eventChannel, delay } from 'redux-saga';
 
 import { ActionTypes as types } from '../constants';
-import * as partyActions from 'actions/partyActions';
-import { setParty } from 'actions/currentUserActions';
+import * as partyActions from '../actions/partyActions';
+import { setParty } from '../actions/currentUserActions';
 import {
   continueIfSignedIn,
   getUidFromState,
   getUserAndUidFromState,
   getPartyFromState,
 } from './sagasCommon';
-import { defaultState as defaultParty } from 'reducers/party';
-import { hasPartyChanged } from 'helpers/party';
+import { defaultState as defaultParty } from '../reducers/party';
+import { hasPartyChanged } from '../helpers/party';
 
 export default function partySagas(ytkFire, ytSearch) {
   function* watchNewParty() {

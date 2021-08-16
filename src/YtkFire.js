@@ -1,5 +1,5 @@
 import { timeout, TimeoutError } from 'promise-timeout';
-import idFromName from 'helpers/idFromName';
+import idFromName from './helpers/idFromName';
 
 export class UserDataDoesNotExist extends Error {
   constructor(uid) {
@@ -18,6 +18,8 @@ export class UserNotSignedIn extends Error {
     super('User is not signed in');
   }
 }
+
+export { TimeoutError };
 
 // TODO: This is not a good solution.
 // An instance of this class will store sign-in state.
@@ -135,5 +137,3 @@ export default class YtkFire {
     });
   }
 }
-
-export { TimeoutError };

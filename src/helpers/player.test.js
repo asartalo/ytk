@@ -1,4 +1,4 @@
-import { ytPlayerState } from 'helpers/player';
+import { ytPlayerState } from './player';
 
 describe('ytPlayerState()', () => {
   const testData = new Map([

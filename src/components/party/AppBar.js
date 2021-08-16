@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 
-import { partyShape } from 'components/propTypes';
-import { idToFullUrl } from 'helpers/party';
-import micIcon from 'images/okee_logo_1.svg';
+import { partyShape } from '../propTypes';
+import { idToFullUrl } from '../../helpers/party';
+import micIcon from '../../images/okee_logo_1.svg';
 import GroupButton from './GroupButton';
 import PartyGoersMenu from './PartyGoersMenu';
 
@@ -34,24 +34,27 @@ const styles = theme => ({
   },
 
   userBadge: {
-    top: 2,
-    right: -4,
+    top: 10,
+    right: 6,
     // backgroundColor: 'black',
   },
 
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginLeft: -6,
+    marginRight: 10,
+    padding: 6,
     backgroundColor: theme.palette.primary.main,
     color: '#fff',
+    transition: theme.transitions.duration.standard,
 
     '&:hover': {
       backgroundColor: '#000',
+      transform: `scale(1.3, 1.3)`,
     },
   },
 
   logo: {
-    width: theme.spacing.unit * 5,
+    width: theme.spacing(5),
     filter: 'invert(1)',
   },
 });
@@ -102,11 +105,7 @@ export class AppBar extends Component {
               </Link>
             </IconButton>
 
-            <Typography
-              variant="display1"
-              color="inherit"
-              className={classes.title}
-            >
+            <Typography variant="h4" color="inherit" className={classes.title}>
               {party.name || 'Okee!'}
             </Typography>
 

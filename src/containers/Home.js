@@ -1,51 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { currentUserShape, firestoreShape } from 'components/propTypes';
-import { currentUserActions } from 'actions';
-import HomePage from 'components/home/HomePage';
-import NameForm from 'components/home/NameForm';
-import Start from 'components/home/Start';
-import Join from 'components/home/Join';
-import ChooseParty from 'components/home/ChooseParty';
-import uiState from 'components/home/uiState';
+import { currentUserShape, firestoreShape } from '../components/propTypes';
+import { currentUserActions } from '../actions';
+import HomePage from '../components/home/HomePage';
+import NameForm from '../components/home/NameForm';
+import Start from '../components/home/Start';
+import Join from '../components/home/Join';
+import ChooseParty from '../components/home/ChooseParty';
+import uiState from '../components/home/uiState';
 
-export class Home extends Component {
-  static propTypes = {
-    className: PropTypes.string,
-    dispatch: PropTypes.func.isRequired,
-    currentUser: currentUserShape.isRequired,
-    firestore: firestoreShape.isRequired,
-  };
+export function Home(props) {
+  const { currentUser, dispatch } = props;
 
-  constructor(props) {
-    super(props);
-    this.handleNameSet = this.handleNameSet.bind(this);
-    this.handleInputStarted = this.handleInputStarted.bind(this);
-    this.handleSetIntent = this.handleSetIntent.bind(this);
+  function handleSetIntent(intent) {
+    dispatch(currentUserActions.setIntent(intent));
   }
 
-  handleNameSet(name, intent) {
-    this.props.dispatch(currentUserActions.setName(name, intent));
+  function handleNameSet(userName, intent) {
+    dispatch(currentUserActions.setName(userName, intent));
   }
 
-  handleInputStarted() {
-    this.props.dispatch(currentUserActions.setHomeState('inputStarted'));
+  function handleInputStarted() {
+    dispatch(currentUserActions.setHomeState('inputStarted'));
   }
 
-  handleSetIntent(intent) {
-    this.props.dispatch(currentUserActions.setIntent(intent));
-  }
-
-  renderHomeBody() {
-    const { currentUser } = this.props;
-    switch (uiState(this.props)) {
+  const renderHomeBody = () => {
+    switch (uiState(props)) {
       case 'choose_party':
         return (
           <ChooseParty
             userName={currentUser.name}
-            onSetIntent={this.handleSetIntent}
+            onSetIntent={handleSetIntent}
             parties={currentUser.party ? [currentUser.party] : []}
           />
         );
@@ -57,22 +44,24 @@ export class Home extends Component {
         return (
           <NameForm
             userName={currentUser.name}
-            onNameSet={this.handleNameSet}
-            onInputStarted={this.handleInputStarted}
+            onNameSet={handleNameSet}
+            onInputStarted={handleInputStarted}
           />
         );
     }
-  }
+  };
 
-  render() {
-    const { currentUser } = this.props;
-    return (
-      <HomePage homeState={currentUser.homeState}>
-        {this.renderHomeBody()}
-      </HomePage>
-    );
-  }
+  return (
+    <HomePage homeState={currentUser.homeState}>{renderHomeBody()}</HomePage>
+  );
 }
+
+Home.propTypes = {
+  className: PropTypes.string,
+  dispatch: PropTypes.func.isRequired,
+  currentUser: currentUserShape.isRequired,
+  firestore: firestoreShape.isRequired,
+};
 
 export default connect((state, props) => {
   const { currentUser, firestore } = state;

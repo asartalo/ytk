@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { setPlayback, setCurrentAt, skip } from 'actions/partyActions';
+import { setPlayback, setCurrentAt, skip } from '../../actions/partyActions';
 import { ConnectedPlayer } from './ConnectedPlayer';
-import Player from 'components/video/Player';
-import videos from 'fixtures/queuedVideos';
+import Player from '../video/Player';
+import videos from '../../fixtures/queuedVideos';
 
 const currentVideoTemplate = {
   ...videos[0],
@@ -327,7 +327,7 @@ describe('ConnectedPlayer', () => {
       });
     });
 
-    describe('when the videoId and at prop is changed ', () => {
+    describe('when the videoId and at prop is changed', () => {
       beforeEach(() => {
         component.setProps({ at: 9.0, videoId: 'somethingElse' });
       });

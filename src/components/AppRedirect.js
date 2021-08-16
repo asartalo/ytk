@@ -1,21 +1,21 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { clearRedirect } from 'actions/uiActions';
+import { clearRedirect } from '../actions/uiActions';
 
-export class AppRedirect extends PureComponent {
-  componentDidUpdate() {
-    const { to, dispatch } = this.props;
+function AppRedirect({ to, dispatch }) {
+  const navigate = useNavigate();
+  useEffect(() => {
     if (to) {
       dispatch(clearRedirect());
     }
+  }, [to, dispatch]);
+  if (to) {
+    navigate(to);
   }
 
-  render() {
-    const { to } = this.props;
-    return to ? <Redirect to={to} /> : null;
-  }
+  return <>{null}</>;
 }
 
 export default connect(({ ui }) => {

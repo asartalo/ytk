@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { shallowWithRouter } from 'helpers/enzymeTest';
+import { shallowWithRouter, mountWithRouter } from '../../helpers/enzymeTest';
 
-import userReducer from 'reducers/currentUser';
-import partyReducer from 'reducers/party';
-import staticVideoData from 'fixtures/staticVideoData';
-import { currentUserActions } from 'actions';
+import userReducer from '../../reducers/currentUser';
+import partyReducer from '../../reducers/party';
+import staticVideoData from '../../fixtures/staticVideoData';
+import { currentUserActions } from '../../actions';
 import ConnectedPlayer from './ConnectedPlayer';
 
 import PartyPageWithStyle, { PartyPage } from './PartyPage';
@@ -34,7 +34,7 @@ const defaultPropsNaked = {
 describe('PartyPage', () => {
   let page, props;
 
-  const mountPage = () => shallowWithRouter(<PartyPage {...props} />);
+  const mountPage = () => mountWithRouter(<PartyPage {...props} />);
 
   beforeEach(() => {
     props = {
@@ -48,7 +48,7 @@ describe('PartyPage', () => {
     page = mountPage();
   });
 
-  describe('when component has mounted', () => {
+  describe.only('when component has mounted', () => {
     let instance;
     beforeEach(() => {
       instance = page.instance();

@@ -11,7 +11,7 @@ const styles = theme => ({
   thumbnail: {
     width: 53,
     height: 40,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
 
   clearButton: {

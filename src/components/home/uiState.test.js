@@ -1,5 +1,5 @@
-import currentUserReducer from 'reducers/currentUser';
-import firestoreReducer from 'reducers/firestore';
+import currentUserReducer from '../../reducers/currentUser';
+import firestoreReducer from '../../reducers/firestore';
 import uiState from './uiState';
 
 describe('uiState()', () => {

@@ -3,32 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.5.0",
-    "@material-ui/icons": "^2.0.2",
-    "firebase": "^5.3.0",
-    "husky": "^0.14.3",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "firebase": "^8.9.1",
+    "history": "^5.0.1",
+    "husky": "^7.0.1",
     "keymirror": "^0.1.1",
     "lint-staged": "^7.2.0",
-    "node-sass-chokidar": "^1.3.0",
+    "node-sass-chokidar": "^1.5.0",
     "npm-run-all": "^4.1.3",
     "prettier": "^1.13.7",
     "promise-timeout": "^1.3.0",
-    "prop-types": "^15.6.2",
-    "react": "^16.4.1",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^17.0.2",
     "react-idle-timer": "^4.0.8",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.3.1",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^6.0.0-beta.1",
     "react-router-scroll-4": "^1.0.0-beta.1",
-    "react-scripts": "2.0.0-next.3e165448",
-    "react-swipeable-views": "^0.12.16",
+    "react-scripts": "4.0.3",
+    "react-swipeable-views": "^0.14.0",
     "react-youtube": "^7.6.0",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "screenfull": "^3.3.2",
     "voca": "^1.4.0",
+    "web-vitals": "^1.0.1",
     "youtube-api-v3-search": "^1.0.2"
   },
   "lint-staged": {
@@ -41,35 +46,42 @@
     "precommit": "lint-staged",
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-    "start-js": "NODE_PATH=src/ react-scripts start",
-    "start": "NODE_PATH=src/ npm-run-all -p watch-css start-js",
-    "build-js": "NODE_PATH=src/ react-scripts build",
-    "build": "NODE_PATH=src/ npm-run-all build-css build-js",
-    "test": "NODE_PATH=src/ react-scripts test --env=jsdom",
-    "test-coverage": "NODE_PATH=src/ react-scripts test --env=jsdom --coverage",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test --env=jsdom",
+    "test-coverage": "react-scripts test --env=jsdom --coverage",
     "eject": "react-scripts eject"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "devDependencies": {
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "coveralls": "^3.0.2",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme": "^3.11.0",
     "firebase-mock": "^2.2.4",
-    "jest-enzyme": "^6.0.2",
-    "jest-mock-random": "^1.0.2",
-    "mock-local-storage": "^1.0.5",
+    "jest-enzyme": "^7.1.2",
+    "jest-mock-random": "^1.1.1",
+    "mock-local-storage": "^1.1.17",
     "react-router-enzyme-context": "^1.2.0",
     "redux-saga-test-plan": "^3.7.0"
   },
   "browserslist": {
-    "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
-    ],
     "production": [
-      ">0.25%",
+      ">0.2%",
+      "not dead",
       "not op_mini all",
       "ie 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }

@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { Link } from 'react-router-dom';
 
-import { idToPath } from 'helpers/party';
+import { idToPath } from '../../helpers/party';
 
 const styles = theme => ({
   root: {},

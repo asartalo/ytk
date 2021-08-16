@@ -1,10 +1,9 @@
-import * as promise from 'helpers/promise';
+import * as promise from '../helpers/promise';
 export default function fakeFirestore(jest) {
   const fakeFs = {};
 
   fakeFs.authUser = { uid: 'FAKEUID' };
   fakeFs.authResponse = { user: fakeFs.authUser };
-  fakeFs.signInResponse = promise.resolvesTo(fakeFs.authResponse);
 
   fakeFs.userData = {
     name: 'John',
@@ -54,7 +53,9 @@ export default function fakeFirestore(jest) {
     collection: fakeFs.collection,
     runTransaction: fakeFs.runTransactionMock,
   };
-  fakeFs.signInAnonymously = jest.fn(() => fakeFs.signInResponse);
+  fakeFs.signInAnonymously = jest.fn(() => {
+    return promise.resolvesTo(fakeFs.authResponse);
+  });
   fakeFs.auth = {
     signInAnonymously: fakeFs.signInAnonymously,
   };

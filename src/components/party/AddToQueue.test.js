@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import searchResults from 'fixtures/staticVideoData';
-import { profiles } from 'fixtures/users';
+import searchResults from '../../fixtures/staticVideoData';
+import { profiles } from '../../fixtures/users';
 import { Provider } from 'react-redux';
-import mockStore from 'helpers/mockStore';
+import mockStore from '../../helpers/mockStore';
 
-import { search, addToQueue } from 'actions/partyActions';
+import { search, addToQueue } from '../../actions/partyActions';
 import VideoListItem from './VideoListItem';
 
 import AddToQueueWithStyles, { AddToQueue } from './AddToQueue';

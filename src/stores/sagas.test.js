@@ -1,14 +1,14 @@
 import { expectSaga } from 'redux-saga-test-plan';
 
-import { currentUserActions, errorActions } from 'actions';
-import rootReducer from 'reducers/index';
+import { currentUserActions, errorActions } from '../actions';
+import rootReducer from '../reducers/index';
 
-import * as promise from 'helpers/promise';
+import * as promise from '../helpers/promise';
 import {
   signInAnonymouslySuccess,
   signInAnonymouslyError,
   syncReady,
-} from 'actions/firestoreActions';
+} from '../actions/firestoreActions';
 import YtkFire, { UserDataDoesNotExist } from '../YtkFire';
 
 import setup from './sagas';

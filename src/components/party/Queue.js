@@ -7,10 +7,10 @@ import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { arrayOfQueueVideo, arrayOfProfiles } from 'components/propTypes';
-import { findUserNameFromId } from 'helpers/party';
-import { removeFromQueue } from 'actions/partyActions';
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import { arrayOfQueueVideo, arrayOfProfiles } from '../propTypes';
+import { findUserNameFromId } from '../../helpers/party';
+import { removeFromQueue } from '../../actions/partyActions';
+import IconButtonWithTooltip from '../ytk/IconButtonWithTooltip';
 import VideoListItem from './VideoListItem';
 
 const styles = theme => ({

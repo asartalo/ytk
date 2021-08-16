@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { ytPlayerState } from 'helpers/player';
+import { ytPlayerState } from '../../helpers/player';
 import YouTube from 'react-youtube';
 
 function originUrl() {

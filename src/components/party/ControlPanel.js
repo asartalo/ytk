@@ -5,13 +5,13 @@ import SwipeableViews from 'react-swipeable-views';
 import Divider from '@material-ui/core/Divider';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { currentUserShape, partyShape } from 'components/propTypes';
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import { currentUserShape, partyShape } from '../propTypes';
+import IconButtonWithTooltip from '../ytk/IconButtonWithTooltip';
 import FabAddButton from './FabAddButton';
 import Current from './Current';
 import Queue from './Queue';
 import AddToQueue from './AddToQueue';
-import If from 'components/If';
+import If from '../If';
 
 const styles = theme => ({
   root: {},
@@ -29,18 +29,18 @@ const styles = theme => ({
   panelStandalone: {
     overflow: 'visible',
     height: 'auto',
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 
   panelControlWrap: {
     backgroundColor: theme.palette.background.paper,
-    height: theme.spacing.unit * 5,
+    height: theme.spacing(5),
   },
 
   panelControl: {
-    marginTop: theme.spacing.unit,
-    marginLeft: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
   },
 
   fab: {

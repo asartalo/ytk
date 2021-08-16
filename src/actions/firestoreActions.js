@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import action from 'helpers/action';
+import action from '../helpers/action';
 
 export function signInAnonymouslyRequest() {
   return action(types.FIRESTORE_SIGN_IN_ANONYMOUSLY_REQUEST);

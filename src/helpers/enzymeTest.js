@@ -1,12 +1,18 @@
 import { mount, shallow } from 'enzyme';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
+import { MemoryRouter } from 'react-router-dom';
 
 export function mountWithRouter(component) {
-  const options = new ReactRouterEnzymeContext();
-  return mount(component, options.get());
+  return mount(
+    <MemoryRouter initialEntries={['/']} initialIndex={0}>
+      {component}
+    </MemoryRouter>
+  );
 }
 
 export function shallowWithRouter(component) {
-  const options = new ReactRouterEnzymeContext();
-  return shallow(component, options.get());
+  return shallow(
+    <MemoryRouter initialEntries={['/']} initialIndex={0}>
+      {component}
+    </MemoryRouter>
+  );
 }

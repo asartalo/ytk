@@ -1,13 +1,12 @@
 import React from 'react';
-
-import { mountWithRouter } from 'helpers/enzymeTest';
+import { mountWithRouter } from '../../helpers/enzymeTest';
 
 import UserParties from './UserParties';
 import ListItem from '@material-ui/core/ListItem';
 import { Link } from 'react-router-dom';
 
 describe('UserParties', () => {
-  let component, props;
+  let props;
 
   function mountUserParties() {
     return mountWithRouter(<UserParties {...props} />);

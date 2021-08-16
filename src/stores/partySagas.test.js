@@ -1,15 +1,15 @@
 import { expectSaga } from 'redux-saga-test-plan';
 import { mockRandomForEach } from 'jest-mock-random';
 
-import * as promise from 'helpers/promise';
-import { currentUserActions, partyActions } from 'actions';
-import rootReducer from 'reducers/index';
-import { syncReady } from 'actions/firestoreActions';
+import * as promise from '../helpers/promise';
+import { currentUserActions, partyActions } from '../actions';
+import rootReducer from '../reducers/index';
+import { syncReady } from '../actions/firestoreActions';
 import setup from './partySagas';
 import YtkFire from '../YtkFire';
-import { party } from 'fixtures/parties';
-import queuedVideos from 'fixtures/queuedVideos';
-import { defaultParty } from 'fixtures/parties';
+import { party } from '../fixtures/parties';
+import queuedVideos from '../fixtures/queuedVideos';
+import { defaultParty } from '../fixtures/parties';
 
 describe('partySagas', () => {
   let initialState, sagas, saga, ytkFire;

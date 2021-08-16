@@ -15,7 +15,7 @@ import TextField from '@material-ui/core/TextField';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import CheckIcon from '@material-ui/icons/Check';
 
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import IconButtonWithTooltip from '../ytk/IconButtonWithTooltip';
 
 const styles = theme => ({
   root: {},
@@ -81,8 +81,10 @@ export class ShareDialog extends Component {
         open={open}
         keepMounted
         onClose={onClose}
-        onEntered={e => {
-          setTimeout(this.focusOnText, 100);
+        TransitionProps={{
+          onEntered: e => {
+            setTimeout(this.focusOnText, 100);
+          },
         }}
       >
         <DialogTitle>Let others join in on the fun</DialogTitle>

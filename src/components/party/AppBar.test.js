@@ -1,6 +1,6 @@
 import React from 'react';
-import { mountWithRouter } from 'helpers/enzymeTest';
-import { profiles } from 'fixtures/users';
+import { mountWithRouter } from '../../helpers/enzymeTest';
+import { profiles } from '../../fixtures/users';
 
 import GroupButton from './GroupButton';
 import PartyGoersMenu from './PartyGoersMenu';

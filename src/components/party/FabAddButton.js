@@ -1,6 +1,6 @@
 import React from 'react';
 import Zoom from '@material-ui/core/Zoom';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 function FabAddButton(props) {
@@ -8,9 +8,9 @@ function FabAddButton(props) {
   delete buttonProps.show;
   return (
     <Zoom in={props.show}>
-      <Button variant="fab" color="primary" {...buttonProps}>
+      <Fab color="primary" {...buttonProps}>
         <AddIcon />
-      </Button>
+      </Fab>
     </Zoom>
   );
 }

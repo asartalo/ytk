@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
-import ProgressOrChildren from 'components/ProgressOrChildren';
-import HomeButton from 'components/ytk/HomeButton';
+import ProgressOrChildren from '../ProgressOrChildren';
+import HomeButton from '../ytk/HomeButton';
 
 const styles = theme => ({
   mainTitle: {
-    ...theme.typography.display1,
+    ...theme.typography.h4,
     fontWeight: 300,
     color: theme.palette.text.primary,
   },
   spacer: {
-    margin: `${theme.spacing.unit * 5}px`,
+    margin: `${theme.spacing(5)}px`,
   },
 });
 

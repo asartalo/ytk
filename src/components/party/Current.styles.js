@@ -25,14 +25,14 @@ const styles = theme => ({
   playerControls: {
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
   miscControls: {
     display: 'flex',
     justifyContent: 'flex-end',
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 });
 

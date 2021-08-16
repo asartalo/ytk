@@ -8,8 +8,8 @@ import {
   hasCurrentChanged,
 } from './party';
 import { mockRandomForEach } from 'jest-mock-random';
-import staticVideoData from 'fixtures/staticVideoData';
-import { defaultParty } from 'fixtures/parties';
+import staticVideoData from '../fixtures/staticVideoData';
+import { defaultParty } from '../fixtures/parties';
 
 describe('helpers/party', () => {
   describe('idToPath()', () => {

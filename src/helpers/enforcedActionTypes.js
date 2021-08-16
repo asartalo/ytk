@@ -2,7 +2,7 @@
 function enforcedActionTypes(...types) {
   return new Proxy(new Set(types), {
     get: function(set, prop) {
-      if (set.has(prop)) {
+      if (set.has(prop) || prop === '$$typeof') {
         return prop;
       } else {
         throw Error(`'${prop}' action type was not defined`);

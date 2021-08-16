@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { Redirect } from 'react-router-dom';
 
-import { clearRedirect } from 'actions/uiActions';
+import { clearRedirect } from '../actions/uiActions';
 import { AppRedirect } from './AppRedirect';
 
 describe('AppRedirect', () => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   palette: {
     // type: 'dark',
     primary: {

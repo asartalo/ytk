@@ -1,6 +1,6 @@
-import reducerTest from 'helpers/reducerTest';
+import reducerTest from '../helpers/reducerTest';
 import * as actions from '../actions/currentUserActions';
-import { joinPartySuccess, newPartySuccess } from 'actions/partyActions';
+import { joinPartySuccess, newPartySuccess } from '../actions/partyActions';
 import currentUser from './currentUser';
 
 describe('currentUser', () => {

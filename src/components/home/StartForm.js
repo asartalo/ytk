@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import HomeButton from 'components/ytk/HomeButton';
+import HomeButton from '../ytk/HomeButton';
 import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   mainTitle: {
-    ...theme.typography.display1,
+    ...theme.typography.h4,
     fontWeight: 300,
     color: theme.palette.text.primary,
   },
   spacer: {
-    margin: `${theme.spacing.unit * 5}px`,
+    margin: `${theme.spacing(5)}px`,
   },
 });
 

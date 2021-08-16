@@ -1,9 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import queuedVideos from 'fixtures/queuedVideos';
-import { profiles } from 'fixtures/users';
+import queuedVideos from '../../fixtures/queuedVideos';
+import { profiles } from '../../fixtures/users';
 
-import { removeFromQueue } from 'actions/partyActions';
+import { removeFromQueue } from '../../actions/partyActions';
 import { VideoListItem } from './VideoListItem';
 
 import { Queue } from './Queue';

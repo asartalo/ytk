@@ -4,25 +4,25 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
-import HomeButton from 'components/ytk/HomeButton';
+import HomeButton from '../ytk/HomeButton';
 import UserParties from './UserParties';
-import If from 'components/If';
+import If from '../If';
 
 const styles = theme => ({
   mainTitle: {
-    ...theme.typography.display1,
+    ...theme.typography.h4,
     fontWeight: 300,
     color: theme.palette.text.primary,
   },
 
   divider: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 4,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
   },
 
   subtitle: {
     ...theme.typography.subheading,
-    marginBottom: theme.spacing.unit * 6,
+    marginBottom: theme.spacing(6),
   },
 });
 

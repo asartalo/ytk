@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import { currentUserActions, partyActions } from 'actions';
-import { currentUserShape } from 'components/propTypes';
-import IfElse from 'components/IfElse';
-import HomePage from 'components/home/HomePage';
-import NameForm from 'components/home/NameForm';
-import HomeButton from 'components/ytk/HomeButton';
+import { currentUserActions, partyActions } from '../../actions';
+import { currentUserShape } from '../propTypes';
+import IfElse from '../IfElse';
+import HomePage from '../home/HomePage';
+import NameForm from '../home/NameForm';
+import HomeButton from '../ytk/HomeButton';
 
 const styles = theme => ({
   helpText: {
     lineHeight: theme.typography.body1.lineHeight,
-    marginTop: theme.spacing.unit * -4,
-    marginBottom: theme.spacing.unit * 5,
+    marginTop: theme.spacing(-4),
+    marginBottom: theme.spacing(5),
   },
 });
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import searchResults from 'fixtures/staticVideoData';
-import queuedVideos from 'fixtures/queuedVideos';
-import { currentUser, profiles } from 'fixtures/users';
+import searchResults from '../../fixtures/staticVideoData';
+import queuedVideos from '../../fixtures/queuedVideos';
+import { currentUser, profiles } from '../../fixtures/users';
 
-import { setPlayback, skip } from 'actions/partyActions';
+import { setPlayback, skip } from '../../actions/partyActions';
 import {
   standAlonePlayerOn,
   standAlonePlayerOff,
-} from 'actions/currentUserActions';
+} from '../../actions/currentUserActions';
 import PlaybackButton from './PlaybackButton';
 import SkipButton from './SkipButton';
 import StandaloneButton from './StandaloneButton';
-import { idToPlayerUrl } from 'helpers/party';
+import { idToPlayerUrl } from '../../helpers/party';
 
 import { Current } from './Current';
 

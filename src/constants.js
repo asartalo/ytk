@@ -1,4 +1,4 @@
-import enforcedActionTypes from 'helpers/enforcedActionTypes';
+import enforcedActionTypes from './helpers/enforcedActionTypes';
 
 export const ActionTypes = enforcedActionTypes(
   // Errors

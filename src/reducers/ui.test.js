@@ -1,9 +1,8 @@
-import { ActionTypes as types } from '../constants';
-import staticVideoData from 'fixtures/staticVideoData';
-import reducerTest from 'helpers/reducerTest';
-import * as uiActions from 'actions/uiActions';
-import * as userActions from 'actions/currentUserActions';
-import * as partyActions from 'actions/partyActions';
+import staticVideoData from '../fixtures/staticVideoData';
+import reducerTest from '../helpers/reducerTest';
+import * as uiActions from '../actions/uiActions';
+import * as userActions from '../actions/currentUserActions';
+import * as partyActions from '../actions/partyActions';
 
 import ui from './ui';
 

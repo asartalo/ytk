@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import { currentUserShape, partyShape } from 'components/propTypes';
-import { currentUserActions } from 'actions';
+import { currentUserShape, partyShape } from '../propTypes';
+import { currentUserActions } from '../../actions';
 import AppBar from './AppBar';
 import PartyUiGrid from './PartyUiGrid';
 import ConnectedPlayer from './ConnectedPlayer';

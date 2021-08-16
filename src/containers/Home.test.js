@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Home } from './Home';
-import HomePage from 'components/home/HomePage';
-import NameForm from 'components/home/NameForm';
-import ChooseParty from 'components/home/ChooseParty';
-import Start from 'components/home/Start';
-import Join from 'components/home/Join';
-import { currentUserActions } from 'actions';
+import HomePage from '../components/home/HomePage';
+import NameForm from '../components/home/NameForm';
+import ChooseParty from '../components/home/ChooseParty';
+import Start from '../components/home/Start';
+import Join from '../components/home/Join';
+import { currentUserActions } from '../actions';
 
 describe('Home', () => {
   let home, props;
@@ -66,7 +66,7 @@ describe('Home', () => {
           home.instance().handleNameSet('Arnold');
         });
 
-        it('dispatches a set current user name and intent action ', () => {
+        it('dispatches a set current user name and intent action', () => {
           expect(props.dispatch).toHaveBeenCalledWith(
             currentUserActions.setName('Arnold')
           );

@@ -9,7 +9,7 @@ const styles = theme => ({
     padding: '10px 32px 8px 16px',
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
 });
 
@@ -23,7 +23,7 @@ function HomeButton(props) {
       type="submit"
       {...filteredProps}
       className={classes.button}
-      variant="extendedFab"
+      variant="contained"
     >
       <MusicNoteIcon className={classes.extendedIcon} />
       {children}

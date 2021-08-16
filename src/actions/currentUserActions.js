@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import action from 'helpers/action';
+import action from '../helpers/action';
 
 export function setName(name) {
   return action(types.CURRENT_USER_SET_NAME, name);

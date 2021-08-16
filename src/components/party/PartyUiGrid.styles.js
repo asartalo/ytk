@@ -1,4 +1,4 @@
-import { themeToggle } from 'helpers/theme';
+import { themeToggle } from '../../helpers/theme';
 
 const borderColor = theme =>
   theme.palette.grey[themeToggle(theme, '300', '800')];

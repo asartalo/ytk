@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { setPlayback, setCurrentAt, skip } from 'actions/partyActions';
-import Player from 'components/video/Player';
+import { setPlayback, setCurrentAt, skip } from '../../actions/partyActions';
+import Player from '../video/Player';
 
 const playerEvents = ['Ready', 'Pause', 'Play', 'End', 'StateChange', 'Error'];
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
-import IconButtonWithTooltip from 'components/ytk/IconButtonWithTooltip';
+import IconButtonWithTooltip from '../ytk/IconButtonWithTooltip';
 
 function StandaloneButton({ onClick, isStandalone }) {
   const tooltip = isStandalone

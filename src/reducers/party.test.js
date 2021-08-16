@@ -1,8 +1,8 @@
 import { mockRandomForEach } from 'jest-mock-random';
-import reducerTest from 'helpers/reducerTest';
-import * as actions from 'actions/partyActions';
-import staticVideoData from 'fixtures/staticVideoData';
-import queuedVideos from 'fixtures/queuedVideos';
+import reducerTest from '../helpers/reducerTest';
+import * as actions from '../actions/partyActions';
+import staticVideoData from '../fixtures/staticVideoData';
+import queuedVideos from '../fixtures/queuedVideos';
 import party from './party';
 
 describe('party', () => {

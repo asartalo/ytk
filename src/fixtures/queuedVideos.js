@@ -1,6 +1,6 @@
-import { prepForQueue } from 'helpers/party';
-import staticVideoData from 'fixtures/staticVideoData';
-import { profiles } from 'fixtures/users';
+import { prepForQueue } from '../helpers/party';
+import staticVideoData from './staticVideoData';
+import { profiles } from './users';
 
 const uids = profiles.map(profile => profile.uid);
 

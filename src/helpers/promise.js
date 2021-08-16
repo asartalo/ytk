@@ -4,7 +4,7 @@ export function resolvesTo(value, timeout = 0) {
   });
 }
 
-export function rejectsWith(value, timeout = 0) {
+export function rejectsWith(value, timeout = 1) {
   return new Promise((_, reject) => {
     setTimeout(reject, timeout, value);
   });

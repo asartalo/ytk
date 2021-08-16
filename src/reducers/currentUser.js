@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import { currentUserShape, validateReducer } from 'components/propTypes';
+import { currentUserShape, validateReducer } from '../components/propTypes';
 
 const defaultState = {
   name: '',

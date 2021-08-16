@@ -1,4 +1,4 @@
-import randomInt from 'helpers/randomInt';
+import randomInt from './randomInt';
 
 export default function idFromName(name) {
   return name

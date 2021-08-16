@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import CenterTextField from 'components/ytk/CenterTextField';
-import HomeButton from 'components/ytk/HomeButton';
+import CenterTextField from '../ytk/CenterTextField';
+import HomeButton from '../ytk/HomeButton';
 
 const styles = theme => ({
   actions: {

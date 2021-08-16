@@ -1,4 +1,4 @@
-import reducerTest from 'helpers/reducerTest';
+import reducerTest from '../helpers/reducerTest';
 import * as fActions from '../actions/firestoreActions';
 
 import firestore from './firestore';

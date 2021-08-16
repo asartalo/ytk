@@ -1,8 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { partyActions } from 'actions';
-
+import { partyActions } from '../actions';
 import { Party } from './Party';
 
 describe('Party', () => {

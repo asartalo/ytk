@@ -7,19 +7,19 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import * as partyActions from 'actions/partyActions';
-import * as userActions from 'actions/currentUserActions';
-import { findUserNameFromId } from 'helpers/party';
+import * as partyActions from '../../actions/partyActions';
+import * as userActions from '../../actions/currentUserActions';
+import { findUserNameFromId } from '../../helpers/party';
 import {
   currentVideoShape,
   currentUserShape,
   arrayOfProfiles,
   arrayOfQueueVideo,
-} from 'components/propTypes';
+} from '../propTypes';
 import PlaybackButton from './PlaybackButton';
 import SkipButton from './SkipButton';
 import StandaloneButton from './StandaloneButton';
-import { idToPlayerUrl } from 'helpers/party';
+import { idToPlayerUrl } from '../../helpers/party';
 import styles from './Current.styles.js';
 
 export class Current extends Component {
@@ -77,7 +77,7 @@ export class Current extends Component {
   }
 
   render() {
-    const { current, users, classes } = this.props;
+    const { current, users, classes, queue } = this.props;
 
     return (
       <Card square className={classes.card} elevation={0}>
@@ -86,12 +86,13 @@ export class Current extends Component {
             <Typography className={classes.title} color="textSecondary">
               Currently Playing:
             </Typography>
-            <Typography variant="headline">{current.title}</Typography>
-            <Typography variant="subheading" color="textSecondary">
+            <Typography variant="h5">{current.title}</Typography>
+            <Typography variant="subtitle1" color="textSecondary">
               {current.channelTitle}
               <br />
               Added by:{' '}
               <strong>{findUserNameFromId(current.addedBy, users)}</strong>
+              <pre>{JSON.stringify(queue, null, '  ')}</pre>
             </Typography>
           </CardContent>
           <div className={classes.controls}>
@@ -100,7 +101,9 @@ export class Current extends Component {
                 isPlaying={current.isPlaying}
                 onClick={this.handlePlayerToggle}
               />
-              <SkipButton onClick={this.handleNext} />
+              {queue.length > 1 ? (
+                <SkipButton onClick={this.handleNext} />
+              ) : null}
             </div>
             <div className={classes.miscControls}>
               {this.renderStandAloneControl()}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { newParty } from 'actions/partyActions';
+import { newParty } from '../../actions/partyActions';
 import StartForm from './StartForm';
 
 export class Start extends Component {

@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import action from 'helpers/action';
+import action from '../helpers/action';
 
 export function newParty(party) {
   return action(types.PARTY_NEW, party);

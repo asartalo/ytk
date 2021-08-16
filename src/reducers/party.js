@@ -1,6 +1,6 @@
 import { ActionTypes as types } from '../constants';
-import { partyShape, validateReducer } from 'components/propTypes';
-import { prepForQueue } from 'helpers/party';
+import { partyShape, validateReducer } from '../components/propTypes';
+import { prepForQueue } from '../helpers/party';
 
 export const defaultState = {
   name: '',

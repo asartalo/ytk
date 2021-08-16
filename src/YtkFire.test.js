@@ -1,4 +1,4 @@
-import * as promise from 'helpers/promise';
+import * as promise from './helpers/promise';
 import YtkFire, {
   TimeoutError,
   UserDataDoesNotExist,
@@ -45,31 +45,32 @@ describe('YtkFire', () => {
       let error;
       beforeEach(() => {
         error = Error('Something went wrong');
-        fakeFs.auth.signInAnonymously = jest.fn(promise.fnRejectsWith(error));
+        fakeFs.auth.signInAnonymously = jest.fn(async () => {
+          throw error;
+        });
       });
 
-      it('just throws the error', async () => {
-        try {
-          await ytkFire.signInAnonymously();
-        } catch (e) {
-          expect(e).toEqual(error);
-        }
+      it('just throws the error', () => {
+        return expect(ytkFire.signInAnonymously()).rejects.toEqual(error);
       });
     });
 
     describe('when the sign in times out', () => {
-      let error;
       beforeEach(() => {
         fakeFs.signInAnonymously.mockImplementation(
           promise.fnResolvesTo(fakeFs.authResponse, 31000)
         );
       });
 
-      it('throws a timeout error', async () => {
+      it('throws a timeout error', () => {
         jest.useFakeTimers();
-        expect(ytkFire.signInAnonymously()).rejects.toThrow(TimeoutError);
+        // eslint-disable-next-line jest/valid-expect
+        const promise = expect(
+          ytkFire.signInAnonymously()
+        ).rejects.toBeInstanceOf(TimeoutError);
         jest.runOnlyPendingTimers();
         jest.useRealTimers();
+        return promise;
       });
     });
   });
@@ -115,8 +116,6 @@ describe('YtkFire', () => {
   });
 
   describe('#saveUser()', () => {
-    let userData;
-
     it('throws error when user is not signed in', async () => {
       await expect(ytkFire.saveUser({ name: 'Summer' })).rejects.toThrow(
         UserNotSignedIn
@@ -136,11 +135,10 @@ describe('YtkFire', () => {
   });
 
   describe('#newParty()', () => {
-    let partyId = 'summer-time-4898',
-      partyData = {
-        name: 'Summer Time',
-        users: [{ name: 'Foo', uid: 'FUID' }],
-      };
+    let partyData = {
+      name: 'Summer Time',
+      users: [{ name: 'Foo', uid: 'FUID' }],
+    };
 
     it('throws error when not signed in', async () => {
       await expect(ytkFire.newParty(partyData)).rejects.toThrow(

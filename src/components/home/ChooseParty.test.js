@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { mountWithRouter } from 'helpers/enzymeTest';
+import { mountWithRouter } from '../../helpers/enzymeTest';
 
 import ChooseParty from './ChooseParty';
 import UserParties from './UserParties';

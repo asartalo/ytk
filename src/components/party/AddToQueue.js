@@ -12,9 +12,9 @@ import List from '@material-ui/core/List';
 
 import SearchIcon from '@material-ui/icons/Search';
 
-import { arrayOfVideos } from 'components/propTypes';
-import debounce from 'helpers/debounce';
-import * as partyActions from 'actions/partyActions';
+import { arrayOfVideos } from '../propTypes';
+import debounce from '../../helpers/debounce';
+import * as partyActions from '../../actions/partyActions';
 import VideoListItem from './VideoListItem';
 
 const styles = theme => ({
@@ -30,9 +30,7 @@ const styles = theme => ({
     zIndex: 3,
   },
 
-  searchField: {
-    // padding: [2, 3].map(n => `${n * theme.spacing.unit}px` ).join(" ")
-  },
+  searchField: {},
 });
 
 export class AddToQueue extends Component {

@@ -1,5 +1,5 @@
 import { ActionTypes as types } from '../constants';
-import { idToPath, idToJoinPath } from 'helpers/party';
+import { idToPath, idToJoinPath } from '../helpers/party';
 
 export const defaultState = {
   redirectTo: null,

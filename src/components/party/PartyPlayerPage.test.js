@@ -3,11 +3,10 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 
 import { Provider } from 'react-redux';
-import mockStore from 'helpers/mockStore';
-import userReducer from 'reducers/currentUser';
-import partyReducer from 'reducers/party';
-import staticVideoData from 'fixtures/staticVideoData';
-import { partyActions } from 'actions';
+import mockStore from '../../helpers/mockStore';
+import userReducer from '../../reducers/currentUser';
+import partyReducer from '../../reducers/party';
+import staticVideoData from '../../fixtures/staticVideoData';
 import ConnectedPlayer from './ConnectedPlayer';
 
 import PartyPlayerPageWithStyle, { PartyPlayerPage } from './PartyPlayerPage';

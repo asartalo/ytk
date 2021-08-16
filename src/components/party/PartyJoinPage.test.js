@@ -1,15 +1,14 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { currentUserActions, partyActions } from 'actions';
-import HomePage from 'components/home/HomePage';
-import NameForm from 'components/home/NameForm';
-import HomeButton from 'components/ytk/HomeButton';
+import { currentUserActions, partyActions } from '../../actions';
+import HomePage from '../home/HomePage';
+import NameForm from '../home/NameForm';
 
-import PartyJoinPageWithStyles, { PartyJoinPage } from './PartyJoinPage';
+import { PartyJoinPage } from './PartyJoinPage';
 
 describe('PartyJoinPage', () => {
-  let component, props;
+  let props;
 
   function mountPage() {
     return mount(<PartyJoinPage {...props} />);
@@ -73,7 +72,7 @@ describe('PartyJoinPage', () => {
             page.instance().handleNameSet('Gene');
           });
 
-          it('dispatches a set current user name and intent action ', () => {
+          it('dispatches a set current user name and intent action', () => {
             expect(props.dispatch).toHaveBeenCalledWith(
               currentUserActions.setName('Gene')
             );

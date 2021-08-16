@@ -1,93 +1,83 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { partyActions } from 'actions';
-import { currentUserShape, partyShape } from 'components/propTypes';
-import Signal from 'lib/signal';
-import Body from 'components/ytk/Body';
-import ProgressOrChildren from 'components/ProgressOrChildren';
-import PartyPage from 'components/party/PartyPage';
-import PartyPlayerPage from 'components/party/PartyPlayerPage';
-import PartyJoinPage from 'components/party/PartyJoinPage';
+import { partyActions } from '../actions';
+import { currentUserShape, partyShape } from '../components/propTypes';
+import Signal from '../lib/signal';
+import Body from '../components/ytk/Body';
+import ProgressOrChildren from '../components/ProgressOrChildren';
+import PartyPage from '../components/party/PartyPage';
+import PartyPlayerPage from '../components/party/PartyPlayerPage';
+import PartyJoinPage from '../components/party/PartyJoinPage';
 
-export class Party extends Component {
-  static propTypes = {
-    className: PropTypes.string,
-    dispatch: PropTypes.func.isRequired,
-    currentUser: currentUserShape.isRequired,
-    party: partyShape.isRequired,
-    match: PropTypes.object.isRequired,
-    partyGetInProgress: PropTypes.bool.isRequired,
-    partyJoinInProgress: PropTypes.bool.isRequired,
-  };
+export function Party({
+  currentUser,
+  party,
+  partyGetInProgress,
+  partyJoinInProgress,
+  dispatch,
+}) {
+  const signal = new Signal(global.localStorage, global.window, Date.now);
+  // const partyId = match.params.party;
+  const partyId = useParams().party;
 
-  constructor(props) {
-    super(props);
-    this.signal = new Signal(global.localStorage, global.window, Date.now);
-  }
+  const [prevPartyJoinInProgress, setPrevPartyGetInProgress] = useState(false);
 
-  componentDidMount() {
-    const { dispatch, match } = this.props;
-    dispatch(partyActions.getParty(match.params.party));
-  }
+  useEffect(() => {
+    dispatch(partyActions.getParty(partyId));
 
-  componentDidUpdate(prevProps) {
-    const { dispatch, match, partyJoinInProgress } = this.props;
-    if (prevProps.partyJoinInProgress && !partyJoinInProgress) {
-      dispatch(partyActions.getParty(match.params.party));
+    return () => {
+      dispatch(partyActions.unloadParty(partyId));
+    };
+  }, [dispatch, partyId]);
+
+  useEffect(() => {
+    if (prevPartyJoinInProgress && !partyJoinInProgress) {
+      dispatch(partyActions.getParty(partyId));
     }
-  }
+    setPrevPartyGetInProgress(partyJoinInProgress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [partyJoinInProgress, dispatch, partyId]);
 
-  componentWillUnmount() {
-    const { dispatch, match } = this.props;
-    dispatch(partyActions.unloadParty(match.params.party));
-  }
-
-  render() {
-    const {
-      currentUser,
-      match,
-      party,
-      partyGetInProgress,
-      dispatch,
-    } = this.props;
-    const signal = this.signal;
-    const partyId = match.params.party;
-    return (
-      <Body className="Party">
-        <ProgressOrChildren inProgress={partyGetInProgress} fullscreen>
-          <Switch>
-            <Route
-              exact
-              path={match.url}
-              render={() => (
-                <PartyPage {...{ currentUser, party, dispatch, signal }} />
-              )}
-            />
-            <Route
-              exact
-              path={match.url + '/player'}
-              render={() => (
-                <PartyPlayerPage
-                  {...{ currentUser, party, dispatch, signal }}
-                />
-              )}
-            />
-            <Route
-              exact
-              path={match.url + '/join'}
-              render={() => (
-                <PartyJoinPage {...{ currentUser, dispatch, partyId }} />
-              )}
-            />
-          </Switch>
-        </ProgressOrChildren>
-      </Body>
-    );
-  }
+  return (
+    <Body className="Party">
+      <ProgressOrChildren inProgress={partyGetInProgress} fullscreen>
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              <PartyPage {...{ currentUser, party, dispatch, signal }} />
+            }
+          />
+          <Route
+            exact
+            path="/player"
+            element={
+              <PartyPlayerPage {...{ currentUser, party, dispatch, signal }} />
+            }
+          />
+          <Route
+            exact
+            path="/join"
+            render={<PartyJoinPage {...{ currentUser, dispatch, partyId }} />}
+          />
+        </Routes>
+      </ProgressOrChildren>
+    </Body>
+  );
 }
+
+Party.propTypes = {
+  className: PropTypes.string,
+  dispatch: PropTypes.func.isRequired,
+  currentUser: currentUserShape.isRequired,
+  party: partyShape.isRequired,
+  partyGetInProgress: PropTypes.bool.isRequired,
+  partyJoinInProgress: PropTypes.bool.isRequired,
+};
 
 export default connect((state, props) => {
   const { currentUser, party, ui } = state;
