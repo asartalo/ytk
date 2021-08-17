@@ -16,13 +16,13 @@ const styles = theme => ({
   },
 
   emptyQueueHelp: {
-    ...theme.typography.headline,
+    ...theme.typography.h5,
     textAlign: 'center',
     paddingTop: 56,
   },
 
   emptyQueueHeadline: {
-    ...theme.typography.display3,
+    ...theme.typography.h3,
   },
 });
 

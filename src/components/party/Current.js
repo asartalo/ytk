@@ -92,7 +92,6 @@ export class Current extends Component {
               <br />
               Added by:{' '}
               <strong>{findUserNameFromId(current.addedBy, users)}</strong>
-              <pre>{JSON.stringify(queue, null, '  ')}</pre>
             </Typography>
           </CardContent>
           <div className={classes.controls}>

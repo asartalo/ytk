@@ -12,7 +12,7 @@ import List from '@material-ui/core/List';
 
 import SearchIcon from '@material-ui/icons/Search';
 
-import { arrayOfVideos } from '../propTypes';
+import { arrayOfVideos, partyShape } from '../propTypes';
 import debounce from '../../helpers/debounce';
 import * as partyActions from '../../actions/partyActions';
 import VideoListItem from './VideoListItem';
@@ -47,6 +47,7 @@ export class AddToQueue extends Component {
     classes: PropTypes.object,
     className: PropTypes.string,
     searchResults: arrayOfVideos,
+    party: partyShape.isRequired,
   };
 
   constructor(props) {
@@ -88,7 +89,7 @@ export class AddToQueue extends Component {
   }
 
   render() {
-    const { classes, className } = this.props;
+    const { classes, className, party } = this.props;
     const rootClass = [classes.root, className].filter(x => x).join(' ');
 
     return (
@@ -103,6 +104,7 @@ export class AddToQueue extends Component {
                   label="Search"
                   inputRef={this.setInputRef}
                   onChange={this.handleSearch}
+                  autoFocus={party.queue.length === 0}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment
@@ -130,10 +132,11 @@ export class AddToQueue extends Component {
 }
 
 export default connect(state => {
-  const { ui, firestore } = state;
+  const { ui, firestore, party } = state;
 
   return {
     searchResults: ui.searchResults,
     uid: firestore.uid,
+    party: party,
   };
 })(withStyles(styles)(AddToQueue));

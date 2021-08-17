@@ -8,12 +8,10 @@ function AppRedirect({ to, dispatch }) {
   const navigate = useNavigate();
   useEffect(() => {
     if (to) {
+      navigate(to);
       dispatch(clearRedirect());
     }
-  }, [to, dispatch]);
-  if (to) {
-    navigate(to);
-  }
+  }, [to, dispatch, navigate]);
 
   return <>{null}</>;
 }

@@ -62,7 +62,7 @@ export function Party({
           <Route
             exact
             path="/join"
-            render={<PartyJoinPage {...{ currentUser, dispatch, partyId }} />}
+            element={<PartyJoinPage {...{ currentUser, dispatch, partyId }} />}
           />
         </Routes>
       </ProgressOrChildren>
