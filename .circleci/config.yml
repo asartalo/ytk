@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.11
+      - image: cimg/node:8.11
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -22,9 +22,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "yarn.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v2-dependencies-
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
       - run:
           name: Setup Code Climate test-reporter
           command: |
@@ -47,6 +47,3 @@ jobs:
           yarn test-coverage
           ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $? ./coverage/lcov.info
           cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
-
-
