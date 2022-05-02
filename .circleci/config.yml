@@ -2,12 +2,15 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
+orbs:
+  node: circleci/node@5.0.2
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: cimg/node:18.0.0
+      # - image: cimg/node:18.0.0
+      - image: "cimg/base:stable"
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -18,28 +21,33 @@ jobs:
 
     steps:
       - checkout
+      - node/install:
+          install-yarn: true
+          node-version: 18.0.0
+
+      - run: node --version
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-      - run:
-          name: Setup Code Climate test-reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
-      - run:
-          name: .env for tests
-          command: cp env.sample .env.test.local
+      # - restore_cache:
+      #     keys:
+      #       - v2-dependencies-{{ checksum "yarn.lock" }}
+      #       # fallback to using the latest cache if no exact match is found
+      #       - v2-dependencies-
+      # - run:
+      #     name: Setup Code Climate test-reporter
+      #     command: |
+      #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      #       chmod +x ./cc-test-reporter
+      # - run:
+      #     name: .env for tests
+      #     command: cp env.sample .env.test.local
 
       - run: yarn install
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "yarn.lock" }}
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: v2-dependencies-{{ checksum "yarn.lock" }}
 
       # run tests!
       - run: |
