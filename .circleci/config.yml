@@ -23,7 +23,7 @@ jobs:
       - checkout
       - node/install:
           install-yarn: true
-          node-version: 18.0.0
+          node-version: 14.17.3
 
       - run: node --version
 
