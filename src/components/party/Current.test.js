@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import searchResults from '../../fixtures/staticVideoData';
+import { render, screen } from '@testing-library/react';
 import queuedVideos from '../../fixtures/queuedVideos';
 import { currentUser, profiles } from '../../fixtures/users';
 
@@ -9,12 +8,10 @@ import {
   standAlonePlayerOn,
   standAlonePlayerOff,
 } from '../../actions/currentUserActions';
-import PlaybackButton from './PlaybackButton';
-import SkipButton from './SkipButton';
-import StandaloneButton from './StandaloneButton';
 import { idToPlayerUrl } from '../../helpers/party';
 
 import { Current } from './Current';
+import userEvent from '@testing-library/user-event';
 
 const currentVideo = {
   ...queuedVideos[0],
@@ -23,7 +20,7 @@ const currentVideo = {
 };
 
 describe('Current', () => {
-  let component, props;
+  let props, rerender;
   beforeEach(() => {
     props = {
       classes: {},
@@ -39,24 +36,20 @@ describe('Current', () => {
   });
 
   beforeEach(() => {
-    component = mount(<Current {...props} />);
+    rerender = render(<Current {...props} />).rerender;
   });
 
   describe('default state', () => {
-    it('renders without crashing', () => {
-      expect(component).toExist();
-    });
-
     it('playback button is paused', () => {
-      const playbackButton = component.find(PlaybackButton);
-      expect(playbackButton).toHaveProp('isPlaying', false);
+      const playbackButton = screen.getByRole('button', { name: 'Play' });
+      expect(playbackButton).toBeInTheDocument();
     });
   });
 
   describe('when playback button is clicked', () => {
     beforeEach(() => {
-      const playbackButton = component.find(PlaybackButton);
-      playbackButton.simulate('click');
+      const playbackButton = screen.getByRole('button', { name: 'Play' });
+      userEvent.click(playbackButton);
     });
 
     it('calls dispatch to set playback', () => {
@@ -66,8 +59,8 @@ describe('Current', () => {
 
   describe('when skip button is clicked', () => {
     beforeEach(() => {
-      const skip = component.find(SkipButton);
-      skip.simulate('click');
+      const skip = screen.getByRole('button', { name: 'Next' });
+      userEvent.click(skip);
     });
 
     it('calls dispatch to set playback', () => {
@@ -87,8 +80,8 @@ describe('Current', () => {
       oldOpen = global.open;
       opened = { close: jest.fn() };
       global.open = jest.fn(() => opened);
-      button = component.find(StandaloneButton);
-      button.simulate('click');
+      button = screen.getByRole('button', { name: 'Open standalone player' });
+      userEvent.click(button);
     });
 
     afterEach(() => {
@@ -115,12 +108,13 @@ describe('Current', () => {
       beforeEach(() => {
         global.open = jest.fn(() => opened);
         newDispatch = jest.fn();
-        component.setProps({
+        const newProps = {
+          ...props,
           dispatch: newDispatch,
           currentUser: { ...props.currentUser, standAlonePlayer: true },
-        });
-        component.update();
-        button.simulate('click');
+        };
+        rerender(<Current {...newProps} />);
+        userEvent.click(button);
       });
 
       it('dispatches standalonePlayer off action', () => {

@@ -21,7 +21,7 @@
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^17.0.2",
-    "react-idle-timer": "^4.0.8",
+    "react-idle-timer": "^5.1.1",
     "react-redux": "^7.2.4",
     "react-router-dom": "^6.0.0-beta.1",
     "react-router-scroll-4": "^1.0.0-beta.1",

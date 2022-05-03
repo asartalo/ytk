@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { clearRedirect } from '../actions/uiActions';
 
-function AppRedirect({ to, dispatch }) {
+export function AppRedirect({ to, dispatch }) {
   const navigate = useNavigate();
   useEffect(() => {
     if (to) {

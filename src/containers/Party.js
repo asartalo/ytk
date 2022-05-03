@@ -20,7 +20,6 @@ export function Party({
   dispatch,
 }) {
   const signal = new Signal(global.localStorage, global.window, Date.now);
-  // const partyId = match.params.party;
   const partyId = useParams().party;
 
   const [prevPartyJoinInProgress, setPrevPartyGetInProgress] = useState(false);

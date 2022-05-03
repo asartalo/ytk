@@ -56,7 +56,7 @@ export function VideoListItem({
   ) : null;
 
   return (
-    <ListItem {...{ onClick, className, button, key }}>
+    <ListItem {...{ onClick, className, button, key, component: 'li' }}>
       <ListItemIcon>
         <img
           className={classes.thumbnail}

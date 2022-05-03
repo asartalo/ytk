@@ -49,21 +49,10 @@ describe('Home', () => {
       expect(form).toExist();
     });
 
-    it('sets handleNameSet as onNameSet listener', () => {
-      expect(form).toHaveProp('onNameSet', home.instance().handleNameSet);
-    });
-
-    it('sets handleInputStarted as onInputStarted listener', () => {
-      expect(form).toHaveProp(
-        'onInputStarted',
-        home.instance().handleInputStarted
-      );
-    });
-
     describe('when #handleNameSet() is called', () => {
       describe('with start intent', () => {
         beforeEach(() => {
-          home.instance().handleNameSet('Arnold');
+          form.props().onNameSet('Arnold');
         });
 
         it('dispatches a set current user name and intent action', () => {
@@ -76,7 +65,7 @@ describe('Home', () => {
 
     describe('when #handleInputStarted', () => {
       beforeEach(() => {
-        home.instance().handleInputStarted();
+        form.props().onInputStarted();
       });
 
       it('dispatches to set currentUser.homeState to inputStarted action', () => {
@@ -119,13 +108,6 @@ describe('Home', () => {
         expect(chooseUi).toHaveProp('userName', props.currentUser.name);
       });
 
-      it('should pass handleSetIntent callback', () => {
-        expect(chooseUi).toHaveProp(
-          'onSetIntent',
-          home.instance().handleSetIntent
-        );
-      });
-
       describe('when user has a party', () => {
         beforeEach(() => {
           props.currentUser.party = 'my-current-party-1234';
@@ -140,7 +122,7 @@ describe('Home', () => {
 
       describe('when handleSetIntent is called', () => {
         beforeEach(() => {
-          home.instance().handleSetIntent('join');
+          chooseUi.props().onSetIntent('join');
         });
 
         it('dispatches setIntent action', () => {

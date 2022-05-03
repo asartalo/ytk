@@ -1,6 +1,7 @@
 import React from 'react';
-
-import { shallowWithRouter, mountWithRouter } from '../../helpers/enzymeTest';
+import { cleanup, render, screen } from '@testing-library/react';
+import { shallowWithRouter } from '../../helpers/enzymeTest';
+import MuiSizeWrapper from '../../helpers/MuiSizeWrapper';
 
 import userReducer from '../../reducers/currentUser';
 import partyReducer from '../../reducers/party';
@@ -9,6 +10,10 @@ import { currentUserActions } from '../../actions';
 import ConnectedPlayer from './ConnectedPlayer';
 
 import PartyPageWithStyle, { PartyPage } from './PartyPage';
+import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import mockStore from '../../helpers/mockStore';
+import { addToQueue } from '../../actions/partyActions';
 
 const sampleVideo = staticVideoData[0];
 
@@ -32,26 +37,47 @@ const defaultPropsNaked = {
 };
 
 describe('PartyPage', () => {
-  let page, props;
+  let page,
+    props,
+    store,
+    instance,
+    renderResult,
+    showPartyPage = true;
 
-  const mountPage = () => mountWithRouter(<PartyPage {...props} />);
+  const elements = () => (
+    <MuiSizeWrapper>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          {showPartyPage ? <PartyPage {...props} /> : null}
+        </MemoryRouter>
+      </Provider>
+    </MuiSizeWrapper>
+  );
 
   beforeEach(() => {
+    store = mockStore();
     props = {
       ...defaultPropsNaked,
       dispatch: jest.fn(),
+      ref: node => {
+        instance = node;
+      },
       signal: {
         listen: jest.fn(),
         clear: jest.fn(),
       },
     };
-    page = mountPage();
   });
 
-  describe.only('when component has mounted', () => {
-    let instance;
+  const renderPage = () => {
+    renderResult = render(elements());
+    return renderResult;
+  };
+
+  describe('when component has mounted', () => {
     beforeEach(() => {
-      instance = page.instance();
+      showPartyPage = true;
+      renderPage();
     });
 
     it('listens to closeStandalonePlayer signal', () => {
@@ -61,65 +87,77 @@ describe('PartyPage', () => {
       );
     });
 
+    it('show add button when there is no current and queue is empty', () => {
+      const fabButton = screen.getByTestId('FabAddButton');
+      expect(fabButton).toBeInTheDocument();
+    });
+
+    it('does not show a player as there is no current video', () => {
+      const player = screen.queryByTestId('Player');
+      expect(player).not.toBeInTheDocument();
+    });
+
+    it('renders help text for empty queue', () => {
+      const help = screen.getByTestId('Empty Queue Help');
+      expect(help).toBeInTheDocument();
+    });
+
     describe('when component unmounts', () => {
+      let handler;
+
       beforeEach(() => {
-        page.unmount();
+        handler = instance.handleStandalonePlayerClose;
+        showPartyPage = false;
+        const { rerender } = renderResult;
+        rerender(elements());
       });
 
       it('clears closeStandalonePlayer signal listener', () => {
         expect(props.signal.clear).toHaveBeenCalledWith(
           'closeStandalonePlayer',
-          instance.handleStandalonePlayerClose
+          handler
         );
       });
     });
   });
 
-  it('sets showAddmenu to true when there is no current and queue is empty', () => {
-    expect(page.instance().state.showAddMenu).toBe(true);
-  });
-
-  it('does not show a player as there is no current video', () => {
-    const player = page.find(ConnectedPlayer);
-    expect(player).not.toExist();
-  });
-
-  it('renders help text for empty queue', () => {
-    const help = page.find('.emptyQueueHelp');
-    expect(help).toExist();
-  });
-
-  describe('when there is current item on party', () => {
-    const setCurrent = current => ({
-      ...props,
-      party: {
-        ...props.party,
-        current: {
-          ...sampleVideo,
-          addedBy: 'JID',
-          queueId: 'FOO-bar-18388',
-          isPlaying: false,
-          at: 0.0,
-          ...current,
+  describe.skip('when there is current item on party', () => {
+    const setCurrent = current => {
+      const currentItem = {
+        ...sampleVideo,
+        addedBy: 'JID',
+        queueId: 'FOO-bar-18388',
+        isPlaying: false,
+        at: 0.0,
+        ...current,
+      };
+      return {
+        ...props,
+        party: {
+          ...props.party,
+          current: currentItem,
         },
-      },
-    });
+      };
+    };
 
     beforeEach(() => {
       props = setCurrent({});
-      page = mountPage();
+      store.dispatch(addToQueue(props.party.current));
+      cleanup();
+      renderPage();
     });
 
-    it('sets showAddMenu to false', () => {
-      expect(page.instance().state.showAddMenu).toBe(false);
+    it('shows the add menu', () => {
+      const fabButton = screen.getByTestId('FabAddButton');
+      expect(fabButton).toBeInTheDocument();
     });
 
     it('does not render help text for empty queue', () => {
-      const help = page.find('.emptyQueueHelp');
-      expect(help).not.toExist();
+      const help = screen.queryByTestId('Empty Queue Help');
+      expect(help).not.toBeInTheDocument();
     });
 
-    describe('rendered ConnectedPlayer', () => {
+    describe.skip('rendered ConnectedPlayer', () => {
       let player;
       beforeEach(() => {
         player = page.find(ConnectedPlayer);
@@ -131,7 +169,7 @@ describe('PartyPage', () => {
     });
   });
 
-  describe('when handleStandalonePlayerClose is called', () => {
+  describe.skip('when handleStandalonePlayerClose is called', () => {
     beforeEach(() => {
       page.instance().handleStandalonePlayerClose();
     });
@@ -144,7 +182,7 @@ describe('PartyPage', () => {
   });
 });
 
-describe('PartyPageWithStyles', () => {
+describe.skip('PartyPageWithStyles', () => {
   let page, props;
 
   const mountPage = () => shallowWithRouter(<PartyPageWithStyle {...props} />);

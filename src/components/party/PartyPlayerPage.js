@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
-import IdleTimer from 'react-idle-timer';
 import screenfull from 'screenfull';
 
 import injectProp from '../../helpers/injectProp';
+import { IdleTimer } from './IdleTImer';
 import { currentUserShape, partyShape } from '../propTypes';
 import ButtonWithTooltip from '../ytk/ButtonWithTooltip';
 import ConnectedPlayer from './ConnectedPlayer';
@@ -137,22 +137,24 @@ export class PartyPlayerPage extends Component {
     const { classes, party } = this.props;
     const { current } = party;
     return (
-      <IfElse condition={!!current}>
-        <IdleTimer
-          element={document}
-          onActive={this.handleActive}
-          onIdle={this.handleIdle}
-          timeout={1000 * 5}
-        >
-          <div className={classes.root}>
-            <ConnectedPlayer className={classes.player} />
-            {this.renderControls()}
+      <div className="PartyPlayerPage">
+        <IfElse condition={!!current}>
+          <IdleTimer
+            element={document}
+            onActive={this.handleActive}
+            onIdle={this.handleIdle}
+            timeout={1000 * 5}
+          >
+            <div className={classes.root}>
+              <ConnectedPlayer className={classes.player} />
+              {this.renderControls()}
+            </div>
+          </IdleTimer>
+          <div className={classes.noVideoHelp}>
+            <p>There is no video yet.</p>
           </div>
-        </IdleTimer>
-        <div className={classes.noVideoHelp}>
-          <p>There is no video yet.</p>
-        </div>
-      </IfElse>
+        </IfElse>
+      </div>
     );
   }
 }

@@ -1,116 +1,100 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import Grid from '@material-ui/core/Grid';
+import { render, screen } from '@testing-library/react';
 
+import MuiSizeWrapper from '../../helpers/MuiSizeWrapper';
 import { PartyUiGrid } from './PartyUiGrid';
 
 describe('PartyUiGrid', () => {
-  let grid, props;
+  let props;
 
-  const mountGrid = () => {
-    return mount(
-      <PartyUiGrid {...props}>
-        <h1>Player section</h1>
-        <h2>Control section</h2>
-        <h3>This will not be rendered</h3>
-      </PartyUiGrid>
+  const renderGrid = () => {
+    return render(
+      <MuiSizeWrapper>
+        <PartyUiGrid {...props}>
+          <h1>Player section</h1>
+          <h2>Control section</h2>
+          <h3>This will not be rendered</h3>
+        </PartyUiGrid>
+      </MuiSizeWrapper>
     );
   };
 
-  const findSection = section =>
-    grid.find({ iid: section, item: true, container: false });
-
-  beforeEach(() => {
-    props = {
-      hidePlayer: false,
-      classes: {},
-    };
-    grid = mountGrid();
-  });
-
-  it('renders without crashing', () => {
-    expect(grid).toExist();
-  });
-
-  it('renders player section by default', () => {
-    expect(grid.find('h1')).toExist();
-  });
-
-  it('renders player section', () => {
-    expect(grid.find('h2')).toExist();
-  });
-
-  it('renders only 2 child elements at most', () => {
-    expect(grid.find('h3')).not.toExist();
-  });
-
-  describe('sections structure', () => {
-    let playerSection, controlSection;
-
+  describe('when hidePlayer is off', () => {
     beforeEach(() => {
-      playerSection = findSection('player');
-      controlSection = findSection('control');
+      props = {
+        hidePlayer: false,
+        classes: {},
+      };
+      return renderGrid();
     });
 
-    it('has a player section', () => {
-      expect(playerSection).toExist();
+    it('renders player section by default', () => {
+      expect(screen.getByText('Player section')).toBeInTheDocument();
     });
 
-    it('has player component on player section', () => {
-      expect(playerSection.find('h1')).toExist();
+    it('renders player section', () => {
+      expect(screen.getByText('Control section')).toBeInTheDocument();
     });
 
-    it('has a control section', () => {
-      expect(controlSection).toExist();
+    it('renders only 2 child elements at most', () => {
+      expect(
+        screen.queryByText('This will not be rendered')
+      ).not.toBeInTheDocument();
     });
 
-    it('has control component on player section', () => {
-      expect(controlSection.find('h2')).toExist();
-    });
-
-    it('has proper layout for player section', () => {
-      expect(playerSection.props()).toMatchObject({
-        xs: 12,
-        sm: 12,
-        md: 8,
-        lg: 9,
+    describe('sections structure', () => {
+      it('has player component on player section', () => {
+        expect(screen.getByText('Player section')).toBeInTheDocument();
       });
-    });
 
-    it('has proper layout for control section', () => {
-      expect(controlSection.props()).toMatchObject({
-        xs: 12,
-        sm: 12,
-        md: 4,
-        lg: 3,
+      it('has a control section', () => {
+        expect(screen.getByText('Control section')).toBeInTheDocument();
+      });
+
+      it('has proper layout for player section', () => {
+        const playerSection = document.querySelector('[iid="player"]');
+        const classes = Array.from(playerSection.classList).join(' ');
+        expect(classes).toContain('-xs-12');
+        expect(classes).toContain('-sm-12');
+        expect(classes).toContain('-md-8');
+        expect(classes).toContain('-lg-9');
+      });
+
+      it('has proper layout for control section', () => {
+        const controlSection = document.querySelector('[iid="control"]');
+        const classes = Array.from(controlSection.classList).join(' ');
+        expect(classes).toContain('-xs-12');
+        expect(classes).toContain('-sm-12');
+        expect(classes).toContain('-md-4');
+        expect(classes).toContain('-lg-3');
       });
     });
   });
 
   describe('when hidePlayer is on', () => {
-    let controlSection;
-
     beforeEach(() => {
-      props.hidePlayer = true;
-      grid = mountGrid();
-      controlSection = findSection('control');
+      props = {
+        hidePlayer: true,
+        classes: {},
+      };
+      return renderGrid();
     });
 
     it('hides player section', () => {
-      expect(findSection('player')).not.toExist();
+      expect(screen.queryByText('Player section')).not.toBeInTheDocument();
     });
 
     it('still shows control section', () => {
-      expect(controlSection).toExist();
+      expect(screen.getByText('Control section')).toBeInTheDocument();
     });
 
     it('becomes main content', () => {
-      expect(controlSection.props()).toMatchObject({
-        xs: 12,
-        sm: 8,
-        md: 8,
-        lg: 8,
-      });
+      const controlSection = document.querySelector('[iid="control"]');
+      const classes = Array.from(controlSection.classList).join(' ');
+      expect(classes).toContain('-xs-12');
+      expect(classes).toContain('-sm-8');
+      expect(classes).toContain('-md-8');
+      expect(classes).toContain('-lg-8');
     });
   });
 });

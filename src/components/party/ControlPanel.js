@@ -147,6 +147,7 @@ export class ControlPanel extends Component {
         <FabAddButton
           show={!showAddMenu}
           className={classes.fab}
+          data-testid="FabAddButton"
           onClick={this.handleToggleMenu}
         />
       </div>

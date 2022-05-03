@@ -36,6 +36,7 @@ export class Player extends Component {
   static propTypes = {
     className: PropTypes.string,
     videoId: PropTypes.string.isRequired,
+    'data-testid': PropTypes.string,
   };
 
   constructor(props) {
@@ -101,7 +102,10 @@ export class Player extends Component {
     };
 
     return (
-      <div className={rootClasses.join(' ')}>
+      <div
+        className={rootClasses.join(' ')}
+        data-testid={this.props['data-testid']}
+      >
         <YouTube className={classes.iframe} opts={opts} {...ytProps} />
       </div>
     );

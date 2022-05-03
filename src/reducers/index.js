@@ -10,6 +10,14 @@ import party from './party';
 import firestore from './firestore';
 import ui from './ui';
 
+export const basicReducers = () =>
+  combineReducers({
+    currentUser,
+    error,
+    party,
+    ui,
+  });
+
 export default combineReducers({
   currentUser,
   firestore,

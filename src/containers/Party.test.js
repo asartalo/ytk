@@ -4,8 +4,15 @@ import { mount } from 'enzyme';
 import { partyActions } from '../actions';
 import { Party } from './Party';
 
+let partyId = 'the-party-id-8844';
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({ party: partyId }),
+}));
+
 describe('Party', () => {
-  let party, props;
+  let props;
 
   const mountParty = () => {
     return mount(<Party {...props} />);
@@ -25,11 +32,6 @@ describe('Party', () => {
         id: '',
       },
       dispatch: jest.fn(),
-      match: {
-        params: {
-          party: 'the-party-id-8844',
-        },
-      },
       partyGetInProgress: true,
       partyJoinInProgress: false,
     };
@@ -64,9 +66,8 @@ describe('Party', () => {
 
   describe('when party unmounts', () => {
     beforeEach(() => {
-      mountParty()
-        .instance()
-        .componentWillUnmount();
+      const wrapper = mountParty();
+      wrapper.unmount();
     });
 
     it('dispatches unloadParty action', () => {

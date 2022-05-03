@@ -1,27 +1,45 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { Redirect } from 'react-router-dom';
+// import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { clearRedirect } from '../actions/uiActions';
 import { AppRedirect } from './AppRedirect';
 
+let navigateCalls = [];
+const mockNavigate = path => {
+  navigateCalls.push(path);
+};
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('AppRedirect', () => {
-  let component, props;
+  let props;
+  beforeEach(() => {
+    navigateCalls = [];
+  });
+
   describe('default behavior', () => {
     beforeEach(() => {
       props = {
         dispatch: jest.fn(),
         to: null,
       };
-      component = shallow(<AppRedirect {...props} />);
+      render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <AppRedirect {...props} />
+        </MemoryRouter>
+      );
     });
 
-    it('does not render a redirect', () => {
-      expect(component.find(Redirect)).not.toExist();
+    it('does not redirect', () => {
+      expect(navigateCalls.length).toEqual(0);
     });
 
     it('does not dispatch anything when unmounted', () => {
-      component.instance().componentDidUpdate();
       expect(props.dispatch).not.toHaveBeenCalled();
     });
   });
@@ -32,19 +50,19 @@ describe('AppRedirect', () => {
         dispatch: jest.fn(),
         to: '/some-path',
       };
-      component = shallow(<AppRedirect {...props} />);
+
+      return render(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <AppRedirect {...props} />
+        </MemoryRouter>
+      );
     });
 
-    it('renders a redirect', () => {
-      expect(component.find(Redirect)).toExist();
-    });
-
-    it('sets the redirect path to the to prop', () => {
-      expect(component.find(Redirect)).toHaveProp('to', props.to);
+    it('should redirect', () => {
+      expect(navigateCalls.pop()).toEqual('/some-path');
     });
 
     it('dispatch a clearRedirect right after rendering', () => {
-      component.instance().componentDidUpdate();
       expect(props.dispatch).toHaveBeenCalledWith(clearRedirect());
     });
   });

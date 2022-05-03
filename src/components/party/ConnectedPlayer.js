@@ -119,12 +119,15 @@ export class ConnectedPlayer extends Component {
   render() {
     const { videoId, className } = this.props;
     return (
-      <Player
-        className={className}
-        videoId={videoId}
-        start={this.state.startAt}
-        {...this.eventHandlers()}
-      />
+      <div className="foofaa">
+        <Player
+          data-testid="Player"
+          className={className}
+          videoId={videoId}
+          start={this.state.startAt}
+          {...this.eventHandlers()}
+        />
+      </div>
     );
   }
 }

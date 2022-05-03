@@ -1,5 +1,5 @@
 import Signal from './signal';
-import randomInt from 'helpers/randomInt';
+import randomInt from '../helpers/randomInt';
 
 describe('signal', () => {
   let signal, storage, win, counter, timestampFunc;

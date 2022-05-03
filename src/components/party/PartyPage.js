@@ -69,7 +69,7 @@ export class PartyPage extends Component {
       return <ConnectedPlayer className={classes.mainPlayer} />;
     } else {
       return (
-        <div className={classes.emptyQueueHelp}>
+        <div className={classes.emptyQueueHelp} data-testid="Empty Queue Help">
           <h1 className={classes.emptyQueueHeadline}>Let’s Go!</h1>
           <p>
             Use the search form to find a video. <br />
@@ -85,9 +85,9 @@ export class PartyPage extends Component {
     const { showAddMenu } = this.state;
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} data-testid="PartyPage">
         <AppBar party={party} />
-        <div className={classes.mainContent}>
+        <div className={classes.mainContent} data-testid="Main Content">
           <PartyUiGrid hidePlayer={currentUser.standAlonePlayer}>
             <div id="video-main">{this.renderPlayer(classes, party)}</div>
             <ControlPanel

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Fab } from '@material-ui/core';
 
 function filterProps(props) {
   const propsCopy = { ...props };
@@ -23,9 +24,15 @@ function filterProps(props) {
 
 function ButtonWithTooltip(props) {
   const { tooltipProps, buttonProps } = filterProps(props);
+  const { variant } = buttonProps;
+  if (variant === 'fab') {
+    delete buttonProps.variant;
+  }
   const button =
     props.buttonType === 'icon' ? (
       <IconButton {...buttonProps} />
+    ) : variant === 'fab' ? (
+      <Fab {...buttonProps} />
     ) : (
       <Button {...buttonProps} />
     );

@@ -1,43 +1,54 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import searchResults from '../../fixtures/staticVideoData';
-import { profiles } from '../../fixtures/users';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import searchResults from '../../fixtures/staticVideoData';
 import mockStore from '../../helpers/mockStore';
 
 import { search, addToQueue } from '../../actions/partyActions';
-import VideoListItem from './VideoListItem';
 
 import AddToQueueWithStyles, { AddToQueue } from './AddToQueue';
+import userEvent from '@testing-library/user-event';
 
 describe('AddToQueue', () => {
-  let component, props;
+  let props;
   beforeEach(() => {
     props = {
       dispatch: jest.fn(),
       onAddToQueue: jest.fn(),
       uid: 'MYUID',
+      party: {
+        name: 'Pedro Penduko Graduation',
+        id: 'pedro-penduko-graduation',
+        users: [
+          {
+            name: 'Jane',
+            uid: 'aabbcc',
+          },
+        ],
+        queue: [],
+      },
     };
   });
 
+  const renderAddToQueue = props => render(<AddToQueue {...props} />);
+
   it('renders without crashing', () => {
-    component = mount(<AddToQueue {...props} />);
-    expect(component).toExist();
+    expect(() => renderAddToQueue(props)).not.toThrow();
   });
 
-  const simulateSearch = (component, value) => {
+  const simulateSearch = value => {
     jest.useFakeTimers();
-    const input = component.find('input#search-field');
-    input.instance().value = value;
-    input.simulate('change');
+    const input = document.querySelector('input#search-field');
+    userEvent.clear(input);
+    userEvent.type(input, value);
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
   };
 
   describe('when attempting to search', () => {
     beforeEach(() => {
-      component = mount(<AddToQueue {...props} />);
-      simulateSearch(component, 'Foo');
+      renderAddToQueue(props);
+      simulateSearch('Foo');
     });
 
     it('should dispatch search action', () => {
@@ -46,29 +57,25 @@ describe('AddToQueue', () => {
   });
 
   describe('when there are search results', () => {
-    let searchField;
     beforeEach(() => {
       props = {
         ...props,
         searchResults,
       };
-      component = mount(<AddToQueue {...props} />);
-      searchField = component.find('input#search-field');
-      searchField.instance().value = 'Search Term';
+      renderAddToQueue(props);
     });
 
     it('should render results', () => {
-      expect(component.find(VideoListItem).length).toEqual(
-        searchResults.length
-      );
+      const list = screen.getByRole('list');
+      const items = list.querySelectorAll('li');
+      expect(items.length).toEqual(searchResults.length);
     });
 
     describe('when an item is selected', () => {
       beforeEach(() => {
-        component
-          .find(VideoListItem)
-          .first()
-          .simulate('click');
+        const list = screen.getByRole('list');
+        const item = list.querySelector('li:first-child');
+        userEvent.click(item);
       });
 
       it('dispatches addToQueue action', () => {
@@ -82,14 +89,15 @@ describe('AddToQueue', () => {
       });
 
       it('should set the input search field value to empty', () => {
-        expect(searchField.instance().value).toEqual('');
+        const searchField = document.querySelector('input#search-field');
+        expect(searchField.value).toEqual('');
       });
     });
   });
 });
 
 describe('AddToQueueWithStyles', () => {
-  let component, props, store;
+  let props, store;
   beforeEach(() => {
     store = mockStore();
     props = {
@@ -99,11 +107,12 @@ describe('AddToQueueWithStyles', () => {
   });
 
   it('renders without crashing', () => {
-    component = mount(
-      <Provider store={store}>
-        <AddToQueueWithStyles {...props} />
-      </Provider>
-    );
-    expect(component).toExist();
+    expect(() => {
+      render(
+        <Provider store={store}>
+          <AddToQueueWithStyles {...props} />
+        </Provider>
+      );
+    }).not.toThrow();
   });
 });

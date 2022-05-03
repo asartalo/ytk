@@ -70,11 +70,3 @@ describe('AppBar', () => {
     });
   });
 });
-
-describe('AppBarWithStyles', () => {
-  let component, props;
-  beforeEach(() => {
-    props = { commonProps };
-    component = mountWithRouter(<AppBarWithStyles {...props} />);
-  });
-});
